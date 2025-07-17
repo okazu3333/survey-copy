@@ -16,7 +16,9 @@
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
     "component:new": "node scripts/create-component.js",
-    "component:story": "node scripts/create-story.js"
+    "component:story": "node scripts/create-story.js",
+    "quality-check": "node scripts/quality-check.js",
+    "pre-push": "node scripts/pre-push.js"
   },
   "dependencies": {
     "@radix-ui/react-checkbox": "^1.3.2",

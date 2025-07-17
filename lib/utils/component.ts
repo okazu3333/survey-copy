@@ -1,11 +1,15 @@
-import { cn } from '@/lib/utils';
-import type { ComponentState, ComponentSize, ComponentColor } from '@/lib/types/component';
+import type {
+  ComponentColor,
+  ComponentSize,
+  ComponentState,
+} from "@/lib/types/component";
+import { cn } from "@/lib/utils";
 
 // コンポーネントの状態に基づくクラス名を生成
 export function getStateClasses(
   state: ComponentState,
   baseClasses: string,
-  stateClasses: Record<ComponentState, string>
+  stateClasses: Record<ComponentState, string>,
 ): string {
   return cn(baseClasses, stateClasses[state]);
 }
@@ -13,7 +17,7 @@ export function getStateClasses(
 // サイズに基づくクラス名を生成
 export function getSizeClasses(
   size: ComponentSize,
-  sizeClasses: Record<ComponentSize, string>
+  sizeClasses: Record<ComponentSize, string>,
 ): string {
   return sizeClasses[size] || sizeClasses.md;
 }
@@ -21,7 +25,7 @@ export function getSizeClasses(
 // 色に基づくクラス名を生成
 export function getColorClasses(
   color: ComponentColor,
-  colorClasses: Record<ComponentColor, string>
+  colorClasses: Record<ComponentColor, string>,
 ): string {
   return colorClasses[color] || colorClasses.primary;
 }
@@ -29,7 +33,7 @@ export function getColorClasses(
 // バリアントに基づくクラス名を生成
 export function getVariantClasses(
   variant: string,
-  variantClasses: Record<string, string>
+  variantClasses: Record<string, string>,
 ): string {
   return variantClasses[variant] || variantClasses.default;
 }
@@ -40,30 +44,26 @@ export function getAccessibilityProps(
   describedBy?: string,
   labelledBy?: string,
   hidden?: boolean,
-  role?: string
+  role?: string,
 ) {
   return {
-    ...(label && { 'aria-label': label }),
-    ...(describedBy && { 'aria-describedby': describedBy }),
-    ...(labelledBy && { 'aria-labelledby': labelledBy }),
-    ...(hidden && { 'aria-hidden': hidden }),
+    ...(label && { "aria-label": label }),
+    ...(describedBy && { "aria-describedby": describedBy }),
+    ...(labelledBy && { "aria-labelledby": labelledBy }),
+    ...(hidden && { "aria-hidden": hidden }),
     ...(role && { role }),
   };
 }
 
 // フォームバリデーション用のクラス名を生成
 export function getFormClasses(
-  error?: string,
-  disabled?: boolean,
   baseClasses: string,
   errorClasses: string,
-  disabledClasses: string
+  disabledClasses: string,
+  error?: string,
+  disabled?: boolean,
 ): string {
-  return cn(
-    baseClasses,
-    error && errorClasses,
-    disabled && disabledClasses
-  );
+  return cn(baseClasses, error && errorClasses, disabled && disabledClasses);
 }
 
 // コンポーネントのIDを生成
@@ -76,25 +76,25 @@ export function safeHandler<T extends (...args: any[]) => any>(
   handler: T | undefined,
   ...args: Parameters<T>
 ): void {
-  if (typeof handler === 'function') {
+  if (typeof handler === "function") {
     try {
       handler(...args);
     } catch (error) {
-      console.error('Error in event handler:', error);
+      console.error("Error in event handler:", error);
     }
   }
 }
 
 // コンポーネントの表示名を生成
 export function getDisplayName(Component: React.ComponentType<any>): string {
-  return Component.displayName || Component.name || 'Component';
+  return Component.displayName || Component.name || "Component";
 }
 
 // 条件付きでプロパティを追加
 export function conditionalProps<T extends Record<string, any>>(
   props: T,
   condition: boolean,
-  additionalProps: Record<string, any>
+  additionalProps: Record<string, any>,
 ): T {
   return condition ? { ...props, ...additionalProps } : props;
-} 
+}

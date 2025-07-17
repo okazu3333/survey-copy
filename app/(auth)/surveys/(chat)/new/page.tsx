@@ -1,17 +1,11 @@
 "use client";
 
-import {
-  Bot,
-  ChevronRightIcon,
-  CircleHelp,
-  ExternalLink,
-  TriangleAlert,
-} from "lucide-react";
-import { useState, useEffect } from "react";
-import { useForm } from "react-hook-form";
+import { Bot, ChevronRightIcon, CircleHelp, ExternalLink } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { SurveyCardHeader } from "@/components/survey-card-header";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
 import { SurveyAiChat } from "@/components/survey-ai/survey-ai-chat";
+import { SurveyCardHeader } from "@/components/survey-card-header";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { PublishAvailableConfirmDialog } from "./_components/publish-available-confirm-dialog";
@@ -117,35 +111,36 @@ const Page = () => {
         break;
       case 1: // セクションの設定
         // セクション設定ページに遷移
-        router.push('/surveys/question/edit');
+        router.push("/surveys/question/edit");
         break;
       case 2: // 設問の設定
         // 設問設定ページに遷移
-        router.push('/surveys/question/edit');
+        router.push("/surveys/question/edit");
         break;
       case 3: // レビュー
         // レビューページに遷移
-        router.push('/surveys/review');
+        router.push("/surveys/review");
         break;
       case 4: // 調査票の確定
         // 調査票確定ページに遷移
-        router.push('/surveys/complete');
+        router.push("/surveys/complete");
         break;
       default:
         break;
     }
   };
 
-
-
   return (
     <div className="flex gap-4 max-w-[1600px] mx-auto">
       {/* 左：フォーム */}
       <div
         className={`flex flex-col transition-all duration-500 ease-out mx-auto
-        ${isChatOpen ? 'w-[calc(100%-500px)] max-w-[1000px]' : 'w-[calc(100%-320px)] max-w-[1200px]'}`}
+        ${isChatOpen ? "w-[calc(100%-500px)] max-w-[1000px]" : "w-[calc(100%-320px)] max-w-[1200px]"}`}
       >
-        <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col w-full items-start">
+        <form
+          onSubmit={handleSubmit(onSubmit)}
+          className="flex flex-col w-full items-start"
+        >
           <SurveyCardHeader
             workingTitle=""
             currentStep={0}
@@ -341,9 +336,11 @@ const Page = () => {
         />
       </div>
       {/* 右：AIチャット */}
-      <div className={`sticky top-0 h-screen transition-all duration-500 ease-out ${
-        isChatOpen ? 'min-w-[480px] max-w-[500px]' : 'w-[320px]'
-      }`}>
+      <div
+        className={`sticky top-0 h-screen transition-all duration-500 ease-out ${
+          isChatOpen ? "min-w-[480px] max-w-[500px]" : "w-[320px]"
+        }`}
+      >
         {isChatOpen ? (
           <SurveyAiChat
             autoExpand={true}

@@ -11,57 +11,57 @@ const preview: Preview = {
       },
     },
     backgrounds: {
-      default: 'light',
+      default: "light",
       values: [
         {
-          name: 'light',
-          value: '#ffffff',
+          name: "light",
+          value: "#ffffff",
         },
         {
-          name: 'dark',
-          value: '#1a1a1a',
+          name: "dark",
+          value: "#1a1a1a",
         },
         {
-          name: 'gray',
-          value: '#f5f5f5',
+          name: "gray",
+          value: "#f5f5f5",
         },
       ],
     },
     viewport: {
       viewports: {
         mobile: {
-          name: 'Mobile',
+          name: "Mobile",
           styles: {
-            width: '375px',
-            height: '667px',
+            width: "375px",
+            height: "667px",
           },
         },
         tablet: {
-          name: 'Tablet',
+          name: "Tablet",
           styles: {
-            width: '768px',
-            height: '1024px',
+            width: "768px",
+            height: "1024px",
           },
         },
         desktop: {
-          name: 'Desktop',
+          name: "Desktop",
           styles: {
-            width: '1200px',
-            height: '800px',
+            width: "1200px",
+            height: "800px",
           },
         },
       },
     },
-    layout: 'centered',
+    layout: "centered",
   },
   globalTypes: {
     theme: {
-      description: 'Global theme for components',
-      defaultValue: 'light',
+      description: "Global theme for components",
+      defaultValue: "light",
       toolbar: {
-        title: 'Theme',
-        icon: 'circlehollow',
-        items: ['light', 'dark'],
+        title: "Theme",
+        icon: "circlehollow",
+        items: ["light", "dark"],
         dynamicTitle: true,
       },
     },

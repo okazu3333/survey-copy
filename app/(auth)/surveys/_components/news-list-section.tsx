@@ -42,10 +42,10 @@ const generateSampleNews = () => {
     const year = 2025;
     const month = Math.floor(Math.random() * 12) + 1;
     const day = Math.floor(Math.random() * 28) + 1;
-    
+
     return {
       id: String(i + 1),
-      date: `${year}/${String(month).padStart(2, '0')}/${String(day).padStart(2, '0')}`,
+      date: `${year}/${String(month).padStart(2, "0")}/${String(day).padStart(2, "0")}`,
       type: type.name,
       typeColor: type.color,
       content: `${content} ${i + 1}`,
@@ -56,10 +56,10 @@ const generateSampleNews = () => {
 export function NewsListSection() {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
-  
+
   const allNews = generateSampleNews();
   const totalPages = Math.ceil(allNews.length / itemsPerPage);
-  
+
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
   const currentNews = allNews.slice(startIndex, endIndex);
@@ -67,38 +67,38 @@ export function NewsListSection() {
   const generatePaginationItems = () => {
     const items = [];
     const maxVisiblePages = 5;
-    
+
     if (totalPages <= maxVisiblePages) {
       for (let i = 1; i <= totalPages; i++) {
         items.push(i);
       }
     } else {
       let start = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
-      let end = Math.min(totalPages, start + maxVisiblePages - 1);
-      
+      const end = Math.min(totalPages, start + maxVisiblePages - 1);
+
       if (end - start + 1 < maxVisiblePages) {
         start = Math.max(1, end - maxVisiblePages + 1);
       }
-      
+
       if (start > 1) {
         items.push(1);
         if (start > 2) {
-          items.push('ellipsis-start');
+          items.push("ellipsis-start");
         }
       }
-      
+
       for (let i = start; i <= end; i++) {
         items.push(i);
       }
-      
+
       if (end < totalPages) {
         if (end < totalPages - 1) {
-          items.push('ellipsis-end');
+          items.push("ellipsis-end");
         }
         items.push(totalPages);
       }
     }
-    
+
     return items;
   };
 
@@ -124,7 +124,9 @@ export function NewsListSection() {
                 <Badge className={`${item.typeColor} ml-1 mr-2`}>
                   {item.type}
                 </Badge>
-                <p className="text-sm text-gray-700 flex-1 leading-relaxed font-bold">{item.content}</p>
+                <p className="text-sm text-gray-700 flex-1 leading-relaxed font-bold">
+                  {item.content}
+                </p>
               </div>
             </div>
           ))}
@@ -135,15 +137,21 @@ export function NewsListSection() {
           <Pagination>
             <PaginationContent>
               <PaginationItem>
-                <PaginationPrevious 
-                  onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
-                  className={currentPage === 1 ? "pointer-events-none opacity-50" : "cursor-pointer"}
+                <PaginationPrevious
+                  onClick={() =>
+                    setCurrentPage((prev) => Math.max(1, prev - 1))
+                  }
+                  className={
+                    currentPage === 1
+                      ? "pointer-events-none opacity-50"
+                      : "cursor-pointer"
+                  }
                 />
               </PaginationItem>
-              
+
               {generatePaginationItems().map((item, index) => (
                 <PaginationItem key={index}>
-                  {item === 'ellipsis-start' || item === 'ellipsis-end' ? (
+                  {item === "ellipsis-start" || item === "ellipsis-end" ? (
                     <PaginationEllipsis />
                   ) : (
                     <PaginationLink
@@ -156,21 +164,28 @@ export function NewsListSection() {
                   )}
                 </PaginationItem>
               ))}
-              
+
               <PaginationItem>
-                <PaginationNext 
-                  onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
-                  className={currentPage === totalPages ? "pointer-events-none opacity-50" : "cursor-pointer"}
+                <PaginationNext
+                  onClick={() =>
+                    setCurrentPage((prev) => Math.min(totalPages, prev + 1))
+                  }
+                  className={
+                    currentPage === totalPages
+                      ? "pointer-events-none opacity-50"
+                      : "cursor-pointer"
+                  }
                 />
               </PaginationItem>
             </PaginationContent>
           </Pagination>
-          
+
           <div className="mt-4 text-center text-sm text-gray-600">
-            {startIndex + 1} - {Math.min(endIndex, allNews.length)} / {allNews.length} 件
+            {startIndex + 1} - {Math.min(endIndex, allNews.length)} /{" "}
+            {allNews.length} 件
           </div>
         </div>
       </CardContent>
     </Card>
   );
-} 
+}

@@ -1,4 +1,4 @@
-import type { ReactNode, ComponentType, FormEvent } from 'react';
+import type { ComponentType, FormEvent, ReactNode } from "react";
 
 // 基本的なコンポーネントのProps型
 export interface BaseComponentProps {
@@ -8,8 +8,14 @@ export interface BaseComponentProps {
 
 // バリアントを持つコンポーネントのProps型
 export interface VariantComponentProps extends BaseComponentProps {
-  variant?: 'default' | 'secondary' | 'destructive' | 'outline' | 'ghost' | 'link';
-  size?: 'default' | 'sm' | 'lg' | 'icon';
+  variant?:
+    | "default"
+    | "secondary"
+    | "destructive"
+    | "outline"
+    | "ghost"
+    | "link";
+  size?: "default" | "sm" | "lg" | "icon";
 }
 
 // フォームコンポーネントのProps型
@@ -22,10 +28,10 @@ export interface FormComponentProps extends BaseComponentProps {
 
 // アクセシビリティのProps型
 export interface AccessibilityProps {
-  'aria-label'?: string;
-  'aria-describedby'?: string;
-  'aria-labelledby'?: string;
-  'aria-hidden'?: boolean;
+  "aria-label"?: string;
+  "aria-describedby"?: string;
+  "aria-labelledby"?: string;
+  "aria-hidden"?: boolean;
   role?: string;
 }
 
@@ -43,7 +49,7 @@ export interface StoryMeta {
   title: string;
   component: ComponentType<any>;
   parameters?: {
-    layout?: 'centered' | 'padded' | 'fullscreen';
+    layout?: "centered" | "padded" | "fullscreen";
     docs?: {
       description?: {
         component?: string;
@@ -55,10 +61,23 @@ export interface StoryMeta {
 }
 
 // コンポーネントの状態型
-export type ComponentState = 'default' | 'hover' | 'focus' | 'active' | 'disabled' | 'loading' | 'error';
+export type ComponentState =
+  | "default"
+  | "hover"
+  | "focus"
+  | "active"
+  | "disabled"
+  | "loading"
+  | "error";
 
 // サイズ型
-export type ComponentSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
+export type ComponentSize = "xs" | "sm" | "md" | "lg" | "xl";
 
 // 色型
-export type ComponentColor = 'primary' | 'secondary' | 'success' | 'warning' | 'error' | 'info'; 
+export type ComponentColor =
+  | "primary"
+  | "secondary"
+  | "success"
+  | "warning"
+  | "error"
+  | "info";

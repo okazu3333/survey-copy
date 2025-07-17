@@ -59,9 +59,9 @@ export const PublishStep = ({
             const status = getStepStatus(index);
             return (
               <div key={step} className="flex items-center">
-                <StepItem 
-                  label={step} 
-                  status={status} 
+                <StepItem
+                  label={step}
+                  status={status}
                   onClick={() => handleStepClick(index)}
                   isClickable={index <= currentStep}
                 />

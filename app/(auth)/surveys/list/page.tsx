@@ -10,4 +10,4 @@ const SurveyListPage = () => {
   );
 };
 
-export default SurveyListPage; 
+export default SurveyListPage;

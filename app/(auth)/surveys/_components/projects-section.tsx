@@ -1,6 +1,13 @@
 "use client";
 
-import { Download, Eye, MessageSquare, Plus, Settings, FileText } from "lucide-react";
+import {
+  Download,
+  Eye,
+  FileText,
+  MessageSquare,
+  Plus,
+  Settings,
+} from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 import { Badge } from "@/components/ui/badge";
@@ -103,7 +110,7 @@ export function ProjectsSection() {
 
   const handleSelectAll = (checked: boolean) => {
     if (checked) {
-      setSelectedItems(projects.map(project => project.id));
+      setSelectedItems(projects.map((project) => project.id));
     } else {
       setSelectedItems([]);
     }
@@ -111,9 +118,9 @@ export function ProjectsSection() {
 
   const handleSelectItem = (projectId: string, checked: boolean) => {
     if (checked) {
-      setSelectedItems(prev => [...prev, projectId]);
+      setSelectedItems((prev) => [...prev, projectId]);
     } else {
-      setSelectedItems(prev => prev.filter(id => id !== projectId));
+      setSelectedItems((prev) => prev.filter((id) => id !== projectId));
     }
   };
 
@@ -131,15 +138,15 @@ export function ProjectsSection() {
 
             <div className="flex items-center justify-between">
               <div className="flex gap-3">
-                <Button 
-                  variant="outline" 
+                <Button
+                  variant="outline"
                   size="sm"
                   className="border-gray-300 hover:bg-gray-50 min-w-[140px] h-9 items-center justify-center"
                 >
                   選択項目を削除
                 </Button>
-                <Button 
-                  variant="outline" 
+                <Button
+                  variant="outline"
                   size="sm"
                   className="border-gray-300 hover:bg-gray-50 min-w-[180px] h-9 items-center justify-center"
                 >
@@ -147,8 +154,8 @@ export function ProjectsSection() {
                   テスト結果をダウンロード
                 </Button>
               </div>
-              <Button 
-                asChild 
+              <Button
+                asChild
                 className="bg-[#138fb5] hover:bg-[#0f7a9e] text-white shadow-sm min-w-[160px] h-9 items-center justify-center"
               >
                 <Link href="/surveys/new">
@@ -164,40 +171,77 @@ export function ProjectsSection() {
               <TableHeader>
                 <TableRow className="bg-[#75bacf] hover:bg-[#75bacf]">
                   <TableHead className="w-12 text-white">
-                    <Checkbox 
-                      checked={selectedItems.length === projects.length && projects.length > 0}
+                    <Checkbox
+                      checked={
+                        selectedItems.length === projects.length &&
+                        projects.length > 0
+                      }
                       onCheckedChange={handleSelectAll}
                     />
                   </TableHead>
-                  <TableHead className="text-white font-medium">調査コード</TableHead>
-                  <TableHead className="text-white font-medium">調査タイトル</TableHead>
-                  <TableHead className="text-white font-medium text-center">ステータス</TableHead>
-                  <TableHead className="text-white font-medium text-center">作成日時</TableHead>
-                  <TableHead className="text-white font-medium text-center">更新日時</TableHead>
-                  <TableHead className="text-white font-medium text-center">作成者</TableHead>
-                  <TableHead className="text-white font-medium text-center w-16 whitespace-nowrap">レビュー</TableHead>
-                  <TableHead className="text-white font-medium text-center w-16 whitespace-nowrap">回答画面</TableHead>
-                  <TableHead className="text-white font-medium text-center w-16 whitespace-nowrap">配信</TableHead>
-                  <TableHead className="text-white font-medium text-center w-16 whitespace-nowrap">GT表</TableHead>
+                  <TableHead className="text-white font-medium">
+                    調査コード
+                  </TableHead>
+                  <TableHead className="text-white font-medium">
+                    調査タイトル
+                  </TableHead>
+                  <TableHead className="text-white font-medium text-center">
+                    ステータス
+                  </TableHead>
+                  <TableHead className="text-white font-medium text-center">
+                    作成日時
+                  </TableHead>
+                  <TableHead className="text-white font-medium text-center">
+                    更新日時
+                  </TableHead>
+                  <TableHead className="text-white font-medium text-center">
+                    作成者
+                  </TableHead>
+                  <TableHead className="text-white font-medium text-center w-16 whitespace-nowrap">
+                    レビュー
+                  </TableHead>
+                  <TableHead className="text-white font-medium text-center w-16 whitespace-nowrap">
+                    回答画面
+                  </TableHead>
+                  <TableHead className="text-white font-medium text-center w-16 whitespace-nowrap">
+                    配信
+                  </TableHead>
+                  <TableHead className="text-white font-medium text-center w-16 whitespace-nowrap">
+                    GT表
+                  </TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {projects.map((project) => (
                   <TableRow
                     key={project.id}
-                    className={`${selectedItems.includes(project.id) ? 'bg-[#BCD6E0]' : project.rowColor} hover:bg-blue-50 transition-colors cursor-pointer`}
-                    onClick={() => handleSelectItem(project.id, !selectedItems.includes(project.id))}
+                    className={`${selectedItems.includes(project.id) ? "bg-[#BCD6E0]" : project.rowColor} hover:bg-blue-50 transition-colors cursor-pointer`}
+                    onClick={() =>
+                      handleSelectItem(
+                        project.id,
+                        !selectedItems.includes(project.id),
+                      )
+                    }
                   >
                     <TableCell>
-                      <Checkbox 
-                        checked={selectedItems.includes(project.id)} 
-                        onCheckedChange={(checked) => handleSelectItem(project.id, checked === true)}
+                      <Checkbox
+                        checked={selectedItems.includes(project.id)}
+                        onCheckedChange={(checked) =>
+                          handleSelectItem(project.id, checked === true)
+                        }
                       />
                     </TableCell>
-                    <TableCell className="font-medium text-gray-900">{project.id}</TableCell>
-                    <TableCell className="text-gray-700">{project.title}</TableCell>
+                    <TableCell className="font-medium text-gray-900">
+                      {project.id}
+                    </TableCell>
+                    <TableCell className="text-gray-700">
+                      {project.title}
+                    </TableCell>
                     <TableCell className="text-center">
-                      <Badge variant="outline" className={`${project.statusColor} font-bold`}>
+                      <Badge
+                        variant="outline"
+                        className={`${project.statusColor} font-bold`}
+                      >
                         {project.status}
                       </Badge>
                     </TableCell>
@@ -207,10 +251,12 @@ export function ProjectsSection() {
                     <TableCell className="text-sm text-gray-600 text-center">
                       {project.updatedDate}
                     </TableCell>
-                    <TableCell className="text-gray-700 text-center">{project.creator}</TableCell>
+                    <TableCell className="text-gray-700 text-center">
+                      {project.creator}
+                    </TableCell>
                     <TableCell className="text-center px-1">
-                      <Button 
-                        variant="outline" 
+                      <Button
+                        variant="outline"
                         size="sm"
                         className="border-gray-300 hover:bg-gray-50 w-8 h-8 p-0 mx-auto"
                       >
@@ -218,8 +264,8 @@ export function ProjectsSection() {
                       </Button>
                     </TableCell>
                     <TableCell className="text-center px-1">
-                      <Button 
-                        variant="outline" 
+                      <Button
+                        variant="outline"
                         size="sm"
                         className="border-gray-300 hover:bg-gray-50 w-8 h-8 p-0 mx-auto"
                       >
@@ -227,8 +273,8 @@ export function ProjectsSection() {
                       </Button>
                     </TableCell>
                     <TableCell className="text-center px-1">
-                      <Button 
-                        variant="outline" 
+                      <Button
+                        variant="outline"
                         size="sm"
                         className="border-gray-300 hover:bg-gray-50 w-8 h-8 p-0 mx-auto"
                       >
@@ -236,8 +282,8 @@ export function ProjectsSection() {
                       </Button>
                     </TableCell>
                     <TableCell className="text-center px-1">
-                      <Button 
-                        variant="outline" 
+                      <Button
+                        variant="outline"
                         size="sm"
                         className="border-gray-300 hover:bg-gray-50 w-8 h-8 p-0 mx-auto"
                       >

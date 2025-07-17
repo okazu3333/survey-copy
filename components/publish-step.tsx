@@ -79,7 +79,12 @@ type StepItemProps = {
   onClick?: () => void;
 };
 
-const StepItem = ({ label, status, isCompact = false, onClick }: StepItemProps) => {
+const StepItem = ({
+  label,
+  status,
+  isCompact = false,
+  onClick,
+}: StepItemProps) => {
   return (
     <div
       className={cn(
@@ -93,7 +98,7 @@ const StepItem = ({ label, status, isCompact = false, onClick }: StepItemProps) 
         },
       )}
       onClick={onClick}
-      style={{ cursor: onClick ? 'pointer' : 'default' }}
+      style={{ cursor: onClick ? "pointer" : "default" }}
     >
       <span className="truncate text-[10px] sm:text-xs">{label}</span>
       {status === "complete" && (

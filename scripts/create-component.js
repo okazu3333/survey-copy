@@ -1,21 +1,22 @@
 #!/usr/bin/env node
 
-const fs = require('fs');
-const path = require('path');
+const fs = require("fs");
+const path = require("path");
 
 // コマンドライン引数を取得
 const componentName = process.argv[2];
 
 if (!componentName) {
-  console.error('使用方法: npm run component:new <ComponentName>');
+  console.error("使用方法: npm run component:new <ComponentName>");
   process.exit(1);
 }
 
 // コンポーネント名をパスカルケースに変換
-const pascalCase = componentName.charAt(0).toUpperCase() + componentName.slice(1);
+const pascalCase =
+  componentName.charAt(0).toUpperCase() + componentName.slice(1);
 
 // コンポーネントディレクトリを作成
-const componentDir = path.join(__dirname, '..', 'components', 'ui', pascalCase);
+const componentDir = path.join(__dirname, "..", "components", "ui", pascalCase);
 if (!fs.existsSync(componentDir)) {
   fs.mkdirSync(componentDir, { recursive: true });
 }
@@ -168,15 +169,21 @@ export type { ${pascalCase}Props } from './${pascalCase}';
 `;
 
 // ファイルを書き込み
-fs.writeFileSync(path.join(componentDir, `${pascalCase}.tsx`), componentContent);
-fs.writeFileSync(path.join(componentDir, `${pascalCase}.stories.tsx`), storyContent);
-fs.writeFileSync(path.join(componentDir, 'index.ts'), indexContent);
+fs.writeFileSync(
+  path.join(componentDir, `${pascalCase}.tsx`),
+  componentContent,
+);
+fs.writeFileSync(
+  path.join(componentDir, `${pascalCase}.stories.tsx`),
+  storyContent,
+);
+fs.writeFileSync(path.join(componentDir, "index.ts"), indexContent);
 
 console.log(`✅ ${pascalCase}コンポーネントが作成されました:`);
 console.log(`   📁 ${componentDir}/`);
 console.log(`   📄 ${pascalCase}.tsx`);
 console.log(`   📄 ${pascalCase}.stories.tsx`);
 console.log(`   📄 index.ts`);
-console.log('');
-console.log('次のコマンドでStorybookを起動できます:');
-console.log('   npm run storybook'); 
+console.log("");
+console.log("次のコマンドでStorybookを起動できます:");
+console.log("   npm run storybook");

@@ -3,7 +3,7 @@ import { type NextRequest, NextResponse } from "next/server";
 export function middleware(_request: NextRequest) {
   // 認証を一時的に無効化
   return NextResponse.next();
-  
+
   // 以下は認証が有効な場合のコード
   /*
   const basicAuth = request.headers.get("authorization");
