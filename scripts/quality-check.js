@@ -261,6 +261,31 @@ function checkSecurity() {
   }
 }
 
+// CSS依存関係チェック
+function checkCSSDependencies() {
+  logInfo("CSS依存関係チェック中...");
+
+  try {
+    // CSS依存関係分析スクリプトを実行
+    const cssAnalyzer = require("./css-dependency-analyzer");
+    cssAnalyzer.analyzeTailwindDependencies();
+    cssAnalyzer.analyzeGlobalCSS();
+    cssAnalyzer.detectDependencyIssues();
+
+    // 問題があれば警告として記録
+    const analysis = cssAnalyzer.cssAnalysis;
+    if (analysis.recommendations.length > 0) {
+      results.warnings.push(`CSS依存関係の問題が検出されました (${analysis.recommendations.length}件)`);
+    }
+
+    results.passed.push("CSS依存関係チェック完了");
+    return true;
+  } catch (error) {
+    results.warnings.push(`CSS依存関係チェックエラー: ${error.message}`);
+    return false;
+  }
+}
+
 // 結果の表示
 function displayResults() {
   console.log("\n" + "=".repeat(60));
@@ -318,6 +343,7 @@ function main() {
     checkTypeDefinitions,
     checkBuild,
     checkSecurity,
+    checkCSSDependencies,
   ];
 
   checks.forEach((check) => {
@@ -346,5 +372,6 @@ module.exports = {
   checkTypeDefinitions,
   checkBuild,
   checkSecurity,
+  checkCSSDependencies,
   results,
 };
