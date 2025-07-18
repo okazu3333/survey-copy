@@ -38,24 +38,9 @@ export const PublishStep = ({
     return "next";
   };
 
-  // コンテナ内に収めるために、ボタン幅を調整
-  const getStepWidth = (step: string, status: StepStatus) => {
-    const charCount = step.length;
-
-    // チェックマークが付く場合は、より大きな幅を確保
-    if (status === "complete") {
-      if (charCount <= 8) {
-        return "w-28 sm:w-32 lg:w-36";
-      }
-      return "w-32 sm:w-36 lg:w-40";
-    }
-
-    // 通常のボタン幅
-    if (charCount <= 8) {
-      return "w-24 sm:w-28 lg:w-32";
-    }
-
-    return "w-28 sm:w-32 lg:w-36";
+  // 全てのステップを同じ幅に統一
+  const getStepWidth = () => {
+    return "w-24 sm:w-28 lg:w-32";
   };
 
   return (
@@ -78,7 +63,7 @@ export const PublishStep = ({
                   <div
                     className={cn(
                       "flex items-center justify-center gap-1 rounded px-2 py-1 text-xs sm:gap-2 sm:px-3 h-6 sm:h-7 min-w-0",
-                      getStepWidth(step, status),
+                      getStepWidth(),
                       "transition-all duration-200 hover:scale-105",
                       {
                         "bg-[#138FB5] font-bold text-white shadow-md":
