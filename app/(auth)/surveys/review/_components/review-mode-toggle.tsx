@@ -12,17 +12,11 @@ type Mode = {
 };
 
 const modesReviewee: Mode[] = [
-  { id: "edit", label: "編集", path: "/surveys/question/edit" },
   { id: "preview", label: "一覧プレビュー", path: "/surveys/review/preview" },
   { id: "logic", label: "ロジックチェック", path: "/surveys/review/logic" },
 ];
 
 const modesReviewer: Mode[] = [
-  {
-    id: "edit",
-    label: "編集",
-    path: "/surveys/question/edit",
-  },
   {
     id: "preview",
     label: "一覧プレビュー",
@@ -79,7 +73,7 @@ export const ReviewModeToggle = ({
       <div className="flex items-center justify-between self-stretch w-full px-6 py-0">
         <div className="inline-flex items-center justify-end gap-2">
           <div className="inline-flex gap-2 items-center">
-            <span className="font-medium text-[#138FB5] text-xs leading-8 whitespace-nowrap">
+            <span className="font-bold text-[#138FB5] text-xs leading-8 whitespace-nowrap underline">
               モード切り替え
             </span>
           </div>
