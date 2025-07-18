@@ -30,7 +30,7 @@ const Page = () => {
   const [screeningQuestions, setScreeningQuestions] = useState<string[]>([]);
   const [mainSurveyQuestions, setMainSurveyQuestions] = useState<string[]>([]);
 
-  const fixedScreeningQuestions = ["性別", "年齢", "居住地（都道府県単位）"];
+  const fixedScreeningQuestions: string[] = [];
 
   const { handleSubmit } = useForm<SectionFormData>();
 
@@ -81,7 +81,7 @@ const Page = () => {
             )}
           >
             <SurveyCardHeader
-              workingTitle="00008　男性化粧品についての調査"
+              workingTitle=""
               currentStep={1}
               enableDefaultNavigation={true}
             />
@@ -118,7 +118,7 @@ const Page = () => {
                 {/* Fixed Screening Questions */}
                 <div className="flex flex-col items-start gap-6 w-full">
                   <div className="flex flex-col items-end w-full">
-                    <div className="flex h-10 items-center gap-4 w-full">
+                    <div className="flex h-10 items-center gap-4 w-full mt-5">
                       <div className="flex items-center gap-2">
                         <label className="text-sm font-bold text-[#333333] whitespace-nowrap">
                           スクリーニング設問【固定】

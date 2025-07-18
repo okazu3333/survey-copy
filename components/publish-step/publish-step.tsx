@@ -39,16 +39,22 @@ export const PublishStep = ({
   };
 
   // コンテナ内に収めるために、ボタン幅を調整
-  const getStepWidth = (step: string) => {
+  const getStepWidth = (step: string, status: StepStatus) => {
     const charCount = step.length;
     
-    // 5つのボタンと4つの区切り線がコンテナ内に収まるように調整
+    // チェックマークが付く場合は、より大きな幅を確保
+    if (status === "complete") {
+      if (charCount <= 8) {
+        return "w-28 sm:w-32 lg:w-36";
+      }
+      return "w-32 sm:w-36 lg:w-40";
+    }
+    
+    // 通常のボタン幅
     if (charCount <= 8) {
-      // モバイル: w-24, タブレット: w-28, デスクトップ: w-32
       return "w-24 sm:w-28 lg:w-32";
     }
     
-    // 8文字を超える場合は、より大きな幅を設定
     return "w-28 sm:w-32 lg:w-36";
   };
 
@@ -69,20 +75,20 @@ export const PublishStep = ({
               const status = getStepStatus(index);
               return (
                 <div key={step} className="flex items-center flex-shrink-0">
-                  <div
-                    className={cn(
-                      "flex items-center justify-center gap-1 rounded px-2 py-1 text-xs sm:gap-2 sm:px-3 h-6 sm:h-7 min-w-0",
-                      getStepWidth(step),
-                      "transition-all duration-200 hover:scale-105",
-                      {
-                        "bg-[#138FB5] font-bold text-white shadow-md": status === "current",
-                        "bg-white font-medium text-[#138FB5] hover:bg-gray-50":
-                          status === "next" || status === "complete",
-                      },
-                    )}
-                    onClick={() => onStepClick?.(index)}
-                    style={{ cursor: onStepClick ? "pointer" : "default" }}
-                  >
+                                      <div
+                      className={cn(
+                        "flex items-center justify-center gap-1 rounded px-2 py-1 text-xs sm:gap-2 sm:px-3 h-6 sm:h-7 min-w-0",
+                        getStepWidth(step, status),
+                        "transition-all duration-200 hover:scale-105",
+                        {
+                          "bg-[#138FB5] font-bold text-white shadow-md": status === "current",
+                          "bg-white font-medium text-[#138FB5] hover:bg-gray-50":
+                            status === "next" || status === "complete",
+                        },
+                      )}
+                      onClick={() => onStepClick?.(index)}
+                      style={{ cursor: onStepClick ? "pointer" : "default" }}
+                    >
                     <span className="truncate text-[9px] sm:text-[10px] lg:text-xs leading-tight px-0.5">{step}</span>
                     {status === "complete" && (
                       <CircleCheck className="h-3 w-3 flex-shrink-0 text-[#4BBC80] sm:h-4 sm:w-4" />

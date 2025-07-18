@@ -30,8 +30,14 @@ const ReviewLayoutContent = ({
               "w-[calc(100%-500px)]" // 常に同じ幅を維持（新規調査作成画面と同様）
             )}
           >
-            {children}
-            {confirm}
+            {/* メインコンテンツを先に表示 */}
+            <div className="flex-1">
+              {children}
+            </div>
+            {/* 確認ボタンを後から表示 */}
+            <div className="flex-shrink-0">
+              {confirm}
+            </div>
           </div>
           {review}
         </div>
