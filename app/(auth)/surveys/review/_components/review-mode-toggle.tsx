@@ -12,11 +12,17 @@ type Mode = {
 };
 
 const modesReviewee: Mode[] = [
+  { id: "edit", label: "編集", path: "/surveys/question/edit" },
   { id: "preview", label: "一覧プレビュー", path: "/surveys/review/preview" },
   { id: "logic", label: "ロジックチェック", path: "/surveys/review/logic" },
 ];
 
 const modesReviewer: Mode[] = [
+  {
+    id: "edit",
+    label: "編集",
+    path: "/surveys/question/edit",
+  },
   {
     id: "preview",
     label: "一覧プレビュー",
