@@ -31,8 +31,15 @@ export const ModeToggle = ({ currentMode }: ModeToggleProps) => {
     router.push("/surveys/review/preview");
   };
 
+  const handleTestExecution = () => {
+    // TODO: テスト実行のロジックを実装
+    console.log("テスト実行を開始します");
+  };
+
+
+
   return (
-    <div className="flex items-center justify-between self-stretch w-full px-6 py-0">
+    <div className="flex items-center justify-between self-stretch w-full py-0">
       <div className="inline-flex items-center justify-end gap-2">
         <div className="inline-flex gap-2 items-center">
           <span className="font-medium text-[#138FB5] text-xs leading-8 whitespace-nowrap">
@@ -64,14 +71,26 @@ export const ModeToggle = ({ currentMode }: ModeToggleProps) => {
         </div>
       </div>
 
-      <Button
-        onClick={handleSaveSurvey}
-        className="h-10 px-6 py-4 bg-[#556064] rounded-[20px] inline-flex items-center justify-center gap-4"
-      >
-        <span className="font-bold text-white text-base text-center leading-6 whitespace-nowrap">
-          調査票を保存する
-        </span>
-      </Button>
+      <div className="flex flex-col gap-2">
+        <div className="flex items-center gap-2">
+          <Button
+            onClick={handleTestExecution}
+            className="h-10 px-6 py-4 bg-white border-2 border-[#10B981] hover:bg-gray-50 rounded-[20px] inline-flex items-center justify-center gap-4"
+          >
+            <span className="font-bold text-[#10B981] text-base text-center leading-6 whitespace-nowrap">
+              テスト実行
+            </span>
+          </Button>
+          <Button
+            onClick={handleSaveSurvey}
+            className="h-10 px-6 py-4 bg-[#10B981] hover:bg-[#059669] rounded-[20px] inline-flex items-center justify-center gap-4"
+          >
+            <span className="font-bold text-white text-base text-center leading-6 whitespace-nowrap">
+              調査票を保存する
+            </span>
+          </Button>
+        </div>
+      </div>
     </div>
   );
 };

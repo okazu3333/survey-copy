@@ -1,19 +1,26 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { SurveyCardHeader } from "@/components/survey-card-header";
 import { ModeToggle } from "../_components/mode-toggle";
 import { SurveyPreviewSection } from "./_components/survey-preview-section";
 
 const Page = () => {
+  const router = useRouter();
+
+  const handleGoToReview = () => {
+    router.push("/surveys/review/preview");
+  };
+
   return (
     <div className="min-h-screen bg-gray-100">
       <main className="w-full py-6 px-4">
-        <div className="flex gap-4 max-w-[1440px] mx-auto">
-          {/* 左：メインコンテンツ */}
-          <div className="flex flex-col gap-0 transition-all duration-300 w-[calc(100%-500px)]">
+        <div className="flex justify-center max-w-[1440px] mx-auto">
+          {/* メインコンテンツ */}
+          <div className="flex flex-col gap-0 w-full max-w-[1000px]">
             <SurveyCardHeader
               title="設問の設定"
-              workingTitle="00008　男性化粧品についての調査"
+              workingTitle=""
               currentStep={2}
               enableDefaultNavigation={true}
             />

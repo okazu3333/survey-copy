@@ -1,6 +1,7 @@
 /** biome-ignore-all lint/suspicious/noExplicitAny: so many any */
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { useRouter } from "next/navigation";
 import {
   type Section,
   SurveySectionCard,
@@ -8,6 +9,7 @@ import {
 import { Card } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
+import { Button } from "@/components/ui/button";
 
 // Data for screening survey questions
 const screeningSections: Section[] = [
@@ -269,6 +271,7 @@ const TabSelectionSection = ({
 };
 
 export const SurveyPreviewSection = () => {
+  const router = useRouter();
   const [activeTab, setActiveTab] = useState<TabType>("screening");
   const { control, handleSubmit, watch, setValue, getValues } =
     useForm<QuestionFormData>({
@@ -293,6 +296,10 @@ export const SurveyPreviewSection = () => {
     console.log("Form submitted:", data);
   };
 
+  const handleGoToReview = () => {
+    router.push("/surveys/review/preview");
+  };
+
   // Get current sections based on active tab
   const currentSections =
     activeTab === "screening" ? screeningSections : mainSurveySections;
@@ -302,7 +309,15 @@ export const SurveyPreviewSection = () => {
       onSubmit={handleSubmit(onSubmit)}
       className="flex flex-col items-start relative self-stretch w-full"
     >
-      <TabSelectionSection activeTab={activeTab} onTabChange={setActiveTab} />
+      <div className="flex items-center justify-between w-full">
+        <TabSelectionSection activeTab={activeTab} onTabChange={setActiveTab} />
+        <Button
+          onClick={handleGoToReview}
+          className="h-10 px-8 py-2 bg-[#556064] text-white hover:bg-[#4B5563] font-medium text-base"
+        >
+          レビューへ進む
+        </Button>
+      </div>
       <Card className="flex flex-col items-start gap-4 p-4 relative self-stretch w-full bg-[#138FB5] rounded-lg">
         <ScrollArea className="w-full h-[620px]">
           <div className="flex flex-col items-start gap-4 relative w-full">

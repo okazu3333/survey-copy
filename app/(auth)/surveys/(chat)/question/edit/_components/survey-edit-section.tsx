@@ -1,14 +1,17 @@
+
 import { RadioGroup, RadioGroupItem } from "@radix-ui/react-radio-group";
 import { Separator } from "@radix-ui/react-separator";
 import { GripVertical, HelpCircle, Lock, Plus, Trash, X } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { useRouter } from "next/navigation";
 import { Card, CardContent } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Select, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
+import { Button } from "@/components/ui/button";
 
 type TabType = "screening" | "main";
 
@@ -247,6 +250,8 @@ type SurveyEditSectionProps = {
 };
 
 export const SurveyEditSection = ({ groupId }: SurveyEditSectionProps) => {
+  const router = useRouter();
+  
   // Function to get questions based on groupId
   const getQuestionsForGroup = (id: string) => {
     switch (id) {
@@ -302,6 +307,10 @@ export const SurveyEditSection = ({ groupId }: SurveyEditSectionProps) => {
 
   const onSubmit = (data: SettingsFormData) => {
     console.log("Settings form submitted:", data);
+  };
+
+  const handleGoToReview = () => {
+    router.push("/surveys/review/preview");
   };
 
   // Render screening survey content
@@ -1049,9 +1058,17 @@ export const SurveyEditSection = ({ groupId }: SurveyEditSectionProps) => {
 
   return (
     <div className="flex flex-col items-start relative self-stretch w-full">
-      {!groupId && (
-        <TabSelectionSection activeTab={activeTab} onTabChange={setActiveTab} />
-      )}
+      <div className="flex items-center justify-between w-full">
+        {!groupId && (
+          <TabSelectionSection activeTab={activeTab} onTabChange={setActiveTab} />
+        )}
+        <Button
+          onClick={handleGoToReview}
+          className="h-10 px-8 py-2 bg-[#556064] text-white hover:bg-[#4B5563] font-medium text-base"
+        >
+          レビューへ進む
+        </Button>
+      </div>
       <Card className="flex flex-col items-start gap-4 p-4 relative self-stretch w-full flex-[0_0_auto] bg-[#138fb5] rounded-lg">
         <div className="inline-flex items-start gap-1 relative flex-[0_0_auto]">
           <div className="inline-flex h-6 items-center gap-2 pl-2 pr-3 py-0 relative flex-[0_0_auto] bg-white rounded border border-solid border-white cursor-pointer">

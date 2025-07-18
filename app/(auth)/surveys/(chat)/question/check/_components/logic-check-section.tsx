@@ -2,8 +2,10 @@ import { AnimatePresence, motion } from "framer-motion";
 import { Maximize, X } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { useRouter } from "next/navigation";
 import { Card } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { Button } from "@/components/ui/button";
 import { SurveyContent } from "./survey-content";
 
 type QuestionFormData = {
@@ -15,6 +17,7 @@ type QuestionFormData = {
 };
 
 export const LogicCheckSection = () => {
+  const router = useRouter();
   const { handleSubmit } = useForm<QuestionFormData>({
     defaultValues: {
       q1: "",
@@ -29,10 +32,23 @@ export const LogicCheckSection = () => {
     console.log("Form submitted:", data);
   };
 
+  const handleGoToReview = () => {
+    router.push("/surveys/review/preview");
+  };
+
   const [isExpanded, setIsExpanded] = useState(false);
 
   return (
     <div className="flex flex-col items-start relative self-stretch w-full">
+      <div className="flex items-center justify-between w-full">
+        <div></div>
+        <Button
+          onClick={handleGoToReview}
+          className="h-10 px-8 py-2 bg-[#556064] text-white hover:bg-[#4B5563] font-medium text-base"
+        >
+          レビューへ進む
+        </Button>
+      </div>
       <motion.div
         layoutId="survey-card"
         className="flex flex-col items-start relative self-stretch w-full"
