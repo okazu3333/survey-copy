@@ -313,9 +313,12 @@ export const SurveyPreviewSection = () => {
         <TabSelectionSection activeTab={activeTab} onTabChange={setActiveTab} />
         <Button
           onClick={handleGoToReview}
-          className="h-10 px-8 py-2 bg-[#556064] text-white hover:bg-[#4B5563] font-medium text-base"
+                      className="h-10 px-6 py-4 bg-[#556064] hover:bg-[#4a5458] rounded-[20px] inline-flex items-center justify-center gap-3 w-[176px]"
         >
-          レビューへ進む
+          <span className="font-bold text-white text-base text-center leading-6 whitespace-nowrap">
+            レビューへ進む
+          </span>
+          <span className="text-white text-base">&gt;</span>
         </Button>
       </div>
       <Card className="flex flex-col items-start gap-4 p-4 relative self-stretch w-full bg-[#138FB5] rounded-lg">

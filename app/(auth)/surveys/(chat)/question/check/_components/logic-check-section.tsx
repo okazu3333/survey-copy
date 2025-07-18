@@ -44,9 +44,12 @@ export const LogicCheckSection = () => {
         <div></div>
         <Button
           onClick={handleGoToReview}
-          className="h-10 px-8 py-2 bg-[#556064] text-white hover:bg-[#4B5563] font-medium text-base"
+                      className="h-10 px-6 py-4 bg-[#556064] hover:bg-[#4a5458] rounded-[20px] inline-flex items-center justify-center gap-3 w-[176px]"
         >
-          レビューへ進む
+          <span className="font-bold text-white text-base text-center leading-6 whitespace-nowrap">
+            レビューへ進む
+          </span>
+          <span className="text-white text-base">&gt;</span>
         </Button>
       </div>
       <motion.div
