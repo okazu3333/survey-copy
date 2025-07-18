@@ -78,9 +78,9 @@ const generateSampleData = () => {
 export function SurveyListSection() {
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
+  const [allSurveys] = useState(() => generateSampleData()); // 初期化時に1回だけ実行
   const itemsPerPage = 20;
 
-  const allSurveys = generateSampleData();
   const totalPages = Math.ceil(allSurveys.length / itemsPerPage);
 
   const startIndex = (currentPage - 1) * itemsPerPage;

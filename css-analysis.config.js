@@ -1,4 +1,4 @@
-module.exports = {
+export default {
   // 分析対象ディレクトリ
   directories: {
     components: [

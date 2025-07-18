@@ -1,371 +1,200 @@
 #!/usr/bin/env node
 
-const fs = require('fs');
-const path = require('path');
-const { execSync } = require('child_process');
+/**
+ * CSS依存関係分析ツール (コンポーネント化版)
+ * 
+ * 使用方法:
+ *   node scripts/css-dependency-analyzer.js [options]
+ * 
+ * オプション:
+ *   --config <file>     設定ファイルのパス (デフォルト: css-analysis.config.js)
+ *   --output <format>   出力形式 (console, json, html, markdown)
+ *   --file <path>       出力ファイルのパス
+ *   --detailed          詳細レポートを生成
+ *   --help              ヘルプを表示
+ */
 
-// 色付きログ出力
-const colors = {
-  reset: '\x1b[0m',
-  red: '\x1b[31m',
-  green: '\x1b[32m',
-  yellow: '\x1b[33m',
-  blue: '\x1b[34m',
-  magenta: '\x1b[35m',
-  cyan: '\x1b[36m',
-};
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
-function log(message, color = 'reset') {
-  console.log(`${colors[color]}${message}${colors.reset}`);
-}
+// TypeScriptファイルを動的にインポート
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
-function logInfo(message) {
-  log(`ℹ️  ${message}`, 'blue');
-}
+// プロジェクトルートのパスを取得
+const projectRoot = path.resolve(__dirname, '..');
 
-function logSuccess(message) {
-  log(`✅ ${message}`, 'green');
-}
-
-function logWarning(message) {
-  log(`⚠️  ${message}`, 'yellow');
-}
-
-function logError(message) {
-  log(`❌ ${message}`, 'red');
-}
-
-// CSS依存関係の分析結果
-const cssAnalysis = {
-  tailwindClasses: new Map(),
-  customCSS: new Map(),
-  componentDependencies: new Map(),
-  globalStyles: new Map(),
-  issues: [],
-  recommendations: []
-};
-
-// Tailwind CSSクラスの依存関係を分析
-function analyzeTailwindDependencies() {
-  logInfo('Tailwind CSSクラスの依存関係を分析中...');
+// 設定ファイルを読み込み
+async function loadConfig(configPath) {
+  const fullPath = path.resolve(projectRoot, configPath);
   
-  const componentDirs = [
-    'components/ui',
-    'app/_components',
-    'app/(auth)',
-    'components'
-  ];
-  
-  componentDirs.forEach(dir => {
-    if (fs.existsSync(dir)) {
-      analyzeDirectory(dir);
-    }
-  });
-  
-  // Tailwind設定ファイルの分析
-  if (fs.existsSync('tailwind.config.ts')) {
-    analyzeTailwindConfig();
+  if (!fs.existsSync(fullPath)) {
+    console.error(`❌ 設定ファイルが見つかりません: ${fullPath}`);
+    process.exit(1);
   }
-  
-  logSuccess('Tailwind CSS依存関係の分析完了');
-}
 
-// ディレクトリ内のファイルを分析
-function analyzeDirectory(dirPath) {
-  const files = fs.readdirSync(dirPath, { withFileTypes: true });
-  
-  files.forEach(file => {
-    const fullPath = path.join(dirPath, file.name);
-    
-    if (file.isDirectory()) {
-      analyzeDirectory(fullPath);
-    } else if (file.name.endsWith('.tsx') || file.name.endsWith('.ts')) {
-      analyzeComponentFile(fullPath);
-    }
-  });
-}
-
-// コンポーネントファイルの分析
-function analyzeComponentFile(filePath) {
   try {
-    const content = fs.readFileSync(filePath, 'utf8');
-    const componentName = path.basename(filePath, path.extname(filePath));
-    
-    // className属性を抽出
-    const classNameMatches = content.match(/className\s*=\s*["'`]([^"'`]+)["'`]/g);
-    const cnMatches = content.match(/cn\s*\(\s*([^)]+)\s*\)/g);
-    
-    const classes = new Set();
-    
-    // 通常のclassName属性
-    if (classNameMatches) {
-      classNameMatches.forEach(match => {
-        const classValue = match.match(/className\s*=\s*["'`]([^"'`]+)["'`]/)[1];
-        classValue.split(' ').forEach(cls => {
-          if (cls.trim()) classes.add(cls.trim());
-        });
-      });
-    }
-    
-    // cn()関数内のクラス
-    if (cnMatches) {
-      cnMatches.forEach(match => {
-        const cnContent = match.match(/cn\s*\(\s*([^)]+)\s*\)/)[1];
-        // 文字列リテラルを抽出
-        const stringMatches = cnContent.match(/["'`]([^"'`]+)["'`]/g);
-        if (stringMatches) {
-          stringMatches.forEach(strMatch => {
-            const classValue = strMatch.replace(/["'`]/g, '');
-            classValue.split(' ').forEach(cls => {
-              if (cls.trim()) classes.add(cls.trim());
-            });
-          });
-        }
-      });
-    }
-    
-    if (classes.size > 0) {
-      cssAnalysis.tailwindClasses.set(componentName, Array.from(classes));
-    }
-    
-    // コンポーネントの依存関係を分析
-    analyzeComponentDependencies(content, componentName);
-    
+    const config = await import(fullPath);
+    return config.default || config;
   } catch (error) {
-    logError(`ファイル分析エラー (${filePath}): ${error.message}`);
-  }
-}
-
-// コンポーネントの依存関係を分析
-function analyzeComponentDependencies(content, componentName) {
-  const dependencies = new Set();
-  
-  // import文を抽出
-  const importMatches = content.match(/import\s+.*?from\s+["'`]([^"'`]+)["'`]/g);
-  if (importMatches) {
-    importMatches.forEach(match => {
-      const importPath = match.match(/from\s+["'`]([^"'`]+)["'`]/)[1];
-      if (importPath.startsWith('@/') || importPath.startsWith('./') || importPath.startsWith('../')) {
-        dependencies.add(importPath);
-      }
-    });
-  }
-  
-  if (dependencies.size > 0) {
-    cssAnalysis.componentDependencies.set(componentName, Array.from(dependencies));
-  }
-}
-
-// Tailwind設定ファイルの分析
-function analyzeTailwindConfig() {
-  try {
-    const content = fs.readFileSync('tailwind.config.ts', 'utf8');
-    
-    // カスタムテーマの抽出
-    const themeMatches = content.match(/theme:\s*{([^}]+)}/g);
-    if (themeMatches) {
-      logInfo('カスタムTailwindテーマを検出');
-      cssAnalysis.globalStyles.set('tailwind-theme', 'カスタムテーマ設定あり');
-    }
-    
-    // プラグインの抽出
-    const pluginMatches = content.match(/plugins:\s*\[([^\]]+)\]/g);
-    if (pluginMatches) {
-      logInfo('Tailwindプラグインを検出');
-      cssAnalysis.globalStyles.set('tailwind-plugins', 'プラグイン設定あり');
-    }
-    
-  } catch (error) {
-    logError(`Tailwind設定分析エラー: ${error.message}`);
-  }
-}
-
-// グローバルCSSファイルの分析
-function analyzeGlobalCSS() {
-  logInfo('グローバルCSSファイルを分析中...');
-  
-  const cssFiles = [
-    'app/globals.css',
-    'styles/globals.css',
-    'styles/main.css'
-  ];
-  
-  cssFiles.forEach(cssFile => {
-    if (fs.existsSync(cssFile)) {
-      analyzeCSSFile(cssFile);
-    }
-  });
-  
-  logSuccess('グローバルCSS分析完了');
-}
-
-// CSSファイルの分析
-function analyzeCSSFile(filePath) {
-  try {
-    const content = fs.readFileSync(filePath, 'utf8');
-    const fileName = path.basename(filePath);
-    
-    // CSS変数の抽出
-    const cssVars = content.match(/--[^:]+:\s*[^;]+;/g);
-    if (cssVars) {
-      cssAnalysis.globalStyles.set(`${fileName}-variables`, cssVars.length);
-    }
-    
-    // カスタムクラスの抽出
-    const customClasses = content.match(/\.[a-zA-Z][a-zA-Z0-9_-]*\s*{/g);
-    if (customClasses) {
-      const classes = customClasses.map(cls => cls.replace(/[.{]/g, '').trim());
-      cssAnalysis.customCSS.set(fileName, classes);
-    }
-    
-    // @layerディレクティブの分析
-    const layerMatches = content.match(/@layer\s+([^{]+){/g);
-    if (layerMatches) {
-      logInfo(`${fileName}: Tailwindレイヤーを検出`);
-      cssAnalysis.globalStyles.set(`${fileName}-layers`, layerMatches.length);
-    }
-    
-  } catch (error) {
-    logError(`CSSファイル分析エラー (${filePath}): ${error.message}`);
-  }
-}
-
-// 依存関係の問題を検出
-function detectDependencyIssues() {
-  logInfo('依存関係の問題を検出中...');
-  
-  // 未使用のクラスを検出
-  const allClasses = new Set();
-  cssAnalysis.tailwindClasses.forEach(classes => {
-    classes.forEach(cls => allClasses.add(cls));
-  });
-  
-  // 重複するクラスパターンを検出
-  const classPatterns = new Map();
-  cssAnalysis.tailwindClasses.forEach((classes, component) => {
-    const pattern = classes.sort().join(' ');
-    if (classPatterns.has(pattern)) {
-      classPatterns.get(pattern).push(component);
-    } else {
-      classPatterns.set(pattern, [component]);
-    }
-  });
-  
-  // 重複パターンの報告
-  classPatterns.forEach((components, pattern) => {
-    if (components.length > 1) {
-      cssAnalysis.recommendations.push({
-        type: 'duplicate-pattern',
-        message: `重複するクラスパターン: ${components.join(', ')}`,
-        pattern: pattern
-      });
-    }
-  });
-  
-  // 長すぎるクラスリストを検出
-  cssAnalysis.tailwindClasses.forEach((classes, component) => {
-    if (classes.length > 10) {
-      cssAnalysis.recommendations.push({
-        type: 'long-class-list',
-        message: `${component}: クラス数が多すぎます (${classes.length}個)`,
-        classes: classes
-      });
-    }
-  });
-  
-  logSuccess('依存関係問題の検出完了');
-}
-
-// レポートの生成
-function generateReport() {
-  console.log('\n' + '='.repeat(80));
-  log('CSS依存関係分析レポート', 'cyan');
-  console.log('='.repeat(80));
-  
-  // Tailwindクラス使用状況
-  console.log('\n📊 Tailwind CSSクラス使用状況:');
-  cssAnalysis.tailwindClasses.forEach((classes, component) => {
-    log(`  ${component}: ${classes.length}個のクラス`, 'blue');
-    if (classes.length > 0) {
-      console.log(`    ${classes.join(' ')}`);
-    }
-  });
-  
-  // カスタムCSS
-  console.log('\n🎨 カスタムCSS:');
-  cssAnalysis.customCSS.forEach((classes, file) => {
-    log(`  ${file}: ${classes.length}個のクラス`, 'blue');
-    if (classes.length > 0) {
-      console.log(`    ${classes.join(', ')}`);
-    }
-  });
-  
-  // グローバルスタイル
-  console.log('\n🌍 グローバルスタイル:');
-  cssAnalysis.globalStyles.forEach((value, key) => {
-    log(`  ${key}: ${value}`, 'blue');
-  });
-  
-  // コンポーネント依存関係
-  console.log('\n🔗 コンポーネント依存関係:');
-  cssAnalysis.componentDependencies.forEach((deps, component) => {
-    log(`  ${component}:`, 'blue');
-    deps.forEach(dep => console.log(`    → ${dep}`));
-  });
-  
-  // 推奨事項
-  if (cssAnalysis.recommendations.length > 0) {
-    console.log('\n💡 推奨事項:');
-    cssAnalysis.recommendations.forEach((rec, index) => {
-      log(`  ${index + 1}. ${rec.message}`, 'yellow');
-      if (rec.pattern) {
-        console.log(`     パターン: ${rec.pattern}`);
-      }
-    });
-  }
-  
-  // 統計情報
-  const totalComponents = cssAnalysis.tailwindClasses.size;
-  const totalClasses = Array.from(cssAnalysis.tailwindClasses.values())
-    .reduce((sum, classes) => sum + classes.length, 0);
-  const totalCustomClasses = Array.from(cssAnalysis.customCSS.values())
-    .reduce((sum, classes) => sum + classes.length, 0);
-  
-  console.log('\n📈 統計情報:');
-  log(`  コンポーネント数: ${totalComponents}`, 'green');
-  log(`  Tailwindクラス数: ${totalClasses}`, 'green');
-  log(`  カスタムクラス数: ${totalCustomClasses}`, 'green');
-  log(`  推奨事項数: ${cssAnalysis.recommendations.length}`, 'yellow');
-  
-  console.log('\n' + '='.repeat(80));
-}
-
-// メイン実行関数
-function main() {
-  log('🚀 CSS依存関係分析を開始します...', 'cyan');
-  
-  try {
-    analyzeTailwindDependencies();
-    analyzeGlobalCSS();
-    detectDependencyIssues();
-    generateReport();
-    
-    logSuccess('CSS依存関係分析が完了しました！');
-  } catch (error) {
-    logError(`分析エラー: ${error.message}`);
+    console.error(`❌ 設定ファイルの読み込みエラー: ${error.message}`);
     process.exit(1);
   }
 }
 
-// スクリプトが直接実行された場合
-if (require.main === module) {
-  main();
+// コマンドライン引数を解析
+function parseArgs() {
+  const args = process.argv.slice(2);
+  const options = {
+    config: 'css-analysis.config.js',
+    output: 'console',
+    file: null,
+    detailed: false,
+    help: false
+  };
+
+  for (let i = 0; i < args.length; i++) {
+    const arg = args[i];
+    
+    switch (arg) {
+      case '--config':
+        options.config = args[++i];
+        break;
+      case '--output':
+        options.output = args[++i];
+        break;
+      case '--file':
+        options.file = args[++i];
+        break;
+      case '--detailed':
+        options.detailed = true;
+        break;
+      case '--help':
+      case '-h':
+        options.help = true;
+        break;
+      default:
+        console.warn(`⚠️  不明なオプション: ${arg}`);
+    }
+  }
+
+  return options;
 }
 
-module.exports = {
-  analyzeTailwindDependencies,
-  analyzeGlobalCSS,
-  detectDependencyIssues,
-  generateReport,
-  cssAnalysis
-}; 
+// ヘルプを表示
+function showHelp() {
+  console.log(`
+CSS依存関係分析ツール (コンポーネント化版)
+
+使用方法:
+  node scripts/css-dependency-analyzer.js [options]
+
+オプション:
+  --config <file>     設定ファイルのパス (デフォルト: css-analysis.config.js)
+  --output <format>   出力形式 (console, json, html, markdown)
+  --file <path>       出力ファイルのパス
+  --detailed          詳細レポートを生成
+  --help              このヘルプを表示
+
+例:
+  node scripts/css-dependency-analyzer.js --output html --file report.html
+  node scripts/css-dependency-analyzer.js --detailed --output markdown
+  node scripts/css-dependency-analyzer.js --config custom-config.js
+`);
+}
+
+// メイン実行関数
+async function main() {
+  try {
+    const options = parseArgs();
+
+    if (options.help) {
+      showHelp();
+      return;
+    }
+
+    console.log('🔍 CSS依存関係分析を開始...\n');
+
+    // 設定を読み込み
+    const config = await loadConfig(options.config);
+    console.log(`📋 設定ファイル: ${options.config}`);
+
+    // CSSアナライザーを動的にインポート
+    const { CSSDependencyAnalyzer } = await import('../lib/analyzers/css-analyzer.js');
+    const { CSSReportGenerator } = await import('../lib/analyzers/report-generator.js');
+
+    // アナライザーを初期化
+    const analyzer = new CSSDependencyAnalyzer(config);
+    console.log('✅ CSSアナライザーを初期化しました');
+
+    // 分析を実行
+    console.log('🔍 分析を実行中...');
+    const analysis = await analyzer.analyze();
+    console.log('✅ 分析が完了しました');
+
+    // レポート生成器を初期化
+    const reportConfig = {
+      detailed: options.detailed,
+      outputFormat: options.output,
+      showStatistics: true,
+      showRecommendations: true
+    };
+    
+    const reportGenerator = new CSSReportGenerator(reportConfig);
+    console.log('✅ レポート生成器を初期化しました');
+
+    // レポートを生成
+    console.log(`📊 ${options.output}形式でレポートを生成中...`);
+    const report = reportGenerator.generateReport(analysis);
+
+    // 出力
+    if (options.file) {
+      await reportGenerator.saveReport(analysis, options.file);
+      console.log(`💾 レポートを保存しました: ${options.file}`);
+    } else {
+      console.log('\n' + '='.repeat(80));
+      console.log(report);
+    }
+
+    // 統計情報を表示
+    console.log('\n📈 分析結果サマリー:');
+    console.log(`  • コンポーネント数: ${analysis.statistics.totalComponents}`);
+    console.log(`  • Tailwindクラス数: ${analysis.statistics.totalTailwindClasses}`);
+    console.log(`  • カスタムクラス数: ${analysis.statistics.totalCustomClasses}`);
+    console.log(`  • 推奨事項数: ${analysis.statistics.totalRecommendations}`);
+    console.log(`  • 成功率: ${analysis.statistics.successRate.toFixed(1)}%`);
+
+    if (analysis.issues.length > 0) {
+      console.log(`\n⚠️  問題が ${analysis.issues.length} 件見つかりました:`);
+      analysis.issues.forEach((issue, index) => {
+        console.log(`  ${index + 1}. [${issue.type.toUpperCase()}] ${issue.message}`);
+      });
+    }
+
+    if (analysis.recommendations.length > 0) {
+      console.log(`\n💡 推奨事項が ${analysis.recommendations.length} 件あります:`);
+      analysis.recommendations.forEach((rec, index) => {
+        console.log(`  ${index + 1}. ${rec.message} (影響度: ${rec.impact}, 作業量: ${rec.effort})`);
+      });
+    }
+
+    console.log('\n✅ CSS依存関係分析が完了しました！');
+
+  } catch (error) {
+    console.error('\n❌ エラーが発生しました:');
+    console.error(error.message);
+    
+    if (error.stack) {
+      console.error('\nスタックトレース:');
+      console.error(error.stack);
+    }
+    
+    process.exit(1);
+  }
+}
+
+// スクリプトが直接実行された場合のみmain()を呼び出し
+if (import.meta.url === `file://${process.argv[1]}`) {
+  main();
+} 

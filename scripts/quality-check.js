@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 
-const { execSync, spawn } = require("child_process");
-const fs = require("fs");
-const path = require("path");
+import { execSync, spawn } from "child_process";
+import fs from "fs";
+import path from "path";
 
 // 色付きログ出力
 const colors = {
@@ -262,20 +262,27 @@ function checkSecurity() {
 }
 
 // CSS依存関係チェック
-function checkCSSDependencies() {
+async function checkCSSDependencies() {
   logInfo("CSS依存関係チェック中...");
 
   try {
-    // CSS依存関係分析スクリプトを実行
-    const cssAnalyzer = require("./css-dependency-analyzer");
-    cssAnalyzer.analyzeTailwindDependencies();
-    cssAnalyzer.analyzeGlobalCSS();
-    cssAnalyzer.detectDependencyIssues();
-
-    // 問題があれば警告として記録
-    const analysis = cssAnalyzer.cssAnalysis;
+    // コンポーネント化されたCSSアナライザーを使用
+    const { CSSDependencyAnalyzer } = await import('../lib/analyzers/css-analyzer.js');
+    
+    // 設定を読み込み
+    const config = await import('../css-analysis.config.js');
+    const analyzer = new CSSDependencyAnalyzer(config.default || config);
+    
+    // 分析を実行
+    const analysis = await analyzer.analyze();
+    
+    // 問題と推奨事項をチェック
+    if (analysis.issues.length > 0) {
+      results.warnings.push(`CSS問題が検出されました (${analysis.issues.length}件)`);
+    }
+    
     if (analysis.recommendations.length > 0) {
-      results.warnings.push(`CSS依存関係の問題が検出されました (${analysis.recommendations.length}件)`);
+      results.warnings.push(`CSS推奨事項が検出されました (${analysis.recommendations.length}件)`);
     }
 
     results.passed.push("CSS依存関係チェック完了");
@@ -330,7 +337,7 @@ function displayResults() {
 }
 
 // メイン実行関数
-function main() {
+async function main() {
   log("🚀 品質チェックを開始します...", "cyan");
 
   const checks = [
@@ -346,23 +353,27 @@ function main() {
     checkCSSDependencies,
   ];
 
-  checks.forEach((check) => {
+  for (const check of checks) {
     try {
-      check();
+      if (check === checkCSSDependencies) {
+        await check();
+      } else {
+        check();
+      }
     } catch (error) {
       results.failed.push(`チェック実行エラー: ${error.message}`);
     }
-  });
+  }
 
   displayResults();
 }
 
 // スクリプトが直接実行された場合
-if (require.main === module) {
+if (import.meta.url === `file://${process.argv[1]}`) {
   main();
 }
 
-module.exports = {
+export {
   checkDependencies,
   checkTypeScript,
   checkLinting,
