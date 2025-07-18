@@ -36,8 +36,6 @@ export const ModeToggle = ({ currentMode }: ModeToggleProps) => {
     console.log("テスト実行を開始します");
   };
 
-
-
   return (
     <div className="flex items-center justify-between self-stretch w-full py-0">
       <div className="inline-flex items-center justify-end gap-2">

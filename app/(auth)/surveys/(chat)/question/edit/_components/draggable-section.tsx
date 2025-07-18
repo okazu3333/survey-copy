@@ -1,15 +1,19 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
-import { GripIcon } from "@/components/ui/grip-icon";
-import { Card } from "@/components/ui/card";
-import { DraggableQuestionComponent } from "./draggable-question";
-import { DraggableQuestion } from "./drag-drop-context";
 import dynamic from "next/dynamic";
+import type React from "react";
+import { useEffect, useState } from "react";
+import { Card } from "@/components/ui/card";
+import { GripIcon } from "@/components/ui/grip-icon";
+import type { DraggableQuestion } from "./drag-drop-context";
+import { DraggableQuestionComponent } from "./draggable-question";
 
 const DraggableSectionClient = dynamic(
-  () => import("./draggable-section-client").then((mod) => ({ default: mod.DraggableSectionClient })),
-  { ssr: false }
+  () =>
+    import("./draggable-section-client").then((mod) => ({
+      default: mod.DraggableSectionClient,
+    })),
+  { ssr: false },
 );
 
 interface DraggableSectionProps {
@@ -46,7 +50,7 @@ export const DraggableSection: React.FC<DraggableSectionProps> = ({
             <DraggableQuestionComponent
               key={question.id}
               question={question}
-              index={index}
+                              _index={index}
               isFixed={isFixed}
             />
           ))}
@@ -54,4 +58,4 @@ export const DraggableSection: React.FC<DraggableSectionProps> = ({
       )}
     </Card>
   );
-}; 
+};

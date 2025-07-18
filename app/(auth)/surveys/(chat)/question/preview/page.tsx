@@ -8,7 +8,7 @@ import { SurveyPreviewSection } from "./_components/survey-preview-section";
 const Page = () => {
   const router = useRouter();
 
-  const handleGoToReview = () => {
+  const _handleGoToReview = () => {
     router.push("/surveys/review/preview");
   };
 

@@ -1,27 +1,25 @@
 "use client";
 
-import React from "react";
+import { Lock, X } from "lucide-react";
+import type React from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Lock, X } from "lucide-react";
-import { DraggableQuestion } from "./drag-drop-context";
+import type { DraggableQuestion } from "./drag-drop-context";
 
 interface DraggableQuestionComponentProps {
   question: DraggableQuestion;
-  index: number;
+  _index: number;
   isFixed?: boolean;
 }
 
-export const DraggableQuestionComponent: React.FC<DraggableQuestionComponentProps> = ({
-  question,
-  index,
-  isFixed = false,
-}) => {
+export const DraggableQuestionComponent: React.FC<
+  DraggableQuestionComponentProps
+> = ({ question, _index, isFixed = false }) => {
   return (
     <Card className="flex flex-col items-start relative self-stretch w-full flex-[0_0_auto] bg-white rounded-lg border border-solid border-[#dcdcdc]">
       <div className="flex items-center gap-3 pl-3 pr-0 py-0 relative self-stretch w-full flex-[0_0_auto] bg-[#f5f5f5] rounded-[8px_8px_0px_0px] border border-solid border-[#dcdcdc]">
         <Checkbox className="w-4 h-4" />
-        
+
         <div className="inline-flex items-center justify-center px-4 py-2 relative flex-[0_0_auto] bg-[#138fb5]">
           <div className="relative w-fit mt-[-1.00px] font-medium text-white text-xs text-center whitespace-nowrap">
             {question.id}
@@ -98,9 +96,7 @@ export const DraggableQuestionComponent: React.FC<DraggableQuestionComponentProp
                 </div>
               </div>
               <div className="flex-1 px-2 py-1">
-                <div className="text-sm text-[#333333]">
-                  {setting.value}
-                </div>
+                <div className="text-sm text-[#333333]">{setting.value}</div>
               </div>
             </div>
           ))}
@@ -108,4 +104,4 @@ export const DraggableQuestionComponent: React.FC<DraggableQuestionComponentProp
       </CardContent>
     </Card>
   );
-}; 
+};

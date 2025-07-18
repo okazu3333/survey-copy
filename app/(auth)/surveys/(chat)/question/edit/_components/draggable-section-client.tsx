@@ -1,22 +1,22 @@
 "use client";
 
-import React from "react";
 import {
-  DndContext,
   closestCenter,
+  DndContext,
+  type DragEndEvent,
   KeyboardSensor,
   PointerSensor,
   useSensor,
   useSensors,
-  DragEndEvent,
 } from "@dnd-kit/core";
 import {
   SortableContext,
   sortableKeyboardCoordinates,
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
+import type React from "react";
+import { type DraggableQuestion, useDragDrop } from "./drag-drop-context";
 import { DraggableQuestionClient } from "./draggable-question-client";
-import { DraggableQuestion, useDragDrop } from "./drag-drop-context";
 
 interface DraggableSectionClientProps {
   questions: DraggableQuestion[];
@@ -33,7 +33,7 @@ export const DraggableSectionClient: React.FC<DraggableSectionClientProps> = ({
     useSensor(PointerSensor),
     useSensor(KeyboardSensor, {
       coordinateGetter: sortableKeyboardCoordinates,
-    })
+    }),
   );
 
   const handleDragEnd = (event: DragEndEvent) => {
@@ -42,7 +42,7 @@ export const DraggableSectionClient: React.FC<DraggableSectionClientProps> = ({
     if (active.id !== over?.id) {
       const oldIndex = questions.findIndex((q) => q.id === active.id);
       const newIndex = questions.findIndex((q) => q.id === over?.id);
-      
+
       if (oldIndex !== -1 && newIndex !== -1) {
         moveQuestion(oldIndex, newIndex);
       }
@@ -64,7 +64,7 @@ export const DraggableSectionClient: React.FC<DraggableSectionClientProps> = ({
             <DraggableQuestionClient
               key={question.id}
               question={question}
-              index={index}
+                              _index={index}
               isFixed={isFixed}
             />
           ))}
@@ -72,4 +72,4 @@ export const DraggableSectionClient: React.FC<DraggableSectionClientProps> = ({
       </SortableContext>
     </DndContext>
   );
-}; 
+};

@@ -1,20 +1,18 @@
 "use client";
 
-import { RadioGroup, RadioGroupItem } from "@radix-ui/react-radio-group";
-import { Separator } from "@radix-ui/react-separator";
-import { HelpCircle, Lock, Plus, Trash, X } from "lucide-react";
-import { GripIcon } from "@/components/ui/grip-icon";
+
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { useRouter } from "next/navigation";
+import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
+import { GripIcon } from "@/components/ui/grip-icon";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Select, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { Button } from "@/components/ui/button";
-import { DragDropProvider, DraggableQuestion } from "./drag-drop-context";
+import { DragDropProvider, type DraggableQuestion } from "./drag-drop-context";
 import { DraggableSection } from "./draggable-section";
 
 type TabType = "screening" | "main";
@@ -184,7 +182,10 @@ const screeningQuestions: DraggableQuestion[] = [
     settings: [
       { label: "必須回答", value: "必須オン", isToggled: true },
       { label: "回答者条件", value: "全員\nカテゴリ.2 - SC4 = 2" },
-      { label: "回答制御", value: "カテゴリ.1 - ：SC5 ≠ 2 ～ 10　に該当しない場合はアラートを表示" },
+      {
+        label: "回答制御",
+        value: "カテゴリ.1 - ：SC5 ≠ 2 ～ 10　に該当しない場合はアラートを表示",
+      },
       { label: "対象者条件", value: "なし" },
       { label: "スキップ条件", value: "なし" },
       { label: "カテゴリ表示順", value: "通常" },
@@ -276,7 +277,9 @@ type SurveyEditSectionProps = {
   groupId?: string;
 };
 
-export const SurveyEditSection: React.FC<SurveyEditSectionProps> = ({ groupId }) => {
+export const SurveyEditSection: React.FC<SurveyEditSectionProps> = ({
+  groupId,
+}) => {
   const router = useRouter();
   const [activeTab, setActiveTab] = useState<TabType>("screening");
   const { register, handleSubmit } = useForm<SettingsFormData>();
@@ -293,7 +296,7 @@ export const SurveyEditSection: React.FC<SurveyEditSectionProps> = ({ groupId })
   const getTabForGroup = (id: string): TabType => {
     const screeningGroups = ["group-1", "group-2"];
     const mainGroups = ["group-3"];
-    
+
     if (screeningGroups.includes(id)) {
       return "screening";
     } else if (mainGroups.includes(id)) {
@@ -317,7 +320,7 @@ export const SurveyEditSection: React.FC<SurveyEditSectionProps> = ({ groupId })
 
     // 固定セクションの設問をフィルタリング
     const filteredFixedQuestions = fixedQuestions.filter((question) =>
-      targetQuestions.includes(question.id)
+      targetQuestions.includes(question.id),
     );
 
     return (
@@ -356,12 +359,14 @@ export const SurveyEditSection: React.FC<SurveyEditSectionProps> = ({ groupId })
   return (
     <div className="flex flex-col items-start gap-0 relative self-stretch w-full flex-[0_0_auto] bg-white">
       <TabSelectionSection activeTab={activeTab} onTabChange={setActiveTab} />
-      
+
       <ScrollArea className="flex-1 w-full">
         <div className="flex flex-col items-start gap-4 p-6">
-          {activeTab === "screening" ? renderScreeningContent() : renderMainSurveyContent()}
+          {activeTab === "screening"
+            ? renderScreeningContent()
+            : renderMainSurveyContent()}
         </div>
       </ScrollArea>
     </div>
   );
-}; 
+};

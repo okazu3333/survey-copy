@@ -1,30 +1,30 @@
 "use client";
 
 import { Bot } from "lucide-react";
-import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { SurveyAiChat } from "@/components/survey-ai/survey-ai-chat";
 import { SurveyCardHeader } from "@/components/survey-card-header";
+
+import { cn } from "@/lib/utils";
 import { ModeToggle } from "../_components/mode-toggle";
 import { LogicCheckSection } from "./_components/logic-check-section";
-import { SurveyAiChat } from "@/components/survey-ai/survey-ai-chat";
-import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
 
 const userMessages = [
   "ロジックチェックの方法を教えてください",
-  "エラーが発生した場合の対処法は？"
+  "エラーが発生した場合の対処法は？",
 ];
 
 const aiResponses = [
   {
-    text: "ロジックチェック機能へようこそ！設問の論理的な整合性を確認し、調査の品質向上をお手伝いします。何かご質問があればお気軽にお聞きください。"
+    text: "ロジックチェック機能へようこそ！設問の論理的な整合性を確認し、調査の品質向上をお手伝いします。何かご質問があればお気軽にお聞きください。",
   },
   {
-    text: "ロジックチェックでは以下の項目を確認します：\n\n• 設問の順序と依存関係\n• 条件分岐の設定\n• 回答オプションの整合性\n• 必須回答の設定\n• スキップ条件の妥当性\n\nチェックを開始しますか？"
+    text: "ロジックチェックでは以下の項目を確認します：\n\n• 設問の順序と依存関係\n• 条件分岐の設定\n• 回答オプションの整合性\n• 必須回答の設定\n• スキップ条件の妥当性\n\nチェックを開始しますか？",
   },
   {
-    text: "エラーが発生した場合は、以下の手順で対処してください：\n\n1. エラーメッセージを確認\n2. 該当する設問の設定を見直し\n3. 条件分岐の設定を修正\n4. 再度チェックを実行\n\n具体的なエラー内容を教えていただければ、より詳細なアドバイスができます。"
-  }
+    text: "エラーが発生した場合は、以下の手順で対処してください：\n\n1. エラーメッセージを確認\n2. 該当する設問の設定を見直し\n3. 条件分岐の設定を修正\n4. 再度チェックを実行\n\n具体的なエラー内容を教えていただければ、より詳細なアドバイスができます。",
+  },
 ];
 
 const Page = () => {
@@ -32,7 +32,7 @@ const Page = () => {
   const [isChatOpen, setIsChatOpen] = useState(true);
   const [isTransitioning, setIsTransitioning] = useState(false);
 
-  const handleGoToReview = () => {
+  const _handleGoToReview = () => {
     router.push("/surveys/review/preview");
   };
 

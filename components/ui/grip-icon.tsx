@@ -1,4 +1,4 @@
-import React from "react";
+import type React from "react";
 
 interface GripIconProps {
   className?: string;
@@ -40,4 +40,4 @@ export const GripIcon: React.FC<GripIconProps> = ({ className = "" }) => {
       />
     </svg>
   );
-}; 
+};

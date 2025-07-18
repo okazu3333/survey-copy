@@ -1,6 +1,7 @@
 "use client";
 
-import React, { createContext, useContext, useState, ReactNode } from "react";
+import type React from "react";
+import { createContext, type ReactNode, useContext, useState } from "react";
 
 export interface DraggableQuestion {
   id: string;
@@ -16,7 +17,9 @@ interface DragDropContextType {
   moveQuestion: (oldIndex: number, newIndex: number) => void;
 }
 
-const DragDropContext = createContext<DragDropContextType | undefined>(undefined);
+const DragDropContext = createContext<DragDropContextType | undefined>(
+  undefined,
+);
 
 export const useDragDrop = () => {
   const context = useContext(DragDropContext);
@@ -35,7 +38,8 @@ export const DragDropProvider: React.FC<DragDropProviderProps> = ({
   children,
   initialQuestions,
 }) => {
-  const [questions, setQuestions] = useState<DraggableQuestion[]>(initialQuestions);
+  const [questions, setQuestions] =
+    useState<DraggableQuestion[]>(initialQuestions);
 
   const moveQuestion = (oldIndex: number, newIndex: number) => {
     setQuestions((prevQuestions) => {
@@ -51,4 +55,4 @@ export const DragDropProvider: React.FC<DragDropProviderProps> = ({
       {children}
     </DragDropContext.Provider>
   );
-}; 
+};

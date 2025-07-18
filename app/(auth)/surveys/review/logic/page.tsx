@@ -1,6 +1,5 @@
 "use client";
 
-
 import { SurveyCardHeader } from "@/components/survey-card-header";
 import type { ReviewItem } from "@/lib/types/review";
 import { ReviewModeToggle } from "../_components/review-mode-toggle";

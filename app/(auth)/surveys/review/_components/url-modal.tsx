@@ -1,9 +1,14 @@
 "use client";
 
-import { Copy, Check } from "lucide-react";
+import { Check, Copy } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 
 type UrlModalProps = {
@@ -13,7 +18,12 @@ type UrlModalProps = {
   title?: string;
 };
 
-export const UrlModal = ({ open, onOpenChange, url, title = "レビュー画面URL" }: UrlModalProps) => {
+export const UrlModal = ({
+  open,
+  onOpenChange,
+  url,
+  title = "レビュー画面URL",
+}: UrlModalProps) => {
   const [copied, setCopied] = useState(false);
 
   const handleCopy = async () => {
@@ -34,12 +44,10 @@ export const UrlModal = ({ open, onOpenChange, url, title = "レビュー画面U
             {title}
           </DialogTitle>
         </DialogHeader>
-        
+
         <div className="flex flex-col gap-4">
           <div className="flex flex-col gap-2">
-            <label className="text-sm font-medium text-[#333333]">
-              URL
-            </label>
+            <label className="text-sm font-medium text-[#333333]">URL</label>
             <div className="flex items-center gap-2">
               <Input
                 value={url}
@@ -60,7 +68,7 @@ export const UrlModal = ({ open, onOpenChange, url, title = "レビュー画面U
               </Button>
             </div>
           </div>
-          
+
           <div className="flex justify-end gap-2 pt-2">
             <Button
               variant="outline"
@@ -74,4 +82,4 @@ export const UrlModal = ({ open, onOpenChange, url, title = "レビュー画面U
       </DialogContent>
     </Dialog>
   );
-}; 
+};
