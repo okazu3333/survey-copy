@@ -9,7 +9,7 @@ import {
   useEdgesState,
   useNodesState,
 } from "@xyflow/react";
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import "@xyflow/react/dist/style.css";
 import {
   GroupNode,
@@ -508,8 +508,8 @@ export const LogicCheckSurveyContent = ({
     setSelectedGroup(null);
   };
 
-  // Create node types with review items
-  const nodeTypes = createNodeTypes(reviewItems);
+  // Create node types with review items - memoized for performance
+  const nodeTypes = useMemo(() => createNodeTypes(reviewItems), [reviewItems]);
 
   return (
     <div className="w-full h-[3000px] bg-gray-50 rounded-lg overflow-x-auto relative">
@@ -530,6 +530,10 @@ export const LogicCheckSurveyContent = ({
         onPaneClick={handlePaneClick}
         nodeTypes={nodeTypes}
         fitView
+        proOptions={{ hideAttribution: true }}
+        minZoom={0.1}
+        maxZoom={2}
+        defaultViewport={{ x: 0, y: 0, zoom: 0.8 }}
       >
         <Background />
         <Controls />

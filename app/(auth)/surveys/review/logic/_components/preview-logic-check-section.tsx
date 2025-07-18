@@ -2,7 +2,7 @@
 
 import { AnimatePresence, motion } from "framer-motion";
 import { Maximize, X } from "lucide-react";
-import { useState } from "react";
+import { useState, Suspense } from "react";
 import { useForm } from "react-hook-form";
 import { Card } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -61,7 +61,16 @@ export const PreviewLogicCheckSection = ({
               onSubmit={handleSubmit(onSubmit)}
               className="flex flex-col items-start gap-4 relative"
             >
-              <LogicCheckSurveyContent reviewItems={reviewItems} />
+              <Suspense fallback={
+                <div className="flex items-center justify-center w-full h-32">
+                  <div className="flex flex-col items-center gap-2">
+                    <div className="w-6 h-6 border-2 border-[#138FB5] border-t-transparent rounded-full animate-spin"></div>
+                    <p className="text-xs text-gray-600">読み込み中...</p>
+                  </div>
+                </div>
+              }>
+                <LogicCheckSurveyContent reviewItems={reviewItems} />
+              </Suspense>
             </form>
           </ScrollArea>
         </Card>
@@ -94,7 +103,16 @@ export const PreviewLogicCheckSection = ({
               {/* Expanded Content */}
               <div className="overflow-auto max-h-[calc(100vh-200px)]">
                 <div className="p-6">
-                  <LogicCheckSurveyContent reviewItems={reviewItems} />
+                  <Suspense fallback={
+                    <div className="flex items-center justify-center w-full h-32">
+                      <div className="flex flex-col items-center gap-2">
+                        <div className="w-6 h-6 border-2 border-[#138FB5] border-t-transparent rounded-full animate-spin"></div>
+                        <p className="text-xs text-gray-600">読み込み中...</p>
+                      </div>
+                    </div>
+                  }>
+                    <LogicCheckSurveyContent reviewItems={reviewItems} />
+                  </Suspense>
                 </div>
               </div>
             </motion.div>
