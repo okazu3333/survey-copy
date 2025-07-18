@@ -16,6 +16,7 @@ const CompletePage = () => {
             workingTitleLabel="現在作業中のタイトル"
             workingTitle="00008　男性化粧品についての調査"
             currentStep={4}
+            enableDefaultNavigation={true}
           />
 
           {/* Main Content Container */}

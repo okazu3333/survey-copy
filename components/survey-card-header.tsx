@@ -1,5 +1,8 @@
+"use client";
+
 import { PublishStep } from "@/components/publish-step";
 import { Card, CardHeader } from "@/components/ui/card";
+import { useSurveyStepNavigation } from "@/lib/utils/survey-navigation";
 
 type SurveyCardHeaderProps = {
   title?: string;
@@ -7,6 +10,7 @@ type SurveyCardHeaderProps = {
   workingTitle: string;
   currentStep: number;
   onStepClick?: (stepIndex: number) => void;
+  enableDefaultNavigation?: boolean;
 };
 
 export const SurveyCardHeader = ({
@@ -15,7 +19,12 @@ export const SurveyCardHeader = ({
   workingTitle,
   currentStep,
   onStepClick,
+  enableDefaultNavigation = false,
 }: SurveyCardHeaderProps) => {
+  const { handleStepClick: defaultHandleStepClick } = useSurveyStepNavigation();
+  
+  // デフォルトナビゲーションが有効で、onStepClickが提供されていない場合はデフォルトを使用
+  const finalOnStepClick = onStepClick || (enableDefaultNavigation ? defaultHandleStepClick : undefined);
   return (
     <Card className="w-full rounded-t-lg shadow-none border-0">
       <CardHeader className="flex flex-col p-0 space-y-0">
@@ -42,7 +51,7 @@ export const SurveyCardHeader = ({
             </div>
           </div>
         </div>
-        <PublishStep currentStep={currentStep} onStepClick={onStepClick} />
+        <PublishStep currentStep={currentStep} onStepClick={finalOnStepClick} />
       </CardHeader>
     </Card>
   );

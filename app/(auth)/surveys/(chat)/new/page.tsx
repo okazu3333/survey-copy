@@ -125,32 +125,7 @@ const Page = () => {
     console.log("Proceeding to next step");
   };
 
-  const handleStepClick = (stepIndex: number) => {
-    // ステップに応じてページ遷移
-    switch (stepIndex) {
-      case 0: // 概要の設定
-        // 現在のページなので何もしない
-        break;
-      case 1: // セクションの設定
-        // セクション設定ページに遷移
-        router.push("/surveys/question/edit");
-        break;
-      case 2: // 設問の設定
-        // 設問設定ページに遷移
-        router.push("/surveys/question/edit");
-        break;
-      case 3: // レビュー
-        // レビューページに遷移
-        router.push("/surveys/review");
-        break;
-      case 4: // 調査票の確定
-        // 調査票確定ページに遷移
-        router.push("/surveys/complete");
-        break;
-      default:
-        break;
-    }
-  };
+
 
   return (
     <div className="min-h-screen bg-gray-100">
@@ -161,9 +136,9 @@ const Page = () => {
           !isChatOpen && "justify-center"
         )}>
           {/* 左：メインコンテンツ */}
-          <div
-            className={cn(
-              "flex flex-col gap-4 transition-all duration-300",
+                      <div
+              className={cn(
+                "flex flex-col gap-0 transition-all duration-300",
               isChatOpen 
                 ? "w-[calc(100%-500px)]" // 開いている時：元のサイズ
                 : "w-[calc(100%-500px)]" // 閉じている時：前のサイズを維持
@@ -172,7 +147,7 @@ const Page = () => {
             <SurveyCardHeader
               workingTitle=""
               currentStep={0}
-              onStepClick={handleStepClick}
+              enableDefaultNavigation={true}
             />
             <div className="flex flex-col w-full items-center gap-6 p-6 bg-[#ffffff] rounded-b-lg shadow-main-bg">
               <form
@@ -206,13 +181,13 @@ const Page = () => {
                 {/* Survey Form Fields */}
                 <div className="flex flex-col items-start gap-10 w-full">
                   <div className="flex flex-col items-start gap-4 w-full">
-                    <div className="flex flex-col items-start gap-6 w-full">
+                    <div className="flex flex-col items-start gap-2 w-full">
                       {surveyFields.map((field) => (
                         <div
                           key={field.id}
                           className="flex flex-col items-end w-full"
                         >
-                          <div className="flex h-10 items-center gap-4 w-full">
+                          <div className="flex h-10 items-center gap-2 w-full mt-5">
                             <div className="flex items-center gap-2">
                               <label
                                 className="text-sm font-bold text-[#333333] whitespace-nowrap"
@@ -248,10 +223,10 @@ const Page = () => {
                   </div>
                 </div>
                 {/* Distribution Section */}
-                <div className="flex flex-col items-start gap-6 w-full">
+                <div className="flex flex-col items-start gap-2 w-full">
                   {/* Distribution Section Header */}
                   <div className="flex flex-col items-end w-full">
-                    <div className="flex h-10 items-center gap-4 w-full">
+                    <div className="flex h-6 items-center gap-2 w-full mt-5">
                       <div className="flex items-center gap-2">
                         <h2 className="text-lg font-bold text-[#333333] whitespace-nowrap">
                           配信ついて
@@ -262,7 +237,7 @@ const Page = () => {
 
                   {/* Distribution Outlook */}
                   <div className="flex flex-col items-end w-full">
-                    <div className="flex h-10 items-center gap-4 w-full">
+                    <div className="flex h-10 items-center gap-2 w-full">
                       <div className="flex items-center gap-2">
                         <label
                           className="text-sm font-bold text-[#333333] whitespace-nowrap"
@@ -297,7 +272,7 @@ const Page = () => {
 
                   {/* AI Suggestion Quality */}
                   <div className="flex flex-col w-full items-end">
-                    <div className="flex h-10 items-center gap-4 w-full">
+                    <div className="flex h-10 items-center gap-2 w-full">
                       <div className="flex items-center gap-2">
                         <label
                           className="text-sm font-bold text-[#333333] whitespace-nowrap"
@@ -329,10 +304,10 @@ const Page = () => {
                   </div>
                 </div>
               </form>
-              <div className="flex justify-center pb-10 bg-[#ffffff]">
-                <Button
-                  type="submit"
-                  className="w-[340px] h-14 bg-[#556064] rounded-[34px] flex items-center justify-center gap-4 px-4 py-0"
+              <div className="flex justify-center pb-5 bg-[#ffffff]">
+                                  <Button
+                    type="submit"
+                    className="w-[340px] h-14 bg-[#556064] rounded-[34px] flex items-center justify-center gap-4 px-4 py-0 mt-5"
                   onClick={() => setIsDialogOpen(true)}
                 >
                   <span className="font-bold text-white text-base text-center tracking-[0] leading-[22.4px] font-['Noto_Sans_JP',Helvetica]">

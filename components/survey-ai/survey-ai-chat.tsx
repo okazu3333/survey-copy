@@ -138,11 +138,11 @@ export const SurveyAiChat = ({
       </header>
 
       {/* Chat Messages Area */}
-      <ScrollArea className="flex-1 w-full bg-gray-50 py-2">
-        <div className="relative w-full -top-2">
+      <ScrollArea className="flex-1 w-full bg-gray-50 py-0">
+        <div className="relative w-full">
           {/* First AI Message with File Upload Button */}
           {aiResponses.length > 0 && (
-            <div className="flex items-start mb-4">
+            <div className="flex items-start mb-4 pt-2">
               <Bot className="w-6 h-6 mt-4 ml-3 mr-1 text-[#138fb5]" />
               <Card className="max-w-[340px] bg-white rounded-[20px_20px_20px_0px] border-[#d0cfcf]">
                 <CardContent className="p-4">

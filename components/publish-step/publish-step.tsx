@@ -38,20 +38,18 @@ export const PublishStep = ({
     return "next";
   };
 
-  // 文字数に応じて動的に幅を計算
+  // コンテナ内に収めるために、ボタン幅を調整
   const getStepWidth = (step: string) => {
     const charCount = step.length;
-    // 特定の文字列に対してより正確な幅設定
-    if (step === "概要の設定") return "w-28 sm:w-32 lg:w-36"; // 6文字だが幅が必要
-    if (step === "設問の設定") return "w-28 sm:w-32 lg:w-36"; // 6文字だが幅が必要
-    if (step === "調査票の確定") return "w-32 sm:w-36 lg:w-40"; // 7文字で最も長い
     
-    // 一般的な文字数ベースの設定
-    if (charCount <= 4) return "w-16 sm:w-20 lg:w-24"; // 短いテキスト
-    if (charCount <= 5) return "w-20 sm:w-24 lg:w-28"; // 中程度のテキスト
-    if (charCount <= 6) return "w-24 sm:w-28 lg:w-32"; // 6文字（その他）
-    if (charCount <= 8) return "w-28 sm:w-32 lg:w-36"; // 長いテキスト
-    return "w-32 sm:w-36 lg:w-40"; // 非常に長いテキスト
+    // 5つのボタンと4つの区切り線がコンテナ内に収まるように調整
+    if (charCount <= 8) {
+      // モバイル: w-24, タブレット: w-28, デスクトップ: w-32
+      return "w-24 sm:w-28 lg:w-32";
+    }
+    
+    // 8文字を超える場合は、より大きな幅を設定
+    return "w-28 sm:w-32 lg:w-36";
   };
 
   return (
@@ -66,14 +64,14 @@ export const PublishStep = ({
           配信までのステップ
         </h3>
         <div className="flex items-center justify-center flex-1">
-          <div className="flex items-center gap-1 overflow-x-auto sm:gap-0">
+          <div className="flex items-center gap-0 overflow-x-auto sm:gap-0">
             {steps.map((step, index) => {
               const status = getStepStatus(index);
               return (
                 <div key={step} className="flex items-center flex-shrink-0">
                   <div
                     className={cn(
-                      "flex items-center justify-center gap-1 rounded px-3 py-1 text-xs sm:gap-2 sm:px-4 h-6 sm:h-7 min-w-0",
+                      "flex items-center justify-center gap-1 rounded px-2 py-1 text-xs sm:gap-2 sm:px-3 h-6 sm:h-7 min-w-0",
                       getStepWidth(step),
                       "transition-all duration-200 hover:scale-105",
                       {
@@ -85,13 +83,13 @@ export const PublishStep = ({
                     onClick={() => onStepClick?.(index)}
                     style={{ cursor: onStepClick ? "pointer" : "default" }}
                   >
-                    <span className="truncate text-[10px] sm:text-xs leading-tight px-1">{step}</span>
+                    <span className="truncate text-[9px] sm:text-[10px] lg:text-xs leading-tight px-0.5">{step}</span>
                     {status === "complete" && (
                       <CircleCheck className="h-3 w-3 flex-shrink-0 text-[#4BBC80] sm:h-4 sm:w-4" />
                     )}
                   </div>
                   {index < steps.length - 1 && (
-                    <div className="h-0.5 w-2 bg-white sm:w-4" />
+                    <div className="h-0.5 w-2 bg-white sm:w-3" />
                   )}
                 </div>
               );
