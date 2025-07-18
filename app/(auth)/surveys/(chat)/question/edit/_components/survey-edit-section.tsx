@@ -1,6 +1,7 @@
 import { RadioGroup, RadioGroupItem } from "@radix-ui/react-radio-group";
 import { Separator } from "@radix-ui/react-separator";
-import { GripVertical, HelpCircle, Lock, Plus, Trash, X } from "lucide-react";
+import { HelpCircle, Lock, Plus, Trash, X } from "lucide-react";
+import { GripIcon } from "@/components/ui";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -326,7 +327,7 @@ export const SurveyEditSection = ({ groupId }: SurveyEditSectionProps) => {
           targetQuestions.includes("Q3")) && (
           <Card className="flex flex-col items-start gap-4 px-6 py-4 relative self-stretch w-full flex-[0_0_auto] bg-[#f4f7f9] rounded-lg border border-solid border-[#dcdcdc]">
             <div className="items-center inline-flex gap-2 relative flex-[0_0_auto]">
-              <GripVertical className="w-4 h-4 text-[#556064]" />
+              <GripIcon size={21} />
               <div className="relative w-fit mt-[-1.00px] font-bold text-[#333333] text-xs whitespace-nowrap">
                 固定セクション：性別・年齢・居住地
               </div>
@@ -578,7 +579,7 @@ export const SurveyEditSection = ({ groupId }: SurveyEditSectionProps) => {
         {targetQuestions.includes("Q4") && (
           <Card className="flex flex-col items-start gap-4 px-6 py-4 relative self-stretch w-full flex-[0_0_auto] bg-[#f4f7f9] rounded-lg border border-solid border-[#dcdcdc]">
             <div className="items-start inline-flex gap-2 relative flex-[0_0_auto]">
-              <GripVertical className="w-4 h-4 text-[#556064]" />
+              <GripIcon size={21} />
               <div className="relative w-fit mt-[-1.00px] font-bold text-[#333333] text-xs whitespace-nowrap">
                 セクション：未既婚
               </div>
@@ -676,7 +677,7 @@ export const SurveyEditSection = ({ groupId }: SurveyEditSectionProps) => {
         {targetQuestions.includes("Q5") && (
           <Card className="flex flex-col items-start gap-4 px-6 py-4 relative self-stretch w-full flex-[0_0_auto] bg-[#f4f7f9] rounded-lg border border-solid border-[#dcdcdc]">
             <div className="items-start inline-flex gap-2 relative flex-[0_0_auto]">
-              <GripVertical className="w-4 h-4 text-[#556064]" />
+              <GripIcon size={21} />
               <div className="relative w-fit mt-[-1.00px] font-bold text-[#333333] text-xs whitespace-nowrap">
                 セクション：子どもの有無
               </div>
@@ -813,7 +814,7 @@ export const SurveyEditSection = ({ groupId }: SurveyEditSectionProps) => {
         {(targetQuestions.includes("Q6") || targetQuestions.includes("Q7")) && (
           <Card className="flex flex-col items-start gap-4 px-6 py-4 relative self-stretch w-full flex-[0_0_auto] bg-[#f4f7f9] rounded-lg border border-solid border-[#dcdcdc]">
             <div className="items-start inline-flex gap-2 relative flex-[0_0_auto]">
-              <GripVertical className="w-4 h-4 text-[#556064]" />
+              <GripIcon size={21} />
               <div className="relative w-fit mt-[-1.00px] font-bold text-[#333333] text-xs whitespace-nowrap">
                 セクション：職業
               </div>
@@ -907,7 +908,7 @@ export const SurveyEditSection = ({ groupId }: SurveyEditSectionProps) => {
               className="flex flex-col items-start gap-4 px-6 py-4 relative self-stretch w-full flex-[0_0_auto] bg-[#f4f7f9] rounded-lg border border-solid border-[#dcdcdc]"
             >
               <div className="items-start inline-flex gap-2 relative flex-[0_0_auto]">
-                <GripVertical className="w-4 h-4 text-[#556064]" />
+                <GripIcon size={21} />
                 <div className="relative w-fit mt-[-1.00px] font-bold text-[#333333] text-xs whitespace-nowrap">
                   {section.title}
                 </div>
