@@ -1,7 +1,7 @@
 "use client";
 
-import type { ReviewItem } from "@/lib/types/review";
 import { SurveyCardHeader } from "@/components/survey-card-header";
+import type { ReviewItem } from "@/lib/types/review";
 import { ReviewModeToggle } from "../../_components/review-mode-toggle";
 import { PreviewLogicCheckSection } from "../../logic/_components/preview-logic-check-section";
 
@@ -54,9 +54,9 @@ const mockReviewItems: ReviewItem[] = [
 const Page = () => {
   return (
     <div className="flex flex-col gap-4">
-      <SurveyCardHeader 
-        workingTitle="○○○に関する意識調査" 
-        currentStep={3} 
+      <SurveyCardHeader
+        workingTitle=""
+        currentStep={3}
         enableDefaultNavigation={true}
       />
       <div className="flex flex-col w-full items-center gap-6 p-6 bg-[#ffffff] rounded-b-lg shadow-main-bg">

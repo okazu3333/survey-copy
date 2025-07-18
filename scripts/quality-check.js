@@ -267,22 +267,28 @@ async function checkCSSDependencies() {
 
   try {
     // コンポーネント化されたCSSアナライザーを使用
-    const { CSSDependencyAnalyzer } = await import('../lib/analyzers/css-analyzer.js');
-    
+    const { CSSDependencyAnalyzer } = await import(
+      "../lib/analyzers/css-analyzer.js"
+    );
+
     // 設定を読み込み
-    const config = await import('../css-analysis.config.js');
+    const config = await import("../css-analysis.config.js");
     const analyzer = new CSSDependencyAnalyzer(config.default || config);
-    
+
     // 分析を実行
     const analysis = await analyzer.analyze();
-    
+
     // 問題と推奨事項をチェック
     if (analysis.issues.length > 0) {
-      results.warnings.push(`CSS問題が検出されました (${analysis.issues.length}件)`);
+      results.warnings.push(
+        `CSS問題が検出されました (${analysis.issues.length}件)`,
+      );
     }
-    
+
     if (analysis.recommendations.length > 0) {
-      results.warnings.push(`CSS推奨事項が検出されました (${analysis.recommendations.length}件)`);
+      results.warnings.push(
+        `CSS推奨事項が検出されました (${analysis.recommendations.length}件)`,
+      );
     }
 
     results.passed.push("CSS依存関係チェック完了");

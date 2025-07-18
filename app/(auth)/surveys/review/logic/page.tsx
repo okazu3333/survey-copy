@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+
 import { SurveyCardHeader } from "@/components/survey-card-header";
 import type { ReviewItem } from "@/lib/types/review";
 import { ReviewModeToggle } from "../_components/review-mode-toggle";
@@ -53,39 +53,11 @@ const mockReviewItems: ReviewItem[] = [
 ];
 
 const Page = () => {
-  const [isLoaded, setIsLoaded] = useState(false);
-
-  useEffect(() => {
-    // コンポーネントがマウントされた後にローディング完了
-    const timer = setTimeout(() => {
-      setIsLoaded(true);
-    }, 100);
-
-    return () => clearTimeout(timer);
-  }, []);
-
-  if (!isLoaded) {
-    return (
-      <div className="flex flex-col gap-0">
-        <SurveyCardHeader 
-          workingTitle="○○○に関する意識調査" 
-          currentStep={3} 
-          enableDefaultNavigation={true}
-        />
-        <div className="flex flex-col w-full items-center gap-6 p-6 bg-[#ffffff] rounded-b-lg shadow-main-bg">
-          <div className="w-full h-64 flex items-center justify-center">
-            <div className="text-gray-500">読み込み中...</div>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
   return (
     <div className="flex flex-col gap-0">
-      <SurveyCardHeader 
-        workingTitle="○○○に関する意識調査" 
-        currentStep={3} 
+      <SurveyCardHeader
+        workingTitle=""
+        currentStep={3}
         enableDefaultNavigation={true}
       />
       <div className="flex flex-col w-full items-center gap-6 p-6 bg-[#ffffff] rounded-b-lg shadow-main-bg">

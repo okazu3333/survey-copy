@@ -1,25 +1,19 @@
 // CSS依存関係分析システムのエクスポート
 
 import type {
-  CSSAnalysisResult,
-  CSSAnalyzerConfig,
   AnalysisIssue,
   AnalysisRecommendation,
-  AnalysisStatistics
-} from './css-analyzer';
+  AnalysisStatistics,
+  CSSAnalysisResult,
+  CSSAnalyzerConfig,
+} from "./css-analyzer";
+import { CSSDependencyAnalyzer } from "./css-analyzer";
+import type { ReportConfig } from "./report-generator";
+import { CSSReportGenerator } from "./report-generator";
 
-import type { ReportConfig } from './report-generator';
+export { CSSDependencyAnalyzer } from "./css-analyzer";
 
-import { CSSDependencyAnalyzer } from './css-analyzer';
-import { CSSReportGenerator } from './report-generator';
-
-export {
-  CSSDependencyAnalyzer
-} from './css-analyzer';
-
-export {
-  CSSReportGenerator
-} from './report-generator';
+export { CSSReportGenerator } from "./report-generator";
 
 export type {
   CSSAnalysisResult,
@@ -27,7 +21,7 @@ export type {
   AnalysisIssue,
   AnalysisRecommendation,
   AnalysisStatistics,
-  ReportConfig
+  ReportConfig,
 };
 
 // 便利なファクトリ関数
@@ -42,14 +36,19 @@ export function createReportGenerator(config?: Partial<ReportConfig>) {
 // プリセット設定
 export const defaultAnalyzerConfig: CSSAnalyzerConfig = {
   directories: {
-    components: ['components/ui', 'app/_components', 'app/(auth)', 'components'],
-    css: ['app/globals.css', 'styles/globals.css', 'styles/main.css']
+    components: [
+      "components/ui",
+      "app/_components",
+      "app/(auth)",
+      "components",
+    ],
+    css: ["app/globals.css", "styles/globals.css", "styles/main.css"],
   },
   tailwind: {
-    configFile: 'tailwind.config.ts',
+    configFile: "tailwind.config.ts",
     analyzeTheme: true,
     analyzePlugins: true,
-    detectCustomClasses: true
+    detectCustomClasses: true,
   },
   analysis: {
     detectDuplicatePatterns: true,
@@ -57,17 +56,17 @@ export const defaultAnalyzerConfig: CSSAnalyzerConfig = {
     detectUnusedClasses: true,
     analyzeComponentDependencies: true,
     analyzeCSSVariables: true,
-    analyzeLayers: true
+    analyzeLayers: true,
   },
   thresholds: {
     duplicatePatterns: 1,
     longClassList: 10,
-    unusedClasses: 5
+    unusedClasses: 5,
   },
   exclude: {
-    files: ['**/*.test.*', '**/*.spec.*', '**/node_modules/**', '**/.next/**'],
-    classes: ['sr-only', 'hidden', 'invisible']
-  }
+    files: ["**/*.test.*", "**/*.spec.*", "**/node_modules/**", "**/.next/**"],
+    classes: ["sr-only", "hidden", "invisible"],
+  },
 };
 
 export const defaultReportConfig: ReportConfig = {
@@ -76,18 +75,20 @@ export const defaultReportConfig: ReportConfig = {
   showStatistics: true,
   showRecommendations: true,
   generateDependencyGraph: false,
-  outputFormat: 'console'
+  outputFormat: "console",
 };
 
 // 使用例
-export async function analyzeCSSDependencies(config?: Partial<CSSAnalyzerConfig>) {
+export async function analyzeCSSDependencies(
+  config?: Partial<CSSAnalyzerConfig>,
+) {
   const analyzer = createAnalyzer(config);
   return await analyzer.analyze();
 }
 
 export function generateCSSReport(
-  analysis: CSSAnalysisResult, 
-  config?: Partial<ReportConfig>
+  analysis: CSSAnalysisResult,
+  config?: Partial<ReportConfig>,
 ) {
   const reportGenerator = createReportGenerator(config);
   return reportGenerator.generateReport(analysis);
@@ -95,9 +96,9 @@ export function generateCSSReport(
 
 export async function analyzeAndReport(
   analyzerConfig?: Partial<CSSAnalyzerConfig>,
-  reportConfig?: Partial<ReportConfig>
+  reportConfig?: Partial<ReportConfig>,
 ) {
   const analysis = await analyzeCSSDependencies(analyzerConfig);
   const report = generateCSSReport(analysis, reportConfig);
   return { analysis, report };
-} 
+}

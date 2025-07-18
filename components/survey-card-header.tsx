@@ -22,9 +22,11 @@ export const SurveyCardHeader = ({
   enableDefaultNavigation = false,
 }: SurveyCardHeaderProps) => {
   const { handleStepClick: defaultHandleStepClick } = useSurveyStepNavigation();
-  
+
   // デフォルトナビゲーションが有効で、onStepClickが提供されていない場合はデフォルトを使用
-  const finalOnStepClick = onStepClick || (enableDefaultNavigation ? defaultHandleStepClick : undefined);
+  const finalOnStepClick =
+    onStepClick ||
+    (enableDefaultNavigation ? defaultHandleStepClick : undefined);
   return (
     <Card className="w-full rounded-t-lg shadow-none border-0">
       <CardHeader className="flex flex-col p-0 space-y-0">

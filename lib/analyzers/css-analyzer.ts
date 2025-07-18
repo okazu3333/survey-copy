@@ -1,5 +1,5 @@
-import fs from 'fs';
-import path from 'path';
+import fs from "fs";
+import path from "path";
 
 // 分析結果の型定義
 export interface CSSAnalysisResult {
@@ -13,21 +13,25 @@ export interface CSSAnalysisResult {
 }
 
 export interface AnalysisIssue {
-  type: 'error' | 'warning';
+  type: "error" | "warning";
   message: string;
   component?: string;
   file?: string;
-  severity: 'low' | 'medium' | 'high';
+  severity: "low" | "medium" | "high";
 }
 
 export interface AnalysisRecommendation {
-  type: 'duplicate-pattern' | 'long-class-list' | 'unused-class' | 'dependency-cycle';
+  type:
+    | "duplicate-pattern"
+    | "long-class-list"
+    | "unused-class"
+    | "dependency-cycle";
   message: string;
   component?: string;
   pattern?: string;
   classes?: string[];
-  impact: 'low' | 'medium' | 'high';
-  effort: 'low' | 'medium' | 'high';
+  impact: "low" | "medium" | "high";
+  effort: "low" | "medium" | "high";
 }
 
 export interface AnalysisStatistics {
@@ -85,14 +89,19 @@ export class CSSDependencyAnalyzer {
   private getDefaultConfig(): CSSAnalyzerConfig {
     return {
       directories: {
-        components: ['components/ui', 'app/_components', 'app/(auth)', 'components'],
-        css: ['app/globals.css', 'styles/globals.css', 'styles/main.css']
+        components: [
+          "components/ui",
+          "app/_components",
+          "app/(auth)",
+          "components",
+        ],
+        css: ["app/globals.css", "styles/globals.css", "styles/main.css"],
       },
       tailwind: {
-        configFile: 'tailwind.config.ts',
+        configFile: "tailwind.config.ts",
         analyzeTheme: true,
         analyzePlugins: true,
-        detectCustomClasses: true
+        detectCustomClasses: true,
       },
       analysis: {
         detectDuplicatePatterns: true,
@@ -100,17 +109,22 @@ export class CSSDependencyAnalyzer {
         detectUnusedClasses: true,
         analyzeComponentDependencies: true,
         analyzeCSSVariables: true,
-        analyzeLayers: true
+        analyzeLayers: true,
       },
       thresholds: {
         duplicatePatterns: 1,
         longClassList: 10,
-        unusedClasses: 5
+        unusedClasses: 5,
       },
       exclude: {
-        files: ['**/*.test.*', '**/*.spec.*', '**/node_modules/**', '**/.next/**'],
-        classes: ['sr-only', 'hidden', 'invisible']
-      }
+        files: [
+          "**/*.test.*",
+          "**/*.spec.*",
+          "**/node_modules/**",
+          "**/.next/**",
+        ],
+        classes: ["sr-only", "hidden", "invisible"],
+      },
     };
   }
 
@@ -127,8 +141,8 @@ export class CSSDependencyAnalyzer {
         totalTailwindClasses: 0,
         totalCustomClasses: 0,
         totalRecommendations: 0,
-        successRate: 0
-      }
+        successRate: 0,
+      },
     };
   }
 
@@ -141,7 +155,7 @@ export class CSSDependencyAnalyzer {
       this.calculateStatistics();
       return this.result;
     } catch (error) {
-      this.addIssue('error', `分析エラー: ${error}`, 'high');
+      this.addIssue("error", `分析エラー: ${error}`, "high");
       throw error;
     }
   }
@@ -168,7 +182,7 @@ export class CSSDependencyAnalyzer {
 
       if (file.isDirectory()) {
         await this.analyzeDirectory(fullPath);
-      } else if (file.name.endsWith('.tsx') || file.name.endsWith('.ts')) {
+      } else if (file.name.endsWith(".tsx") || file.name.endsWith(".ts")) {
         await this.analyzeComponentFile(fullPath);
       }
     }
@@ -177,7 +191,7 @@ export class CSSDependencyAnalyzer {
   // コンポーネントファイルの分析
   private async analyzeComponentFile(filePath: string): Promise<void> {
     try {
-      const content = fs.readFileSync(filePath, 'utf8');
+      const content = fs.readFileSync(filePath, "utf8");
       const componentName = path.basename(filePath, path.extname(filePath));
 
       const classes = this.extractClasses(content);
@@ -192,7 +206,11 @@ export class CSSDependencyAnalyzer {
         }
       }
     } catch (error) {
-      this.addIssue('error', `ファイル分析エラー (${filePath}): ${error}`, 'medium');
+      this.addIssue(
+        "error",
+        `ファイル分析エラー (${filePath}): ${error}`,
+        "medium",
+      );
     }
   }
 
@@ -201,12 +219,16 @@ export class CSSDependencyAnalyzer {
     const classes = new Set<string>();
 
     // className属性を抽出
-    const classNameMatches = content.match(/className\s*=\s*["'`]([^"'`]+)["'`]/g);
+    const classNameMatches = content.match(
+      /className\s*=\s*["'`]([^"'`]+)["'`]/g,
+    );
     if (classNameMatches) {
-      classNameMatches.forEach(match => {
-        const classValue = match.match(/className\s*=\s*["'`]([^"'`]+)["'`]/)?.[1];
+      classNameMatches.forEach((match) => {
+        const classValue = match.match(
+          /className\s*=\s*["'`]([^"'`]+)["'`]/,
+        )?.[1];
         if (classValue) {
-          classValue.split(' ').forEach(cls => {
+          classValue.split(" ").forEach((cls) => {
             const trimmed = cls.trim();
             if (trimmed && !this.config.exclude.classes.includes(trimmed)) {
               classes.add(trimmed);
@@ -219,14 +241,14 @@ export class CSSDependencyAnalyzer {
     // cn()関数内のクラス
     const cnMatches = content.match(/cn\s*\(\s*([^)]+)\s*\)/g);
     if (cnMatches) {
-      cnMatches.forEach(match => {
+      cnMatches.forEach((match) => {
         const cnContent = match.match(/cn\s*\(\s*([^)]+)\s*\)/)?.[1];
         if (cnContent) {
           const stringMatches = cnContent.match(/["'`]([^"'`]+)["'`]/g);
           if (stringMatches) {
-            stringMatches.forEach(strMatch => {
-              const classValue = strMatch.replace(/["'`]/g, '');
-              classValue.split(' ').forEach(cls => {
+            stringMatches.forEach((strMatch) => {
+              const classValue = strMatch.replace(/["'`]/g, "");
+              classValue.split(" ").forEach((cls) => {
                 const trimmed = cls.trim();
                 if (trimmed && !this.config.exclude.classes.includes(trimmed)) {
                   classes.add(trimmed);
@@ -245,11 +267,18 @@ export class CSSDependencyAnalyzer {
   private extractDependencies(content: string): string[] {
     const dependencies = new Set<string>();
 
-    const importMatches = content.match(/import\s+.*?from\s+["'`]([^"'`]+)["'`]/g);
+    const importMatches = content.match(
+      /import\s+.*?from\s+["'`]([^"'`]+)["'`]/g,
+    );
     if (importMatches) {
-      importMatches.forEach(match => {
+      importMatches.forEach((match) => {
         const importPath = match.match(/from\s+["'`]([^"'`]+)["'`]/)?.[1];
-        if (importPath && (importPath.startsWith('@/') || importPath.startsWith('./') || importPath.startsWith('../'))) {
+        if (
+          importPath &&
+          (importPath.startsWith("@/") ||
+            importPath.startsWith("./") ||
+            importPath.startsWith("../"))
+        ) {
           dependencies.add(importPath);
         }
       });
@@ -261,23 +290,29 @@ export class CSSDependencyAnalyzer {
   // Tailwind設定ファイルの分析
   private async analyzeTailwindConfig(): Promise<void> {
     try {
-      const content = fs.readFileSync(this.config.tailwind.configFile, 'utf8');
+      const content = fs.readFileSync(this.config.tailwind.configFile, "utf8");
 
       if (this.config.tailwind.analyzeTheme) {
         const themeMatches = content.match(/theme:\s*{([^}]+)}/g);
         if (themeMatches) {
-          this.result.globalStyles.set('tailwind-theme', 'カスタムテーマ設定あり');
+          this.result.globalStyles.set(
+            "tailwind-theme",
+            "カスタムテーマ設定あり",
+          );
         }
       }
 
       if (this.config.tailwind.analyzePlugins) {
         const pluginMatches = content.match(/plugins:\s*\[([^\]]+)\]/g);
         if (pluginMatches) {
-          this.result.globalStyles.set('tailwind-plugins', 'プラグイン設定あり');
+          this.result.globalStyles.set(
+            "tailwind-plugins",
+            "プラグイン設定あり",
+          );
         }
       }
     } catch (error) {
-      this.addIssue('error', `Tailwind設定分析エラー: ${error}`, 'medium');
+      this.addIssue("error", `Tailwind設定分析エラー: ${error}`, "medium");
     }
   }
 
@@ -293,7 +328,7 @@ export class CSSDependencyAnalyzer {
   // CSSファイルの分析
   private async analyzeCSSFile(filePath: string): Promise<void> {
     try {
-      const content = fs.readFileSync(filePath, 'utf8');
+      const content = fs.readFileSync(filePath, "utf8");
       const fileName = path.basename(filePath);
 
       if (this.config.analysis.analyzeCSSVariables) {
@@ -305,18 +340,27 @@ export class CSSDependencyAnalyzer {
 
       const customClasses = content.match(/\.[a-zA-Z][a-zA-Z0-9_-]*\s*{/g);
       if (customClasses) {
-        const classes = customClasses.map(cls => cls.replace(/[.{]/g, '').trim());
+        const classes = customClasses.map((cls) =>
+          cls.replace(/[.{]/g, "").trim(),
+        );
         this.result.customCSS.set(fileName, classes);
       }
 
       if (this.config.analysis.analyzeLayers) {
         const layerMatches = content.match(/@layer\s+([^{]+){/g);
         if (layerMatches) {
-          this.result.globalStyles.set(`${fileName}-layers`, layerMatches.length);
+          this.result.globalStyles.set(
+            `${fileName}-layers`,
+            layerMatches.length,
+          );
         }
       }
     } catch (error) {
-      this.addIssue('error', `CSSファイル分析エラー (${filePath}): ${error}`, 'medium');
+      this.addIssue(
+        "error",
+        `CSSファイル分析エラー (${filePath}): ${error}`,
+        "medium",
+      );
     }
   }
 
@@ -336,7 +380,7 @@ export class CSSDependencyAnalyzer {
     const classPatterns = new Map<string, string[]>();
 
     this.result.tailwindClasses.forEach((classes, component) => {
-      const pattern = classes.sort().join(' ');
+      const pattern = classes.sort().join(" ");
       if (classPatterns.has(pattern)) {
         classPatterns.get(pattern)!.push(component);
       } else {
@@ -346,11 +390,11 @@ export class CSSDependencyAnalyzer {
 
     classPatterns.forEach((components, pattern) => {
       if (components.length > this.config.thresholds.duplicatePatterns) {
-        this.addRecommendation('duplicate-pattern', {
-          message: `重複するクラスパターン: ${components.join(', ')}`,
+        this.addRecommendation("duplicate-pattern", {
+          message: `重複するクラスパターン: ${components.join(", ")}`,
           pattern,
-          impact: 'medium',
-          effort: 'medium'
+          impact: "medium",
+          effort: "medium",
         });
       }
     });
@@ -360,11 +404,11 @@ export class CSSDependencyAnalyzer {
   private detectLongClassLists(): void {
     this.result.tailwindClasses.forEach((classes, component) => {
       if (classes.length > this.config.thresholds.longClassList) {
-        this.addRecommendation('long-class-list', {
+        this.addRecommendation("long-class-list", {
           message: `${component}: クラス数が多すぎます (${classes.length}個)`,
           classes,
-          impact: 'low',
-          effort: 'low'
+          impact: "low",
+          effort: "low",
         });
       }
     });
@@ -373,38 +417,48 @@ export class CSSDependencyAnalyzer {
   // 統計情報を計算
   private calculateStatistics(): void {
     this.result.statistics.totalComponents = this.result.tailwindClasses.size;
-    this.result.statistics.totalTailwindClasses = Array.from(this.result.tailwindClasses.values())
-      .reduce((sum, classes) => sum + classes.length, 0);
-    this.result.statistics.totalCustomClasses = Array.from(this.result.customCSS.values())
-      .reduce((sum, classes) => sum + classes.length, 0);
-    this.result.statistics.totalRecommendations = this.result.recommendations.length;
+    this.result.statistics.totalTailwindClasses = Array.from(
+      this.result.tailwindClasses.values(),
+    ).reduce((sum, classes) => sum + classes.length, 0);
+    this.result.statistics.totalCustomClasses = Array.from(
+      this.result.customCSS.values(),
+    ).reduce((sum, classes) => sum + classes.length, 0);
+    this.result.statistics.totalRecommendations =
+      this.result.recommendations.length;
 
-    const totalChecks = this.result.statistics.totalComponents + this.result.statistics.totalCustomClasses;
-    this.result.statistics.successRate = totalChecks > 0 
-      ? ((this.result.statistics.totalComponents / totalChecks) * 100)
-      : 100;
+    const totalChecks =
+      this.result.statistics.totalComponents +
+      this.result.statistics.totalCustomClasses;
+    this.result.statistics.successRate =
+      totalChecks > 0
+        ? (this.result.statistics.totalComponents / totalChecks) * 100
+        : 100;
   }
 
   // 問題を追加
-  private addIssue(type: 'error' | 'warning', message: string, severity: 'low' | 'medium' | 'high'): void {
+  private addIssue(
+    type: "error" | "warning",
+    message: string,
+    severity: "low" | "medium" | "high",
+  ): void {
     this.result.issues.push({
       type,
       message,
-      severity
+      severity,
     });
   }
 
   // 推奨事項を追加
   private addRecommendation(
-    type: AnalysisRecommendation['type'],
+    type: AnalysisRecommendation["type"],
     data: {
       message: string;
       component?: string;
       pattern?: string;
       classes?: string[];
-      impact: 'low' | 'medium' | 'high';
-      effort: 'low' | 'medium' | 'high';
-    }
+      impact: "low" | "medium" | "high";
+      effort: "low" | "medium" | "high";
+    },
   ): void {
     this.result.recommendations.push({
       type,
@@ -413,7 +467,7 @@ export class CSSDependencyAnalyzer {
       pattern: data.pattern,
       classes: data.classes,
       impact: data.impact,
-      effort: data.effort
+      effort: data.effort,
     });
   }
 
@@ -431,4 +485,4 @@ export class CSSDependencyAnalyzer {
   public reset(): void {
     this.result = this.initializeResult();
   }
-} 
+}

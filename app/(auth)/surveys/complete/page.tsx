@@ -10,18 +10,29 @@ const CompletePage = () => {
   return (
     <div className="min-h-screen bg-gray-100">
       <main className="w-full py-6 px-4">
-        <div className="max-w-[960px] mx-auto" style={{ maxWidth: '960px' }}>
-                      <SurveyCardHeader
-              title="調査票の確定"
-              workingTitleLabel="現在作業中のタイトル"
-              workingTitle=""
-              currentStep={4}
-              enableDefaultNavigation={true}
-            />
+        <div className="max-w-[960px] mx-auto" style={{ maxWidth: "960px" }}>
+          <SurveyCardHeader
+            title="調査票の確定"
+            workingTitleLabel="現在作業中のタイトル"
+            workingTitle=""
+            currentStep={4}
+            enableDefaultNavigation={true}
+          />
 
           {/* Main Content Container */}
-          <div className="flex flex-col items-center justify-center gap-6 p-6 bg-[#f4f7f9] rounded-b-lg shadow-[0px_1px_1px_0px_rgba(0,0,0,0.25)] h-[600px] max-w-[960px]" style={{ width: '960px', height: '600px', maxWidth: '960px', maxHeight: '600px' }}>
-            <Card className="w-[640px] h-[200px] max-w-[960px] bg-white rounded-lg border-0 flex items-center justify-center" style={{ width: '640px', height: '200px', maxWidth: '960px' }}>
+          <div
+            className="flex flex-col items-center justify-center gap-6 p-6 bg-[#f4f7f9] rounded-b-lg shadow-[0px_1px_1px_0px_rgba(0,0,0,0.25)] h-[600px] max-w-[960px]"
+            style={{
+              width: "960px",
+              height: "600px",
+              maxWidth: "960px",
+              maxHeight: "600px",
+            }}
+          >
+            <Card
+              className="w-[640px] h-[200px] max-w-[960px] bg-white rounded-lg border-0 flex items-center justify-center"
+              style={{ width: "640px", height: "200px", maxWidth: "960px" }}
+            >
               <CardContent className="flex flex-col items-center justify-center gap-10 px-6 py-[60px] h-full">
                 {/* Success Message */}
                 <h1 className="text-[#333333] text-lg font-bold text-center">

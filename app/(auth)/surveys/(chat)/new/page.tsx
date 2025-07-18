@@ -1,15 +1,14 @@
 "use client";
 
 import { Bot, ChevronRightIcon, CircleHelp, ExternalLink } from "lucide-react";
-import { useRouter } from "next/navigation";
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { SurveyAiChat } from "@/components/survey-ai/survey-ai-chat";
 import { SurveyCardHeader } from "@/components/survey-card-header";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { PublishAvailableConfirmDialog } from "./_components/publish-available-confirm-dialog";
 import { cn } from "@/lib/utils";
+import { PublishAvailableConfirmDialog } from "./_components/publish-available-confirm-dialog";
 
 type SurveyFormData = {
   title: string;
@@ -73,7 +72,6 @@ const aiResponses = [
 ];
 
 const Page = () => {
-  const router = useRouter();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isChatOpen, setIsChatOpen] = useState(true);
   const [isTransitioning, setIsTransitioning] = useState(false);
@@ -93,7 +91,7 @@ const Page = () => {
   const handleChatToggle = (collapsed: boolean) => {
     setIsTransitioning(true);
     setIsChatOpen(!collapsed);
-    
+
     // トランジション完了後にフラグをリセット
     setTimeout(() => {
       setIsTransitioning(false);
@@ -125,23 +123,23 @@ const Page = () => {
     console.log("Proceeding to next step");
   };
 
-
-
   return (
     <div className="min-h-screen bg-gray-100">
       <main className="w-full py-6 px-4">
-        <div className={cn(
-          "flex gap-4 max-w-[1440px] mx-auto",
-          // AIチャットパネルが閉じている時は中央配置
-          !isChatOpen && "justify-center"
-        )}>
+        <div
+          className={cn(
+            "flex gap-4 max-w-[1440px] mx-auto",
+            // AIチャットパネルが閉じている時は中央配置
+            !isChatOpen && "justify-center",
+          )}
+        >
           {/* 左：メインコンテンツ */}
-                      <div
-              className={cn(
-                "flex flex-col gap-0 transition-all duration-300",
-              isChatOpen 
+          <div
+            className={cn(
+              "flex flex-col gap-0 transition-all duration-300",
+              isChatOpen
                 ? "w-[calc(100%-500px)]" // 開いている時：元のサイズ
-                : "w-[calc(100%-500px)]" // 閉じている時：前のサイズを維持
+                : "w-[calc(100%-500px)]", // 閉じている時：前のサイズを維持
             )}
           >
             <SurveyCardHeader
@@ -305,9 +303,9 @@ const Page = () => {
                 </div>
               </form>
               <div className="flex justify-center pb-5 bg-[#ffffff]">
-                                  <Button
-                    type="submit"
-                    className="w-[340px] h-14 bg-[#556064] rounded-[34px] flex items-center justify-center gap-4 px-4 py-0 mt-5"
+                <Button
+                  type="submit"
+                  className="w-[340px] h-14 bg-[#556064] rounded-[34px] flex items-center justify-center gap-4 px-4 py-0 mt-5"
                   onClick={() => setIsDialogOpen(true)}
                 >
                   <span className="font-bold text-white text-base text-center tracking-[0] leading-[22.4px] font-['Noto_Sans_JP',Helvetica]">
@@ -328,7 +326,7 @@ const Page = () => {
           <div
             className={cn(
               "transition-all duration-300 flex",
-              isChatOpen ? "w-[500px]" : "w-16"
+              isChatOpen ? "w-[500px]" : "w-16",
             )}
           >
             {isChatOpen ? (
@@ -347,7 +345,9 @@ const Page = () => {
                 >
                   <div className="flex flex-col items-center gap-0">
                     <Bot className="w-6 h-6 text-white" />
-                    <span className="text-white text-xs font-bold">AIと話す</span>
+                    <span className="text-white text-xs font-bold">
+                      AIと話す
+                    </span>
                   </div>
                 </button>
               </div>

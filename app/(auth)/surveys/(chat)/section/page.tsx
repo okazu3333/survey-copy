@@ -1,13 +1,12 @@
 "use client";
 
-import { Bot, ChevronRightIcon, CircleHelp, ExternalLink } from "lucide-react";
+import { Bot, ChevronRightIcon, CircleHelp } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { SurveyAiChat } from "@/components/survey-ai/survey-ai-chat";
 import { SurveyCardHeader } from "@/components/survey-card-header";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 
 type SectionFormData = {
@@ -38,7 +37,7 @@ const Page = () => {
   const handleChatToggle = (collapsed: boolean) => {
     setIsTransitioning(true);
     setIsChatOpen(!collapsed);
-    
+
     // トランジション完了後にフラグをリセット
     setTimeout(() => {
       setIsTransitioning(false);
@@ -68,16 +67,18 @@ const Page = () => {
   return (
     <div className="min-h-screen bg-gray-100">
       <main className="w-full py-6 px-4">
-        <div className={cn(
-          "flex gap-4 max-w-[1440px] mx-auto",
-          // AIチャットパネルが閉じている時は中央配置
-          !isChatOpen && "justify-center"
-        )}>
+        <div
+          className={cn(
+            "flex gap-4 max-w-[1440px] mx-auto",
+            // AIチャットパネルが閉じている時は中央配置
+            !isChatOpen && "justify-center",
+          )}
+        >
           {/* 左：メインコンテンツ */}
           <div
             className={cn(
               "flex flex-col gap-0 transition-all duration-300",
-              "w-[calc(100%-500px)]" // 常に同じ幅を維持
+              "w-[calc(100%-500px)]", // 常に同じ幅を維持
             )}
           >
             <SurveyCardHeader
@@ -216,7 +217,7 @@ const Page = () => {
           <div
             className={cn(
               "transition-all duration-300 flex",
-              isChatOpen ? "w-[500px]" : "w-16"
+              isChatOpen ? "w-[500px]" : "w-16",
             )}
           >
             {isChatOpen ? (
@@ -235,7 +236,9 @@ const Page = () => {
                 >
                   <div className="flex flex-col items-center gap-0">
                     <Bot className="w-6 h-6 text-white" />
-                    <span className="text-white text-xs font-bold">AIと話す</span>
+                    <span className="text-white text-xs font-bold">
+                      AIと話す
+                    </span>
                   </div>
                 </button>
               </div>

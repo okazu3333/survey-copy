@@ -1,4 +1,4 @@
-import type { CSSAnalysisResult, AnalysisRecommendation } from './css-analyzer';
+import type { CSSAnalysisResult } from "./css-analyzer";
 
 // レポート設定の型定義
 export interface ReportConfig {
@@ -7,7 +7,7 @@ export interface ReportConfig {
   showStatistics: boolean;
   showRecommendations: boolean;
   generateDependencyGraph: boolean;
-  outputFormat: 'console' | 'json' | 'html' | 'markdown';
+  outputFormat: "console" | "json" | "html" | "markdown";
   outputFile?: string;
 }
 
@@ -29,20 +29,20 @@ export class CSSReportGenerator {
       showStatistics: true,
       showRecommendations: true,
       generateDependencyGraph: false,
-      outputFormat: 'console'
+      outputFormat: "console",
     };
   }
 
   // メインのレポート生成メソッド
   public generateReport(analysis: CSSAnalysisResult): string {
     switch (this.config.outputFormat) {
-      case 'json':
+      case "json":
         return this.generateJSONReport(analysis);
-      case 'html':
+      case "html":
         return this.generateHTMLReport(analysis);
-      case 'markdown':
+      case "markdown":
         return this.generateMarkdownReport(analysis);
-      case 'console':
+      case "console":
       default:
         return this.generateConsoleReport(analysis);
     }
@@ -53,7 +53,7 @@ export class CSSReportGenerator {
     const lines: string[] = [];
 
     // ヘッダー
-    lines.push(this.createHeader('CSS依存関係分析レポート'));
+    lines.push(this.createHeader("CSS依存関係分析レポート"));
 
     // Tailwindクラス使用状況
     if (this.config.detailed) {
@@ -76,7 +76,10 @@ export class CSSReportGenerator {
     }
 
     // 推奨事項
-    if (this.config.showRecommendations && analysis.recommendations.length > 0) {
+    if (
+      this.config.showRecommendations &&
+      analysis.recommendations.length > 0
+    ) {
       lines.push(this.createRecommendationsSection(analysis));
     }
 
@@ -88,7 +91,7 @@ export class CSSReportGenerator {
     // フッター
     lines.push(this.createFooter());
 
-    return lines.join('\n');
+    return lines.join("\n");
   }
 
   // JSONレポート生成
@@ -100,14 +103,14 @@ export class CSSReportGenerator {
         totalTailwindClasses: analysis.statistics.totalTailwindClasses,
         totalCustomClasses: analysis.statistics.totalCustomClasses,
         totalRecommendations: analysis.statistics.totalRecommendations,
-        successRate: analysis.statistics.successRate
+        successRate: analysis.statistics.successRate,
       },
       tailwindClasses: Object.fromEntries(analysis.tailwindClasses),
       customCSS: Object.fromEntries(analysis.customCSS),
       globalStyles: Object.fromEntries(analysis.globalStyles),
       componentDependencies: Object.fromEntries(analysis.componentDependencies),
       recommendations: analysis.recommendations,
-      issues: analysis.issues
+      issues: analysis.issues,
     };
 
     return JSON.stringify(report, null, 2);
@@ -176,109 +179,115 @@ export class CSSReportGenerator {
   private generateMarkdownReport(analysis: CSSAnalysisResult): string {
     const lines: string[] = [];
 
-    lines.push('# CSS依存関係分析レポート');
-    lines.push('');
-    lines.push(`**生成日時**: ${new Date().toLocaleString('ja-JP')}`);
-    lines.push('');
+    lines.push("# CSS依存関係分析レポート");
+    lines.push("");
+    lines.push(`**生成日時**: ${new Date().toLocaleString("ja-JP")}`);
+    lines.push("");
 
     // 統計情報
-    lines.push('## 📊 統計情報');
-    lines.push('');
-    lines.push(`- **コンポーネント数**: ${analysis.statistics.totalComponents}`);
-    lines.push(`- **Tailwindクラス数**: ${analysis.statistics.totalTailwindClasses}`);
-    lines.push(`- **カスタムクラス数**: ${analysis.statistics.totalCustomClasses}`);
+    lines.push("## 📊 統計情報");
+    lines.push("");
+    lines.push(
+      `- **コンポーネント数**: ${analysis.statistics.totalComponents}`,
+    );
+    lines.push(
+      `- **Tailwindクラス数**: ${analysis.statistics.totalTailwindClasses}`,
+    );
+    lines.push(
+      `- **カスタムクラス数**: ${analysis.statistics.totalCustomClasses}`,
+    );
     lines.push(`- **推奨事項数**: ${analysis.statistics.totalRecommendations}`);
     lines.push(`- **成功率**: ${analysis.statistics.successRate.toFixed(1)}%`);
-    lines.push('');
+    lines.push("");
 
     // 推奨事項
     if (analysis.recommendations.length > 0) {
-      lines.push('## 💡 推奨事項');
-      lines.push('');
+      lines.push("## 💡 推奨事項");
+      lines.push("");
       analysis.recommendations.forEach((rec, index) => {
         lines.push(`### ${index + 1}. ${rec.message}`);
         if (rec.pattern) {
           lines.push(`**パターン**: \`${rec.pattern}\``);
         }
         if (rec.classes) {
-          lines.push(`**クラス**: \`${rec.classes.join(' ')}\``);
+          lines.push(`**クラス**: \`${rec.classes.join(" ")}\``);
         }
         lines.push(`**影響度**: ${rec.impact} | **作業量**: ${rec.effort}`);
-        lines.push('');
+        lines.push("");
       });
     }
 
     // Tailwindクラス
     if (this.config.detailed) {
-      lines.push('## 🎨 Tailwind CSSクラス使用状況');
-      lines.push('');
+      lines.push("## 🎨 Tailwind CSSクラス使用状況");
+      lines.push("");
       analysis.tailwindClasses.forEach((classes, component) => {
         lines.push(`### ${component}`);
         lines.push(`**クラス数**: ${classes.length}`);
-        lines.push(`**クラス**: \`${classes.join(' ')}\``);
-        lines.push('');
+        lines.push(`**クラス**: \`${classes.join(" ")}\``);
+        lines.push("");
       });
     }
 
-    return lines.join('\n');
+    return lines.join("\n");
   }
 
   // セクション生成メソッド
   private createHeader(title: string): string {
-    const separator = '='.repeat(80);
+    const separator = "=".repeat(80);
     return `${separator}\n${title}\n${separator}`;
   }
 
   private createTailwindClassesSection(analysis: CSSAnalysisResult): string {
-    const lines = ['\n📊 Tailwind CSSクラス使用状況:'];
-    
+    const lines = ["\n📊 Tailwind CSSクラス使用状況:"];
+
     analysis.tailwindClasses.forEach((classes, component) => {
       lines.push(`  ${component}: ${classes.length}個のクラス`);
       if (classes.length > 0) {
-        lines.push(`    ${classes.join(' ')}`);
+        lines.push(`    ${classes.join(" ")}`);
       }
     });
 
-    return lines.join('\n');
+    return lines.join("\n");
   }
 
   private createCustomCSSSection(analysis: CSSAnalysisResult): string {
-    const lines = ['\n🎨 カスタムCSS:'];
-    
+    const lines = ["\n🎨 カスタムCSS:"];
+
     analysis.customCSS.forEach((classes, file) => {
       lines.push(`  ${file}: ${classes.length}個のクラス`);
       if (classes.length > 0) {
-        lines.push(`    ${classes.join(', ')}`);
+        lines.push(`    ${classes.join(", ")}`);
       }
     });
 
-    return lines.join('\n');
+    return lines.join("\n");
   }
 
   private createGlobalStylesSection(analysis: CSSAnalysisResult): string {
-    const lines = ['\n🌍 グローバルスタイル:'];
-    
+    const lines = ["\n🌍 グローバルスタイル:"];
+
     analysis.globalStyles.forEach((value, key) => {
       lines.push(`  ${key}: ${value}`);
     });
 
-    return lines.join('\n');
+    return lines.join("\n");
   }
 
   private createDependenciesSection(analysis: CSSAnalysisResult): string {
-    const lines = ['\n🔗 コンポーネント依存関係:'];
-    
+    const lines = ["\n🔗 コンポーネント依存関係:"];
+
     analysis.componentDependencies.forEach((deps, component) => {
       lines.push(`  ${component}:`);
-      deps.forEach(dep => lines.push(`    → ${dep}`));
+      deps.forEach((dep) => lines.push(`    → ${dep}`));
     });
 
-    return lines.join('\n');
+    return lines.join("\n");
   }
 
   private createRecommendationsSection(analysis: CSSAnalysisResult): string {
-    const lines = ['\n💡 推奨事項:'];
-    
+    const lines = ["\n💡 推奨事項:"];
+
     analysis.recommendations.forEach((rec, index) => {
       lines.push(`  ${index + 1}. ${rec.message}`);
       if (rec.pattern) {
@@ -286,36 +295,42 @@ export class CSSReportGenerator {
       }
     });
 
-    return lines.join('\n');
+    return lines.join("\n");
   }
 
   private createStatisticsSection(analysis: CSSAnalysisResult): string {
-    const lines = ['\n📈 統計情報:'];
-    
+    const lines = ["\n📈 統計情報:"];
+
     lines.push(`  コンポーネント数: ${analysis.statistics.totalComponents}`);
-    lines.push(`  Tailwindクラス数: ${analysis.statistics.totalTailwindClasses}`);
+    lines.push(
+      `  Tailwindクラス数: ${analysis.statistics.totalTailwindClasses}`,
+    );
     lines.push(`  カスタムクラス数: ${analysis.statistics.totalCustomClasses}`);
     lines.push(`  推奨事項数: ${analysis.statistics.totalRecommendations}`);
 
-    return lines.join('\n');
+    return lines.join("\n");
   }
 
   private createFooter(): string {
-    return '\n' + '='.repeat(80);
+    return "\n" + "=".repeat(80);
   }
 
   // HTMLセクション生成メソッド
   private generateHTMLRecommendations(analysis: CSSAnalysisResult): string {
-    if (analysis.recommendations.length === 0) return '';
+    if (analysis.recommendations.length === 0) return "";
 
-    const recommendations = analysis.recommendations.map(rec => `
+    const recommendations = analysis.recommendations
+      .map(
+        (rec) => `
       <div class="recommendation impact-${rec.impact}">
         <strong>${rec.message}</strong>
-        ${rec.pattern ? `<br><code>パターン: ${rec.pattern}</code>` : ''}
-        ${rec.classes ? `<br><code>クラス: ${rec.classes.join(' ')}</code>` : ''}
+        ${rec.pattern ? `<br><code>パターン: ${rec.pattern}</code>` : ""}
+        ${rec.classes ? `<br><code>クラス: ${rec.classes.join(" ")}</code>` : ""}
         <br><small>影響度: ${rec.impact} | 作業量: ${rec.effort}</small>
       </div>
-    `).join('');
+    `,
+      )
+      .join("");
 
     return `
       <h2>💡 推奨事項</h2>
@@ -324,14 +339,18 @@ export class CSSReportGenerator {
   }
 
   private generateHTMLIssues(analysis: CSSAnalysisResult): string {
-    if (analysis.issues.length === 0) return '';
+    if (analysis.issues.length === 0) return "";
 
-    const issues = analysis.issues.map(issue => `
+    const issues = analysis.issues
+      .map(
+        (issue) => `
       <div class="issue">
         <strong>${issue.type.toUpperCase()}:</strong> ${issue.message}
         <br><small>重要度: ${issue.severity}</small>
       </div>
-    `).join('');
+    `,
+      )
+      .join("");
 
     return `
       <h2>⚠️ 問題</h2>
@@ -340,15 +359,19 @@ export class CSSReportGenerator {
   }
 
   private generateHTMLTailwindClasses(analysis: CSSAnalysisResult): string {
-    if (analysis.tailwindClasses.size === 0) return '';
+    if (analysis.tailwindClasses.size === 0) return "";
 
-    const components = Array.from(analysis.tailwindClasses.entries()).map(([component, classes]) => `
+    const components = Array.from(analysis.tailwindClasses.entries())
+      .map(
+        ([component, classes]) => `
       <div class="component-list">
         <h3>${component}</h3>
-        <div class="class-list">${classes.join(' ')}</div>
+        <div class="class-list">${classes.join(" ")}</div>
         <small>${classes.length}個のクラス</small>
       </div>
-    `).join('');
+    `,
+      )
+      .join("");
 
     return `
       <h2>🎨 Tailwind CSSクラス</h2>
@@ -357,15 +380,19 @@ export class CSSReportGenerator {
   }
 
   private generateHTMLCustomCSS(analysis: CSSAnalysisResult): string {
-    if (analysis.customCSS.size === 0) return '';
+    if (analysis.customCSS.size === 0) return "";
 
-    const files = Array.from(analysis.customCSS.entries()).map(([file, classes]) => `
+    const files = Array.from(analysis.customCSS.entries())
+      .map(
+        ([file, classes]) => `
       <div class="component-list">
         <h3>${file}</h3>
-        <div class="class-list">${classes.join(', ')}</div>
+        <div class="class-list">${classes.join(", ")}</div>
         <small>${classes.length}個のクラス</small>
       </div>
-    `).join('');
+    `,
+      )
+      .join("");
 
     return `
       <h2>🎨 カスタムCSS</h2>
@@ -379,9 +406,12 @@ export class CSSReportGenerator {
   }
 
   // レポートをファイルに保存
-  public async saveReport(analysis: CSSAnalysisResult, filePath: string): Promise<void> {
-    const fs = await import('fs');
+  public async saveReport(
+    analysis: CSSAnalysisResult,
+    filePath: string,
+  ): Promise<void> {
+    const fs = await import("fs");
     const report = this.generateReport(analysis);
-    await fs.promises.writeFile(filePath, report, 'utf8');
+    await fs.promises.writeFile(filePath, report, "utf8");
   }
-} 
+}
