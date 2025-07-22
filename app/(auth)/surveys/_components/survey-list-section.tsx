@@ -30,6 +30,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { useRouter } from "next/navigation";
 
 // サンプルデータ（実際の実装ではAPIから取得）
 const generateSampleData = () => {
@@ -58,17 +59,20 @@ const generateSampleData = () => {
   const creators = ["山田太郎", "佐藤花子", "田中次郎", "鈴木美咲", "高橋健一"];
 
   return Array.from({ length: 100 }, (_, i) => {
-    const status = statuses[Math.floor(Math.random() * statuses.length)];
-    const title = titles[Math.floor(Math.random() * titles.length)];
-    const creator = creators[Math.floor(Math.random() * creators.length)];
+    const status = statuses[i % statuses.length];
+    const title = titles[i % titles.length];
+    const creator = creators[i % creators.length];
+    const day = ((i % 30) + 1).toString().padStart(2, "0");
+    const hour = ((i % 24)).toString().padStart(2, "0");
+    const minute = ((i % 60)).toString().padStart(2, "0");
 
     return {
       id: `SRB${String(i + 1).padStart(3, "0")}`,
       title: `${title} ${i + 1}`,
       status: status.name,
       statusColor: status.color,
-      createdDate: `2025/06/${String(Math.floor(Math.random() * 30) + 1).padStart(2, "0")} ${String(Math.floor(Math.random() * 24)).padStart(2, "0")}:${String(Math.floor(Math.random() * 60)).padStart(2, "0")}`,
-      updatedDate: `2025/06/${String(Math.floor(Math.random() * 30) + 1).padStart(2, "0")} ${String(Math.floor(Math.random() * 24)).padStart(2, "0")}:${String(Math.floor(Math.random() * 60)).padStart(2, "0")}`,
+      createdDate: `2025/06/${day} ${hour}:${minute}`,
+      updatedDate: `2025/06/${day} ${hour}:${minute}`,
       creator,
       rowColor: "bg-white",
     };
@@ -80,6 +84,7 @@ export function SurveyListSection() {
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
   const [allSurveys] = useState(() => generateSampleData()); // 初期化時に1回だけ実行
   const itemsPerPage = 20;
+  const router = useRouter();
 
   const totalPages = Math.ceil(allSurveys.length / itemsPerPage);
 
@@ -112,6 +117,29 @@ export function SurveyListSection() {
   const handleDownloadResults = () => {
     // テスト結果のダウンロード処理
     console.log("テスト結果をダウンロード");
+  };
+
+  // テーブル行クリック時の遷移処理
+  const handleRowClick = (survey: typeof allSurveys[number], event: React.MouseEvent) => {
+    // クリックされた要素がインタラクティブ要素の場合は何もしない
+    const tag = (event.target as HTMLElement).tagName.toLowerCase();
+    if (
+      tag === "button" ||
+      tag === "a" ||
+      tag === "input" ||
+      tag === "svg" ||
+      (event.target as HTMLElement).closest("button") ||
+      (event.target as HTMLElement).closest("a") ||
+      (event.target as HTMLElement).closest("input") ||
+      (event.target as HTMLElement).closest("svg")
+    ) {
+      return;
+    }
+    if (["レビュー待ち", "レビュー完了", "作成完了"].includes(survey.status)) {
+      router.push(`/surveys/review/preview`);
+    } else if (survey.status === "作成中") {
+      router.push(`/surveys/question/edit`);
+    }
   };
 
   const generatePaginationItems = () => {
@@ -251,12 +279,7 @@ export function SurveyListSection() {
                   <TableRow
                     key={survey.id}
                     className={`${selectedItems.includes(survey.id) ? "bg-[#BCD6E0]" : survey.rowColor} hover:bg-blue-50 transition-colors cursor-pointer`}
-                    onClick={() =>
-                      handleSelectItem(
-                        survey.id,
-                        !selectedItems.includes(survey.id),
-                      )
-                    }
+                    onClick={(e) => handleRowClick(survey, e)}
                   >
                     <TableCell>
                       <Checkbox
@@ -264,6 +287,7 @@ export function SurveyListSection() {
                         onCheckedChange={(checked) =>
                           handleSelectItem(survey.id, checked as boolean)
                         }
+                        // チェックボックス自体のクリックイベントは選択状態の切り替えのみ
                       />
                     </TableCell>
                     <TableCell className="font-medium text-gray-900">
@@ -293,7 +317,14 @@ export function SurveyListSection() {
                       <Button
                         variant="outline"
                         size="sm"
-                        className="border-gray-300 hover:bg-gray-50 w-8 h-8 p-0 mx-auto"
+                        className="border-gray-300 w-8 h-8 p-0 mx-auto relative z-10 transition-colors hover:bg-[#e0f2fe] focus:bg-[#bae6fd]"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          router.push("/surveys/review/reviewer/preview");
+                        }}
+                        aria-label="レビュワープレビュー画面へ"
+                        tabIndex={0}
                       >
                         <Eye className="w-4 h-4" />
                       </Button>
