@@ -298,10 +298,10 @@ export const SurveySectionWithComments = ({
                         if (top < margin) top = margin;
                       }
                       return {
-                        left: left + "px",
-                        top: top + "px",
+                        left: `${left}px`,
+                        top: `${top}px`,
                         zIndex: 40,
-                        width: popupWidth + "px",
+                        width: `${popupWidth}px`,
                         pointerEvents: "auto",
                       };
                     })()}

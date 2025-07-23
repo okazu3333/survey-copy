@@ -26,9 +26,11 @@ const ReviewSidebar = ({ userType = "reviewee" }: ReviewSidebarProps) => {
   const [filterStatus, setFilterStatus] = useState<FilterStatus>("all");
   const [isAiDialogOpen, setIsAiDialogOpen] = useState(false);
   const [isUserDialogOpen, setIsUserDialogOpen] = useState(false);
-  const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false);
-  const [pendingDialogType, setPendingDialogType] = useState<"ai" | "user" | null>(null);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [_isPasswordModalOpen, _setIsPasswordModalOpen] = useState(false);
+  const [_pendingDialogType, _setPendingDialogType] = useState<
+    "ai" | "user" | null
+  >(null);
+  const [_isAuthenticated, _setIsAuthenticated] = useState(false);
 
   type ReviewItem = {
     id: number;

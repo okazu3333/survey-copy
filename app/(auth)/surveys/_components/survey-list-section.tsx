@@ -80,7 +80,7 @@ export function SurveyListSection() {
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
   const [allSurveys] = useState(() => generateSampleData()); // 初期化時に1回だけ実行
   const itemsPerPage = 20;
-  const router = useRouter();
+  const _router = useRouter();
   const { handleRowClick, handleIconClick } = useTableNavigation();
 
   const totalPages = Math.ceil(allSurveys.length / itemsPerPage);

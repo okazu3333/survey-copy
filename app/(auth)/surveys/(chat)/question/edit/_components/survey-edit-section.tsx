@@ -1,9 +1,10 @@
 import { RadioGroup, RadioGroupItem } from "@radix-ui/react-radio-group";
 import { Separator } from "@radix-ui/react-separator";
-import { HelpCircle, Lock, Plus, Trash, X } from "lucide-react";
+import { Lock, Plus, Trash, X } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { SettingsPanel } from "@/components/common/settings-panel";
 import { GripIcon } from "@/components/ui";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -11,8 +12,6 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Select, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Textarea } from "@/components/ui/textarea";
-import { SettingsPanel } from "@/components/common/settings-panel";
 
 type TabType = "screening" | "main";
 
@@ -306,7 +305,7 @@ export const SurveyEditSection = ({ groupId }: SurveyEditSectionProps) => {
     },
   });
 
-  const onSubmit = (data: SettingsFormData) => {
+  const _onSubmit = (data: SettingsFormData) => {
     console.log("Settings form submitted:", data);
   };
 
@@ -808,14 +807,14 @@ export const SurveyEditSection = ({ groupId }: SurveyEditSectionProps) => {
                   <GridPattern />
                 </div>
 
-
                 {/* 設定パネル */}
                 <div className="mt-4 w-full">
                   <SettingsPanel
                     defaultValues={{
                       requiredAnswer: true,
                       targetCondition: "全員\nカテゴリ.2 - SC4 = 2",
-                      answerControl: "カテゴリ.1 - ：SC5 ≠ 2 ～ 10　に該当しない場合はアラートを表示",
+                      answerControl:
+                        "カテゴリ.1 - ：SC5 ≠ 2 ～ 10　に該当しない場合はアラートを表示",
                       subjectCondition: "なし",
                       skipCondition: "なし",
                       categoryOrder: "通常",
@@ -1037,10 +1036,13 @@ export const SurveyEditSection = ({ groupId }: SurveyEditSectionProps) => {
                     <div className="mt-4 w-full">
                       <SettingsPanel
                         defaultValues={{
-                          requiredAnswer: question.settings[0]?.isToggled || true,
-                          targetCondition: question.settings[1]?.value || "全員",
+                          requiredAnswer:
+                            question.settings[0]?.isToggled || true,
+                          targetCondition:
+                            question.settings[1]?.value || "全員",
                           answerControl: question.settings[2]?.value || "なし",
-                          subjectCondition: question.settings[3]?.value || "なし",
+                          subjectCondition:
+                            question.settings[3]?.value || "なし",
                           skipCondition: question.settings[4]?.value || "なし",
                           categoryOrder: question.settings[5]?.value || "通常",
                           jumpCondition: question.settings[6]?.value || "なし",

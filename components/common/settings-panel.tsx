@@ -1,6 +1,7 @@
-import React, { useState } from "react";
-import { useForm } from "react-hook-form";
 import { ChevronDown, ChevronUp, HelpCircle } from "lucide-react";
+import type React from "react";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
@@ -38,7 +39,7 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({
     defaultValues,
   });
 
-  const requiredAnswer = watch("requiredAnswer");
+  const _requiredAnswer = watch("requiredAnswer");
 
   const onSubmit = (data: SettingsFormData) => {
     onSave?.(data);
@@ -69,7 +70,10 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({
           <div className="flex items-start gap-2 relative self-stretch w-full flex-[0_0_auto] min-w-0">
             <div className="flex w-36 items-center gap-1 px-0 py-1 relative flex-shrink-0">
               <div className="inline-flex items-center gap-2 relative flex-[0_0_auto] min-w-0">
-                <label htmlFor="requiredAnswer" className="w-fit font-medium text-[#333333] text-sm relative mt-[-1.00px] truncate">
+                <label
+                  htmlFor="requiredAnswer"
+                  className="w-fit font-medium text-[#333333] text-sm relative mt-[-1.00px] truncate"
+                >
                   必須回答
                 </label>
                 <div className="inline-flex items-center pt-0.5 pb-0 px-0 relative flex-shrink-0">
@@ -78,10 +82,7 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({
               </div>
             </div>
             <div className="inline-flex items-center gap-2 px-0 py-1 relative flex-shrink-0">
-              <Checkbox
-                {...register("requiredAnswer")}
-                className="h-4 w-4"
-              />
+              <Checkbox {...register("requiredAnswer")} className="h-4 w-4" />
               <span className="relative w-fit mt-[-1.00px] font-medium text-[#333333] text-xs text-center whitespace-nowrap">
                 必須オン
               </span>
@@ -92,7 +93,10 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({
           <div className="flex items-start gap-2 relative self-stretch w-full flex-[0_0_auto] min-w-0">
             <div className="flex w-36 items-center gap-1 px-0 py-1 relative flex-shrink-0">
               <div className="inline-flex items-center gap-2 relative flex-[0_0_auto] min-w-0">
-                <label htmlFor="targetCondition" className="w-fit font-medium text-[#333333] text-sm relative mt-[-1.00px] truncate">
+                <label
+                  htmlFor="targetCondition"
+                  className="w-fit font-medium text-[#333333] text-sm relative mt-[-1.00px] truncate"
+                >
                   回答者条件
                 </label>
                 <div className="inline-flex items-center pt-0.5 pb-0 px-0 relative flex-shrink-0">
@@ -113,7 +117,10 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({
           <div className="flex items-start gap-2 relative self-stretch w-full flex-[0_0_auto] min-w-0">
             <div className="flex w-36 items-center gap-1 px-0 py-1 relative flex-shrink-0">
               <div className="inline-flex items-center gap-2 relative flex-[0_0_auto] min-w-0">
-                <label htmlFor="answerControl" className="w-fit font-medium text-[#333333] text-sm relative mt-[-1.00px] truncate">
+                <label
+                  htmlFor="answerControl"
+                  className="w-fit font-medium text-[#333333] text-sm relative mt-[-1.00px] truncate"
+                >
                   回答制御
                 </label>
                 <div className="inline-flex items-center pt-0.5 pb-0 px-0 relative flex-shrink-0">
@@ -134,7 +141,10 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({
           <div className="flex items-start gap-2 relative self-stretch w-full flex-[0_0_auto] min-w-0">
             <div className="flex w-36 items-center gap-1 px-0 py-1 relative flex-shrink-0">
               <div className="inline-flex items-center gap-2 relative flex-[0_0_auto] min-w-0">
-                <label htmlFor="subjectCondition" className="w-fit font-medium text-[#333333] text-sm relative mt-[-1.00px] truncate">
+                <label
+                  htmlFor="subjectCondition"
+                  className="w-fit font-medium text-[#333333] text-sm relative mt-[-1.00px] truncate"
+                >
                   対象者条件
                 </label>
                 <div className="inline-flex items-center pt-0.5 pb-0 px-0 relative flex-shrink-0">
@@ -154,7 +164,10 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({
           <div className="flex items-start gap-2 relative self-stretch w-full flex-[0_0_auto] min-w-0">
             <div className="flex w-36 items-center gap-1 px-0 py-1 relative flex-shrink-0">
               <div className="inline-flex items-center gap-2 relative flex-[0_0_auto] min-w-0">
-                <label htmlFor="skipCondition" className="w-fit font-medium text-[#333333] text-sm relative mt-[-1.00px] truncate">
+                <label
+                  htmlFor="skipCondition"
+                  className="w-fit font-medium text-[#333333] text-sm relative mt-[-1.00px] truncate"
+                >
                   スキップ条件
                 </label>
                 <div className="inline-flex items-center pt-0.5 pb-0 px-0 relative flex-shrink-0">
@@ -174,7 +187,10 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({
           <div className="flex items-start gap-2 relative self-stretch w-full flex-[0_0_auto] min-w-0">
             <div className="flex w-36 items-center gap-1 px-0 py-1 relative flex-shrink-0">
               <div className="inline-flex items-center gap-2 relative flex-[0_0_auto] min-w-0">
-                <label htmlFor="categoryOrder" className="w-fit font-medium text-[#333333] text-sm relative mt-[-1.00px] truncate">
+                <label
+                  htmlFor="categoryOrder"
+                  className="w-fit font-medium text-[#333333] text-sm relative mt-[-1.00px] truncate"
+                >
                   カテゴリ表示順
                 </label>
                 <div className="inline-flex items-center pt-0.5 pb-0 px-0 relative flex-shrink-0">
@@ -194,7 +210,10 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({
           <div className="flex items-start gap-2 relative self-stretch w-full flex-[0_0_auto] min-w-0">
             <div className="flex w-36 items-center gap-1 px-0 py-1 relative flex-shrink-0">
               <div className="inline-flex items-center gap-2 relative flex-[0_0_auto] min-w-0">
-                <label htmlFor="jumpCondition" className="w-fit font-medium text-[#333333] text-sm relative mt-[-1.00px] truncate">
+                <label
+                  htmlFor="jumpCondition"
+                  className="w-fit font-medium text-[#333333] text-sm relative mt-[-1.00px] truncate"
+                >
                   ジャンプ条件
                 </label>
                 <div className="inline-flex items-center pt-0.5 pb-0 px-0 relative flex-shrink-0">
@@ -224,4 +243,4 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({
       )}
     </div>
   );
-}; 
+};

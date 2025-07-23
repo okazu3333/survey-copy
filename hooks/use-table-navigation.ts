@@ -1,6 +1,6 @@
 import { useRouter } from "next/navigation";
 import { useCallback } from "react";
-import type { IconAction, Project, ProjectStatus } from "@/lib/types/survey";
+import type { IconAction, Project } from "@/lib/types/survey";
 import {
   getIconActionPath,
   getNavigationPath,

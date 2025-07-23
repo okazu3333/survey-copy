@@ -69,9 +69,9 @@ export const SurveyAiChat = ({
       setIsChatHistoryOpen(true);
     };
 
-    window.addEventListener('openChatHistory', handleOpenChatHistory);
+    window.addEventListener("openChatHistory", handleOpenChatHistory);
     return () => {
-      window.removeEventListener('openChatHistory', handleOpenChatHistory);
+      window.removeEventListener("openChatHistory", handleOpenChatHistory);
     };
   }, []);
 

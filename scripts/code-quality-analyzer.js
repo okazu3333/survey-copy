@@ -1,8 +1,7 @@
 #!/usr/bin/env node
 
-import fs from "fs";
+import fs from "node:fs";
 import { glob } from "glob";
-import path from "path";
 
 async function analyzeCodeQuality() {
   console.log("🔍 コード品質分析中...");
@@ -150,7 +149,7 @@ async function analyzeFileStructure() {
   return structure;
 }
 
-async function generateRecommendations(analysis, duplicates, structure) {
+async function generateRecommendations(analysis, duplicates, _structure) {
   console.log("\n💡 改善推奨事項:");
 
   const recommendations = [];

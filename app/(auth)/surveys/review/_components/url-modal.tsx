@@ -1,7 +1,7 @@
 "use client";
 
 import { Check, Copy, RefreshCw } from "lucide-react";
-import React, { useState, useEffect } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -29,21 +29,22 @@ export const UrlModal = ({
   const [password, setPassword] = useState("");
 
   // 8桁のランダムパスワードを生成する関数
-  const generatePassword = () => {
-    const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  const generatePassword = useCallback(() => {
+    const chars =
+      "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
     let result = "";
     for (let i = 0; i < 8; i++) {
       result += chars.charAt(Math.floor(Math.random() * chars.length));
     }
     return result;
-  };
+  }, []);
 
   // モーダルが開かれた時にパスワードを生成（レビュー画面URLの場合のみ）
   useEffect(() => {
     if (open && title === "レビュー画面URL") {
       setPassword(generatePassword());
     }
-  }, [open, title]);
+  }, [open, title, generatePassword]);
 
   const handleCopy = async () => {
     try {
@@ -108,7 +109,9 @@ export const UrlModal = ({
           {title === "レビュー画面URL" && (
             <div className="flex flex-col gap-2">
               <div className="flex items-center justify-between">
-                <Label className="text-sm font-medium text-[#333333]">パスワード</Label>
+                <Label className="text-sm font-medium text-[#333333]">
+                  パスワード
+                </Label>
                 <Button
                   onClick={handleRegeneratePassword}
                   variant="outline"

@@ -1,5 +1,3 @@
-import { GripVertical } from "lucide-react";
-
 interface GripIconProps {
   size?: number;
   className?: string;

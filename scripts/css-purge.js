@@ -1,8 +1,7 @@
 #!/usr/bin/env node
 
-import fs from "fs";
+import fs from "node:fs";
 import { glob } from "glob";
-import path from "path";
 
 const USED_CLASSES = new Set([
   // レイアウト

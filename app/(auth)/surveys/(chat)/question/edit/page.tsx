@@ -43,16 +43,16 @@ const Page = () => {
   const handleTestExecution = () => {
     console.log("テスト実行ボタンが押されました");
     setShowTestProgress(true);
-    
+
     // AIチャットパネルが閉じている場合は開く
     if (!isChatOpen) {
       setIsChatOpen(true);
     }
-    
+
     // 少し遅延してからチャット履歴パネルを開く
     setTimeout(() => {
       // SurveyAiChatコンポーネント内でチャット履歴パネルを開くためのトリガー
-      const event = new CustomEvent('openChatHistory');
+      const event = new CustomEvent("openChatHistory");
       window.dispatchEvent(event);
     }, 100);
   };
@@ -82,7 +82,10 @@ const Page = () => {
             />
             <div className="flex flex-col w-full items-center gap-6 p-6 bg-[#ffffff] rounded-b-lg shadow-main-bg">
               {/* Header Section with Mode Toggle */}
-              <ModeToggle currentMode="edit" onTestExecution={handleTestExecution} />
+              <ModeToggle
+                currentMode="edit"
+                onTestExecution={handleTestExecution}
+              />
 
               {/* Survey Edit Area */}
               <SurveyEditSection />

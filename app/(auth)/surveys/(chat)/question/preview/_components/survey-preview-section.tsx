@@ -1,18 +1,17 @@
 /** biome-ignore-all lint/suspicious/noExplicitAny: so many any */
 
+import { RadioGroup, RadioGroupItem } from "@radix-ui/react-radio-group";
+import { Separator } from "@radix-ui/react-separator";
+import { Lock, X } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { RadioGroup, RadioGroupItem } from "@radix-ui/react-radio-group";
-import { Separator } from "@radix-ui/react-separator";
-import { HelpCircle, Lock, Trash, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Select, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Textarea } from "@/components/ui/textarea";
 
 // Data for children section settings (screening) - 編集画面と同期
 const childrenSectionSettings = [
@@ -48,12 +47,7 @@ const GridPattern = () => (
     className="absolute inset-0 h-full w-full"
   >
     <defs>
-      <pattern
-        id="grid"
-        width="8"
-        height="8"
-        patternUnits="userSpaceOnUse"
-      >
+      <pattern id="grid" width="8" height="8" patternUnits="userSpaceOnUse">
         <path
           d="M 8 0 L 0 0 0 8"
           fill="none"
@@ -67,7 +61,7 @@ const GridPattern = () => (
 );
 
 // Data for screening survey questions (編集画面と同期)
-const screeningSections = [
+const _screeningSections = [
   {
     id: "fixed",
     title: "固定セクション：性別・年齢・居住地",
@@ -97,9 +91,7 @@ const screeningSections = [
         type: "SA",
         typeLabel: "SA・単一選択方式",
         question: "あなたのお住まい（都道府県）を教えてください。",
-        options: [
-          { id: 1, label: "47都道府県" },
-        ],
+        options: [{ id: 1, label: "47都道府県" }],
         settings: [...childrenSectionSettings],
         required: true,
       },
@@ -176,7 +168,7 @@ const screeningSections = [
 ];
 
 // Data for main survey questions (編集画面と同期)
-const mainSurveySections = [
+const _mainSurveySections = [
   {
     id: "cosmetics-usage-1",
     title: "セクション：男性化粧品の使用状況（使用有無、頻度）",
@@ -328,7 +320,7 @@ type QuestionFormData = {
 };
 
 // SurveySectionCard component for new data structure
-const SurveySectionCard = ({ section }: { section: any }) => {
+const _SurveySectionCard = ({ section }: { section: any }) => {
   return (
     <div className="w-full p-4 bg-white rounded-lg border">
       <h3 className="font-bold text-lg mb-4">{section.title}</h3>
@@ -343,7 +335,7 @@ const SurveySectionCard = ({ section }: { section: any }) => {
             </label>
             <span className="text-xs text-gray-500">{question.typeLabel}</span>
           </div>
-          
+
           {/* SA: 単一選択方式 */}
           {question.type === "SA" && question.options && (
             <div className="space-y-2">
@@ -360,23 +352,19 @@ const SurveySectionCard = ({ section }: { section: any }) => {
               ))}
             </div>
           )}
-          
+
           {/* MA: 複数選択方式 */}
           {question.type === "MA" && question.options && (
             <div className="space-y-2">
               {question.options.map((option: any) => (
                 <label key={option.id} className="flex items-center">
-                  <input 
-                    type="checkbox" 
-                    value={option.id} 
-                    className="mr-2" 
-                  />
+                  <input type="checkbox" value={option.id} className="mr-2" />
                   {option.label}
                 </label>
               ))}
             </div>
           )}
-          
+
           {/* GR: グループ選択 */}
           {question.type === "GR" && question.options && (
             <div className="space-y-2">
@@ -393,7 +381,7 @@ const SurveySectionCard = ({ section }: { section: any }) => {
               ))}
             </div>
           )}
-          
+
           {/* NU: 数値回答形式 */}
           {question.type === "NU" && (
             <input

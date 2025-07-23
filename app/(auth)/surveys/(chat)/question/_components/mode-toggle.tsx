@@ -22,7 +22,10 @@ type ModeToggleProps = {
   onTestExecution?: () => void;
 };
 
-export const ModeToggle = ({ currentMode, onTestExecution }: ModeToggleProps) => {
+export const ModeToggle = ({
+  currentMode,
+  onTestExecution,
+}: ModeToggleProps) => {
   const router = useRouter();
 
   const handleModeChange = (path: string) => {

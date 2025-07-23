@@ -1,17 +1,21 @@
 "use client";
 
-import { useState, useEffect } from "react";
 import { CheckCircle, Clock } from "lucide-react";
+import { useEffect, useState } from "react";
 
 type TestProgressSectionProps = {
   isVisible: boolean;
 };
 
-export const TestProgressSection = ({ isVisible }: TestProgressSectionProps) => {
+export const TestProgressSection = ({
+  isVisible,
+}: TestProgressSectionProps) => {
   const [answerProgress, setAnswerProgress] = useState(0);
   const [coverageProgress, setCoverageProgress] = useState(0);
   const [isCompleted, setIsCompleted] = useState(false);
-  const [currentTest, setCurrentTest] = useState<'answer' | 'coverage' | 'completed'>('answer');
+  const [currentTest, setCurrentTest] = useState<
+    "answer" | "coverage" | "completed"
+  >("answer");
 
   useEffect(() => {
     if (!isVisible) {
@@ -19,7 +23,7 @@ export const TestProgressSection = ({ isVisible }: TestProgressSectionProps) => 
       setAnswerProgress(0);
       setCoverageProgress(0);
       setIsCompleted(false);
-      setCurrentTest('answer');
+      setCurrentTest("answer");
       return;
     }
 
@@ -33,25 +37,25 @@ export const TestProgressSection = ({ isVisible }: TestProgressSectionProps) => 
     const timer = setInterval(() => {
       currentStep++;
       const progress = Math.min(currentStep * increment, 100);
-      
-      if (currentTest === 'answer') {
+
+      if (currentTest === "answer") {
         setAnswerProgress(progress);
-        
+
         if (progress >= 100) {
           // 回答テスト完了、カバレッジテストを開始
-          setCurrentTest('coverage');
+          setCurrentTest("coverage");
           setAnswerProgress(100);
           setCoverageProgress(0);
           currentStep = 0; // カウンターをリセット
         }
-      } else if (currentTest === 'coverage') {
+      } else if (currentTest === "coverage") {
         setCoverageProgress(progress);
-        
+
         if (progress >= 100) {
           // カバレッジテスト完了
           clearInterval(timer);
           setCoverageProgress(100);
-          setCurrentTest('completed');
+          setCurrentTest("completed");
           setIsCompleted(true);
         }
       }
@@ -78,11 +82,13 @@ export const TestProgressSection = ({ isVisible }: TestProgressSectionProps) => 
         {/* 回答テスト */}
         <div className="space-y-2">
           <div className="flex items-center justify-between">
-            <span className="text-sm font-medium text-gray-700">回答テスト</span>
+            <span className="text-sm font-medium text-gray-700">
+              回答テスト
+            </span>
             <div className="flex items-center gap-2">
-              {currentTest === 'coverage' || currentTest === 'completed' ? (
+              {currentTest === "coverage" || currentTest === "completed" ? (
                 <CheckCircle className="w-4 h-4 text-green-500" />
-              ) : currentTest === 'answer' ? (
+              ) : currentTest === "answer" ? (
                 <Clock className="w-4 h-4 text-blue-500 animate-spin" />
               ) : (
                 <Clock className="w-4 h-4 text-gray-400" />
@@ -95,8 +101,11 @@ export const TestProgressSection = ({ isVisible }: TestProgressSectionProps) => 
           <div className="w-full h-2 bg-gray-200 rounded-full overflow-hidden">
             <div
               className={`h-full transition-all duration-100 ease-out ${
-                currentTest === 'answer' ? 'bg-blue-500' : 
-                currentTest === 'coverage' || currentTest === 'completed' ? 'bg-green-500' : 'bg-gray-300'
+                currentTest === "answer"
+                  ? "bg-blue-500"
+                  : currentTest === "coverage" || currentTest === "completed"
+                    ? "bg-green-500"
+                    : "bg-gray-300"
               }`}
               style={{ width: `${answerProgress}%` }}
             />
@@ -106,11 +115,13 @@ export const TestProgressSection = ({ isVisible }: TestProgressSectionProps) => 
         {/* カバレッジテスト */}
         <div className="space-y-2">
           <div className="flex items-center justify-between">
-            <span className="text-sm font-medium text-gray-700">カバレッジテスト</span>
+            <span className="text-sm font-medium text-gray-700">
+              カバレッジテスト
+            </span>
             <div className="flex items-center gap-2">
-              {currentTest === 'completed' ? (
+              {currentTest === "completed" ? (
                 <CheckCircle className="w-4 h-4 text-green-500" />
-              ) : currentTest === 'coverage' ? (
+              ) : currentTest === "coverage" ? (
                 <Clock className="w-4 h-4 text-blue-500 animate-spin" />
               ) : (
                 <Clock className="w-4 h-4 text-gray-400" />
@@ -123,8 +134,11 @@ export const TestProgressSection = ({ isVisible }: TestProgressSectionProps) => 
           <div className="w-full h-2 bg-gray-200 rounded-full overflow-hidden">
             <div
               className={`h-full transition-all duration-100 ease-out ${
-                currentTest === 'coverage' ? 'bg-blue-500' : 
-                currentTest === 'completed' ? 'bg-green-500' : 'bg-gray-300'
+                currentTest === "coverage"
+                  ? "bg-blue-500"
+                  : currentTest === "completed"
+                    ? "bg-green-500"
+                    : "bg-gray-300"
               }`}
               style={{ width: `${coverageProgress}%` }}
             />
@@ -133,4 +147,4 @@ export const TestProgressSection = ({ isVisible }: TestProgressSectionProps) => 
       </div>
     </div>
   );
-}; 
+};

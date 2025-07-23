@@ -1,8 +1,3 @@
-import { useRouter } from "next/navigation";
-import { useForm } from "react-hook-form";
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import {
   Background,
   Controls,
@@ -12,7 +7,12 @@ import {
   useEdgesState,
   useNodesState,
 } from "@xyflow/react";
-import { useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
+import { useMemo } from "react";
+import { useForm } from "react-hook-form";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import "@xyflow/react/dist/style.css";
 import {
   GroupNode,
@@ -694,8 +694,8 @@ export const LogicCheckSection = () => {
   };
 
   // ノードUI用の状態管理
-  const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
-  const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
+  const [nodes, _setNodes, onNodesChange] = useNodesState(initialNodes);
+  const [edges, _setEdges, onEdgesChange] = useEdgesState(initialEdges);
   const nodeTypes = useMemo(() => createNodeTypes(), []);
 
   const handleNodeClick = (_event: React.MouseEvent, node: Node) => {
@@ -716,7 +716,7 @@ export const LogicCheckSection = () => {
           {/* ロジックチェックの内容 */}
           <div className="w-full p-6 bg-gray-50 rounded-lg">
             <h2 className="text-xl font-bold mb-4">ロジックチェック結果</h2>
-            
+
             {/* ノードUI */}
             <div className="w-full h-[3000px] mb-6 border rounded-lg overflow-hidden">
               <ReactFlow
@@ -738,21 +738,35 @@ export const LogicCheckSection = () => {
                 <Controls />
               </ReactFlow>
             </div>
-            
+
             {/* スクリーニング設問 */}
             <div className="mb-6">
-              <h3 className="text-lg font-semibold mb-3">固定セクション：性別・年齢・居住地</h3>
+              <h3 className="text-lg font-semibold mb-3">
+                固定セクション：性別・年齢・居住地
+              </h3>
               <div className="mb-4 p-3 bg-white rounded border">
-                <p className="font-medium mb-2">あなたの性別を教えてください。</p>
-                <p className="text-sm text-gray-600">ID: Q1 | タイプ: SA・単一選択方式</p>
+                <p className="font-medium mb-2">
+                  あなたの性別を教えてください。
+                </p>
+                <p className="text-sm text-gray-600">
+                  ID: Q1 | タイプ: SA・単一選択方式
+                </p>
               </div>
               <div className="mb-4 p-3 bg-white rounded border">
-                <p className="font-medium mb-2">あなたの年齢を教えてください。</p>
-                <p className="text-sm text-gray-600">ID: Q2 | タイプ: NU・数値回答形式</p>
+                <p className="font-medium mb-2">
+                  あなたの年齢を教えてください。
+                </p>
+                <p className="text-sm text-gray-600">
+                  ID: Q2 | タイプ: NU・数値回答形式
+                </p>
               </div>
               <div className="mb-4 p-3 bg-white rounded border">
-                <p className="font-medium mb-2">あなたのお住まい（都道府県）を教えてください。</p>
-                <p className="text-sm text-gray-600">ID: Q3 | タイプ: SA・単一選択方式</p>
+                <p className="font-medium mb-2">
+                  あなたのお住まい（都道府県）を教えてください。
+                </p>
+                <p className="text-sm text-gray-600">
+                  ID: Q3 | タイプ: SA・単一選択方式
+                </p>
               </div>
             </div>
 
@@ -760,16 +774,25 @@ export const LogicCheckSection = () => {
               <h3 className="text-lg font-semibold mb-3">セクション：未既婚</h3>
               <div className="mb-4 p-3 bg-white rounded border">
                 <p className="font-medium mb-2">あなたは結婚していますか。</p>
-                <p className="text-sm text-gray-600">ID: Q4 | タイプ: SA・単一選択方式</p>
+                <p className="text-sm text-gray-600">
+                  ID: Q4 | タイプ: SA・単一選択方式
+                </p>
               </div>
             </div>
 
             <div className="mb-6">
-              <h3 className="text-lg font-semibold mb-3">{childrenSection.title}</h3>
+              <h3 className="text-lg font-semibold mb-3">
+                {childrenSection.title}
+              </h3>
               {childrenSection.questions.map((question) => (
-                <div key={question.id} className="mb-4 p-3 bg-white rounded border">
+                <div
+                  key={question.id}
+                  className="mb-4 p-3 bg-white rounded border"
+                >
                   <p className="font-medium mb-2">{question.question}</p>
-                  <p className="text-sm text-gray-600">ID: {question.id} | タイプ: {question.typeLabel}</p>
+                  <p className="text-sm text-gray-600">
+                    ID: {question.id} | タイプ: {question.typeLabel}
+                  </p>
                 </div>
               ))}
             </div>
@@ -777,12 +800,20 @@ export const LogicCheckSection = () => {
             <div className="mb-6">
               <h3 className="text-lg font-semibold mb-3">セクション：職業</h3>
               <div className="mb-4 p-3 bg-white rounded border">
-                <p className="font-medium mb-2">あなたの職業を教えてください。</p>
-                <p className="text-sm text-gray-600">ID: Q6 | タイプ: GR・グループ選択</p>
+                <p className="font-medium mb-2">
+                  あなたの職業を教えてください。
+                </p>
+                <p className="text-sm text-gray-600">
+                  ID: Q6 | タイプ: GR・グループ選択
+                </p>
               </div>
               <div className="mb-4 p-3 bg-white rounded border">
-                <p className="font-medium mb-2">ご家族の職業を教えてください。</p>
-                <p className="text-sm text-gray-600">ID: Q7 | タイプ: GR・グループ選択</p>
+                <p className="font-medium mb-2">
+                  ご家族の職業を教えてください。
+                </p>
+                <p className="text-sm text-gray-600">
+                  ID: Q7 | タイプ: GR・グループ選択
+                </p>
               </div>
             </div>
 
@@ -791,9 +822,14 @@ export const LogicCheckSection = () => {
               <div key={sectionIndex} className="mb-6">
                 <h3 className="text-lg font-semibold mb-3">{section.title}</h3>
                 {section.questions.map((question) => (
-                  <div key={question.id} className="mb-4 p-3 bg-white rounded border">
+                  <div
+                    key={question.id}
+                    className="mb-4 p-3 bg-white rounded border"
+                  >
                     <p className="font-medium mb-2">{question.question}</p>
-                    <p className="text-sm text-gray-600">ID: {question.id} | タイプ: {question.typeLabel}</p>
+                    <p className="text-sm text-gray-600">
+                      ID: {question.id} | タイプ: {question.typeLabel}
+                    </p>
                   </div>
                 ))}
               </div>

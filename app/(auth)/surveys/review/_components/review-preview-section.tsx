@@ -2,7 +2,6 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import type { Section } from "@/app/(auth)/surveys/_components/survey-section-card";
-import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
