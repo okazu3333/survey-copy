@@ -3,236 +3,154 @@
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import {
-  type Section,
-  SurveySectionCard,
-} from "@/app/(auth)/surveys/_components/survey-section-card";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Separator } from "@/components/ui/separator";
 
 // Data for screening survey questions
-const screeningSections: Section[] = [
+const screeningSections = [
   {
-    id: "fixed",
-    title: "固定セクション：性別・年齢・居住地",
+    id: "screening-1",
+    title: "基本情報",
     questions: [
       {
         id: "q1",
-        number: "Q1",
-        type: "SA・単一選択方式",
-        isFixed: true,
-        question: "あなたの性別を教えてください。",
-        options: [
-          { id: "1", label: "男性" },
-          { id: "2", label: "女性" },
-        ],
+        type: "text",
+        label: "お名前",
+        required: true,
       },
       {
         id: "q2",
-        number: "Q2",
-        type: "NU・数値回答形式",
-        isFixed: true,
-        question: "あなたの年齢を教えてください。",
-        suffix: "歳",
+        type: "email",
+        label: "メールアドレス",
+        required: true,
       },
+    ],
+  },
+  {
+    id: "screening-2",
+    title: "スクリーニング",
+    questions: [
       {
         id: "q3",
-        number: "Q3",
-        type: "SA・単一選択方式",
-        isFixed: true,
-        question: "あなたのお住まい（都道府県）を教えてください。",
-        placeholder: "47都道府県",
+        type: "radio",
+        label: "年齢",
+        options: ["18-24歳", "25-34歳", "35-44歳", "45歳以上"],
+        required: true,
       },
-    ],
-  },
-  {
-    id: "marital",
-    title: "セクション：未既婚",
-    questions: [
       {
         id: "q4",
-        number: "Q4",
-        type: "SA・単一選択方式",
-        isFixed: false,
-        question: "あなたは結婚していますか。",
-        options: [
-          { id: "1", label: "未婚" },
-          { id: "2", label: "既婚（離別・死別含む）" },
-        ],
-      },
-    ],
-  },
-  {
-    id: "children",
-    title: "セクション：子どもの有無",
-    questions: [
-      {
-        id: "q5",
-        number: "Q5",
-        type: "MA・複数選択方式",
-        isFixed: false,
-        question: "あなたと同居している方をお知らせください。",
-        options: [
-          { id: "1", label: "自分のみ（一人暮らし）" },
-          { id: "2", label: "配偶者" },
-          { id: "3", label: "こども（未就学児）" },
-          { id: "4", label: "こども（小学生）" },
-          { id: "5", label: "こども（中高生）" },
-          { id: "6", label: "こども（高校生を除く18歳以上）" },
-          { id: "7", label: "自分（配偶者）の親" },
-          { id: "8", label: "自分（配偶者）の兄弟姉妹" },
-          { id: "9", label: "自分（配偶者）の祖父母" },
-          { id: "10", label: "その他" },
-        ],
+        type: "checkbox",
+        label: "興味のある分野",
+        options: ["技術", "ビジネス", "エンターテイメント", "スポーツ"],
+        required: false,
       },
     ],
   },
 ];
 
 // Data for main survey questions
-const mainSurveySections: Section[] = [
+const mainSurveySections = [
   {
-    id: "cosmetics-usage-1",
-    title: "セクション：男性化粧品の使用状況（使用有無、頻度）",
+    id: "main-1",
+    title: "本調査",
     questions: [
       {
-        id: "q8",
-        number: "Q8",
-        type: "SA・単一選択方式",
-        isFixed: false,
-        question: "あなたはどのくらいの頻度で化粧品を使用しますか？",
-        options: [
-          { id: "1", label: "毎日" },
-          { id: "2", label: "週に数回" },
-          { id: "3", label: "月に数回" },
-          { id: "4", label: "ほとんど使用しない" },
-        ],
+        id: "q5",
+        type: "radio",
+        label: "満足度",
+        options: ["非常に満足", "満足", "普通", "不満", "非常に不満"],
+        required: true,
       },
       {
-        id: "q9",
-        number: "Q9",
-        type: "GR・グループ選択",
-        isFixed: false,
-        question: "あなたが使用している化粧品の種類を教えてください。",
-        options: [
-          { id: "1", label: "スキンケア用品" },
-          { id: "2", label: "洗顔料" },
-          { id: "3", label: "化粧水" },
-          { id: "4", label: "乳液・クリーム" },
-          { id: "5", label: "日焼け止め" },
-          { id: "6", label: "ヘアケア用品" },
-        ],
-      },
-      {
-        id: "q10",
-        number: "Q10",
-        type: "SA・単一選択方式",
-        isFixed: false,
-        question: "化粧品を購入する際に最も重視する要因は何ですか？",
-        options: [
-          { id: "1", label: "価格" },
-          { id: "2", label: "ブランド" },
-          { id: "3", label: "効果" },
-          { id: "4", label: "成分" },
-          { id: "5", label: "口コミ・評価" },
-        ],
-      },
-      {
-        id: "q11",
-        number: "Q11",
-        type: "SA・単一選択方式",
-        isFixed: false,
-        question: "化粧品に関する情報をどこで入手することが多いですか？",
-        options: [
-          { id: "1", label: "インターネット" },
-          { id: "2", label: "店舗スタッフ" },
-          { id: "3", label: "友人・知人" },
-          { id: "4", label: "雑誌・メディア" },
-        ],
-      },
-      {
-        id: "q12",
-        number: "Q12",
-        type: "SA・単一選択方式",
-        isFixed: false,
-        question: "今後、化粧品の使用頻度を増やしたいと思いますか？",
-        options: [
-          { id: "1", label: "とても思う" },
-          { id: "2", label: "やや思う" },
-          { id: "3", label: "あまり思わない" },
-          { id: "4", label: "全く思わない" },
-        ],
-      },
-    ],
-  },
-  {
-    id: "cosmetics-usage-2",
-    title: "セクション：化粧品ブランドの認知・購入意向",
-    questions: [
-      {
-        id: "q13",
-        number: "Q13",
-        type: "SA・単一選択方式",
-        isFixed: false,
-        question: "最も信頼している化粧品ブランドを教えてください。",
-        options: [
-          { id: "1", label: "資生堂" },
-          { id: "2", label: "花王" },
-          { id: "3", label: "ユニリーバ" },
-          { id: "4", label: "ロレアル" },
-          { id: "5", label: "その他" },
-        ],
-      },
-      {
-        id: "q14",
-        number: "Q14",
-        type: "SA・単一選択方式",
-        isFixed: false,
-        question: "新しい化粧品ブランドを試すことに対してどう思いますか？",
-        options: [
-          { id: "1", label: "積極的に試したい" },
-          { id: "2", label: "条件が合えば試したい" },
-          { id: "3", label: "あまり試したくない" },
-          { id: "4", label: "全く試したくない" },
-        ],
-      },
-      {
-        id: "q15",
-        number: "Q15",
-        type: "SA・単一選択方式",
-        isFixed: false,
-        question: "化粧品の購入チャネルとして最もよく利用するのはどこですか？",
-        options: [
-          { id: "1", label: "ドラッグストア" },
-          { id: "2", label: "百貨店" },
-          { id: "3", label: "オンラインショップ" },
-          { id: "4", label: "コンビニエンスストア" },
-          { id: "5", label: "専門店" },
-        ],
+        id: "q6",
+        type: "text",
+        label: "改善点",
+        required: false,
       },
     ],
   },
 ];
 
+type TabType = "screening" | "main";
+
 type QuestionFormData = {
-  q1?: string;
-  q2?: string;
-  q3?: string;
-  q4?: string;
-  q5?: string[];
-  q8?: string;
-  q9?: string[];
-  q10?: string;
-  q11?: string;
-  q12?: string;
-  q13?: string;
-  q14?: string;
-  q15?: string;
+  q1: string;
+  q2: string;
+  q3: string;
+  q4: string[];
+  q5: string;
+  q6: string;
+  q7: string;
+  q8: string;
+  q9: string[];
+  q10: string;
+  q11: string;
+  q12: string;
+  q13: string;
+  q14: string;
+  q15: string;
 };
 
-type TabType = "screening" | "main";
+// Mock SurveySectionCard component
+const SurveySectionCard = ({ section }: { section: any }) => {
+  return (
+    <div className="w-full p-4 bg-white rounded-lg border">
+      <h3 className="font-bold text-lg mb-4">{section.title}</h3>
+      {section.questions.map((question: any) => (
+        <div key={question.id} className="mb-4">
+          <label
+            htmlFor={question.id}
+            className="block text-sm font-medium mb-2"
+          >
+            {question.label}
+          </label>
+          {question.type === "text" && (
+            <input
+              id={question.id}
+              type="text"
+              className="w-full p-2 border rounded"
+              placeholder="回答を入力"
+            />
+          )}
+          {question.type === "email" && (
+            <input
+              id={question.id}
+              type="email"
+              className="w-full p-2 border rounded"
+              placeholder="メールアドレスを入力"
+            />
+          )}
+          {question.type === "radio" && (
+            <div className="space-y-2">
+              {question.options.map((option: string) => (
+                <label key={option} className="flex items-center">
+                  <input
+                    type="radio"
+                    name={question.id}
+                    value={option}
+                    className="mr-2"
+                  />
+                  {option}
+                </label>
+              ))}
+            </div>
+          )}
+          {question.type === "checkbox" && (
+            <div className="space-y-2">
+              {question.options.map((option: string) => (
+                <label key={option} className="flex items-center">
+                  <input type="checkbox" value={option} className="mr-2" />
+                  {option}
+                </label>
+              ))}
+            </div>
+          )}
+        </div>
+      ))}
+    </div>
+  );
+};
 
 // Tab Selection Component
 const TabSelectionSection = ({
@@ -274,24 +192,23 @@ const TabSelectionSection = ({
 export const SurveyPreviewSection = () => {
   const router = useRouter();
   const [activeTab, setActiveTab] = useState<TabType>("screening");
-  const { control, handleSubmit, watch, setValue, getValues } =
-    useForm<QuestionFormData>({
-      defaultValues: {
-        q1: "",
-        q2: "",
-        q3: "",
-        q4: "",
-        q5: [],
-        q8: "",
-        q9: [],
-        q10: "",
-        q11: "",
-        q12: "",
-        q13: "",
-        q14: "",
-        q15: "",
-      },
-    });
+  const { handleSubmit } = useForm<QuestionFormData>({
+    defaultValues: {
+      q1: "",
+      q2: "",
+      q3: "",
+      q4: [],
+      q5: "",
+      q8: "",
+      q9: [],
+      q10: "",
+      q11: "",
+      q12: "",
+      q13: "",
+      q14: "",
+      q15: "",
+    },
+  });
 
   const onSubmit = (data: QuestionFormData) => {
     console.log("Form submitted:", data);
@@ -301,9 +218,21 @@ export const SurveyPreviewSection = () => {
     router.push("/surveys/review/preview");
   };
 
-  // Get current sections based on active tab
-  const currentSections =
-    activeTab === "screening" ? screeningSections : mainSurveySections;
+  const renderScreeningContent = () => (
+    <div className="flex flex-col items-start gap-4 relative w-full">
+      {screeningSections.map((section) => (
+        <SurveySectionCard key={section.id} section={section} />
+      ))}
+    </div>
+  );
+
+  const renderMainSurveyContent = () => (
+    <div className="flex flex-col items-start gap-4 relative w-full">
+      {mainSurveySections.map((section) => (
+        <SurveySectionCard key={section.id} section={section} />
+      ))}
+    </div>
+  );
 
   return (
     <form
@@ -312,9 +241,20 @@ export const SurveyPreviewSection = () => {
     >
       <div className="flex items-center justify-between w-full">
         <TabSelectionSection activeTab={activeTab} onTabChange={setActiveTab} />
+      </div>
+      <Card className="flex flex-col items-start gap-4 p-4 relative self-stretch w-full flex-[0_0_auto] bg-[#138fb5] rounded-lg">
+        <ScrollArea className="flex flex-col h-[580px] items-start gap-4 relative self-stretch rounded-lg">
+          {activeTab === "screening"
+            ? renderScreeningContent()
+            : renderMainSurveyContent()}
+        </ScrollArea>
+      </Card>
+
+      {/* レビューへ進むボタンを下部に配置 */}
+      <div className="flex justify-center w-full mt-6 pb-6">
         <Button
           onClick={handleGoToReview}
-          className="whitespace-nowrap text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 text-primary-foreground shadow hover:bg-primary/90 w-[176px] h-10 bg-[#556064] rounded-[20px] flex items-center justify-center gap-3 px-4 py-0"
+          className="w-[340px] h-14 bg-[#556064] rounded-[34px] flex items-center justify-center gap-4 px-4 py-0"
         >
           <span className="font-bold text-white text-base text-center tracking-[0] leading-[22.4px] font-['Noto_Sans_JP',Helvetica]">
             レビューへ進む
@@ -336,27 +276,6 @@ export const SurveyPreviewSection = () => {
           </svg>
         </Button>
       </div>
-      <Card className="flex flex-col items-start gap-4 p-4 relative self-stretch w-full bg-[#138FB5] rounded-lg">
-        <ScrollArea className="w-full h-[620px]">
-          <div className="flex flex-col items-start gap-4 relative w-full">
-            {currentSections.map((section) => (
-              <SurveySectionCard
-                key={section.id}
-                section={section}
-                control={control}
-                watch={watch as (name: string) => any}
-                setValue={setValue as (name: string, value: any) => void}
-                getValues={getValues as (name?: string) => any}
-              />
-            ))}
-          </div>
-        </ScrollArea>
-      </Card>
-
-      <Separator
-        className="absolute w-1 h-[230px] top-[211px] right-4 bg-[#dcdcdc] rounded"
-        orientation="vertical"
-      />
     </form>
   );
 };

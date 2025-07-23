@@ -1065,9 +1065,32 @@ export const SurveyEditSection = ({ groupId }: SurveyEditSectionProps) => {
             onTabChange={setActiveTab}
           />
         )}
+      </div>
+      <Card className="flex flex-col items-start gap-4 p-4 relative self-stretch w-full flex-[0_0_auto] bg-[#138fb5] rounded-lg">
+        <div className="inline-flex items-start gap-1 relative flex-[0_0_auto]">
+          <div className="inline-flex h-6 items-center gap-2 pl-2 pr-3 py-0 relative flex-[0_0_auto] bg-white rounded border border-solid border-white cursor-pointer">
+            <Checkbox className="w-4 h-4" />
+            <span className="w-fit font-bold text-[#138fb5] text-xs whitespace-nowrap relative">
+              全選択・解除
+            </span>
+          </div>
+          <div className="flex w-6 h-6 items-center justify-center gap-2 relative bg-white rounded border border-solid border-white cursor-pointer">
+            <Trash className="w-5 h-5 text-[#556064]" />
+          </div>
+        </div>
+
+        <ScrollArea className="flex flex-col h-[580px] items-start gap-4 relative self-stretch rounded-lg">
+          {activeTab === "screening"
+            ? renderScreeningContent()
+            : renderMainSurveyContent()}
+        </ScrollArea>
+      </Card>
+
+      {/* レビューへ進むボタンを下部に配置 */}
+      <div className="flex justify-center w-full mt-6 pb-6">
         <Button
           onClick={handleGoToReview}
-          className="whitespace-nowrap text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 text-primary-foreground shadow hover:bg-primary/90 w-[176px] h-10 bg-[#556064] rounded-[20px] flex items-center justify-center gap-3 px-4 py-0"
+          className="w-[340px] h-14 bg-[#556064] rounded-[34px] flex items-center justify-center gap-4 px-4 py-0"
         >
           <span className="font-bold text-white text-base text-center tracking-[0] leading-[22.4px] font-['Noto_Sans_JP',Helvetica]">
             レビューへ進む
@@ -1089,25 +1112,6 @@ export const SurveyEditSection = ({ groupId }: SurveyEditSectionProps) => {
           </svg>
         </Button>
       </div>
-      <Card className="flex flex-col items-start gap-4 p-4 relative self-stretch w-full flex-[0_0_auto] bg-[#138fb5] rounded-lg">
-        <div className="inline-flex items-start gap-1 relative flex-[0_0_auto]">
-          <div className="inline-flex h-6 items-center gap-2 pl-2 pr-3 py-0 relative flex-[0_0_auto] bg-white rounded border border-solid border-white cursor-pointer">
-            <Checkbox className="w-4 h-4" />
-            <span className="w-fit font-bold text-[#138fb5] text-xs whitespace-nowrap relative">
-              全選択・解除
-            </span>
-          </div>
-          <div className="flex w-6 h-6 items-center justify-center gap-2 relative bg-white rounded border border-solid border-white cursor-pointer">
-            <Trash className="w-5 h-5 text-[#556064]" />
-          </div>
-        </div>
-
-        <ScrollArea className="flex flex-col h-[580px] items-start gap-4 relative self-stretch rounded-lg">
-          {activeTab === "screening"
-            ? renderScreeningContent()
-            : renderMainSurveyContent()}
-        </ScrollArea>
-      </Card>
 
       {!groupId && (
         <div className="absolute w-1 h-[230px] top-[211px] left-[870px] bg-borderdefault rounded" />

@@ -70,26 +70,24 @@ export const ModeToggle = ({ currentMode }: ModeToggleProps) => {
         </div>
       </div>
 
-      <div className="flex flex-col gap-2">
-        <div className="flex items-center gap-2">
-          <Button
-            onClick={handleTestExecution}
-            className="h-8 px-4 py-2 bg-[#138fb5] border-2 border-[#138fb5] hover:bg-[#0f7a9e] rounded-md inline-flex items-center justify-center gap-2"
-          >
-            <Play className="w-3 h-3 text-white" />
-            <span className="font-bold text-white text-sm text-center leading-5 whitespace-nowrap">
-              テスト実行
-            </span>
-          </Button>
-          <Button
-            onClick={handleSaveSurvey}
-            className="h-8 px-4 py-2 bg-[#138fb5] hover:bg-[#0f7a9e] rounded-md inline-flex items-center justify-center gap-2"
-          >
-            <span className="font-bold text-white text-sm text-center leading-5 whitespace-nowrap">
-              調査票を保存する
-            </span>
-          </Button>
-        </div>
+      <div className="flex items-center gap-2">
+        <Button
+          onClick={handleTestExecution}
+          className="h-8 px-4 py-2 bg-[#138fb5] border-2 border-[#138fb5] hover:bg-[#0f7a9e] rounded-md inline-flex items-center justify-center gap-2"
+        >
+          <Play className="w-3 h-3 text-white" />
+          <span className="font-bold text-white text-sm text-center leading-5 whitespace-nowrap">
+            テスト実行
+          </span>
+        </Button>
+        <Button
+          onClick={handleSaveSurvey}
+          className="h-8 px-4 py-2 bg-[#138fb5] hover:bg-[#0f7a9e] rounded-md inline-flex items-center justify-center gap-2"
+        >
+          <span className="font-bold text-white text-sm text-center leading-5 whitespace-nowrap">
+            調査票を保存する
+          </span>
+        </Button>
       </div>
     </div>
   );
