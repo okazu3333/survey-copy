@@ -1,6 +1,6 @@
 import { RadioGroup, RadioGroupItem } from "@radix-ui/react-radio-group";
 import { Separator } from "@radix-ui/react-separator";
-import { Lock, Plus, Trash, X } from "lucide-react";
+import { Lock, Trash, X } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -413,9 +413,6 @@ export const SurveyEditSection = ({ groupId }: SurveyEditSectionProps) => {
 
                       <div className="flex flex-col items-center flex-[0_0_auto] relative self-stretch w-full">
                         <Separator className="h-px relative self-stretch w-full" />
-                        <div className="absolute w-4 h-4 top-[-8px] left-1/2 transform -translate-x-1/2 cursor-pointer flex items-center justify-center bg-[#979BA2] rounded-full shadow-[0px_0px_8px_0px_rgba(0,0,0,0.08)]">
-                          <Plus className="w-2 h-2 text-white" />
-                        </div>
                       </div>
 
                       <div className="flex items-center gap-2 relative self-stretch w-full flex-[0_0_auto]">
@@ -717,10 +714,6 @@ export const SurveyEditSection = ({ groupId }: SurveyEditSectionProps) => {
 
                 <div className="absolute top-[58px] left-3.5 inline-flex items-center p-1">
                   <GridPattern />
-                </div>
-
-                <div className="absolute w-4 h-4 top-[132px] left-1/2 transform -translate-x-1/2 cursor-pointer flex items-center justify-center bg-[#979BA2] rounded-full shadow-[0px_0px_8px_0px_rgba(0,0,0,0.08)]">
-                  <Plus className="w-2 h-2 text-white" />
                 </div>
 
                 {/* 設定パネル */}
