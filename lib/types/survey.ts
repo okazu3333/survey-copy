@@ -49,6 +49,26 @@ export type SurveyFormData = {
   q15?: string;
 };
 
+// プロジェクト管理関連の型定義
+export type ProjectStatus =
+  | "作成中"
+  | "レビュー待ち"
+  | "レビュー完了"
+  | "作成完了"
+  | "配信中"
+  | "配信終了";
+
+export type IconAction = "review" | "response" | "distribution" | "gtTable";
+
+export type Project = {
+  id: string;
+  title: string;
+  status: ProjectStatus;
+  createdDate: string;
+  updatedDate: string;
+  creator: string;
+};
+
 // レビュー関連の型定義
 export type ReviewType = "ai" | "team";
 

@@ -31,16 +31,17 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { type Project, useTableNavigation } from "@/hooks/use-table-navigation";
 
 // サンプルデータ（実際の実装ではAPIから取得）
-const generateSampleData = () => {
-  const statuses = [
-    { name: "作成中", color: "bg-white text-[#4BBC80] border-[#4BBC80]" },
-    { name: "レビュー待ち", color: "bg-white text-[#60ADC2] border-[#60ADC2]" },
-    { name: "レビュー完了", color: "bg-[#60ADC2] text-white border-[#60ADC2]" },
-    { name: "作成完了", color: "bg-[#4BBC80] text-white border-[#4BBC80]" },
-    { name: "配信中", color: "bg-[#D96868] text-white border-[#D96868]" },
-    { name: "配信終了", color: "bg-[#ABAEB1] text-white border-[#ABAEB1]" },
+const generateSampleData = (): Project[] => {
+  const statuses: Project["status"][] = [
+    "作成中",
+    "レビュー待ち",
+    "レビュー完了",
+    "作成完了",
+    "配信中",
+    "配信終了",
   ];
 
   const titles = [
@@ -58,23 +59,18 @@ const generateSampleData = () => {
 
   const creators = ["山田太郎", "佐藤花子", "田中次郎", "鈴木美咲", "高橋健一"];
 
-  return Array.from({ length: 100 }, (_, i) => {
-    const status = statuses[i % statuses.length];
-    const title = titles[i % titles.length];
-    const creator = creators[i % creators.length];
-    const day = ((i % 30) + 1).toString().padStart(2, "0");
-    const hour = (i % 24).toString().padStart(2, "0");
-    const minute = (i % 60).toString().padStart(2, "0");
+  return Array.from({ length: 50 }, (_, index) => {
+    const randomStatus = statuses[Math.floor(Math.random() * statuses.length)];
+    const randomTitle = titles[Math.floor(Math.random() * titles.length)];
+    const randomCreator = creators[Math.floor(Math.random() * creators.length)];
 
     return {
-      id: `SRB${String(i + 1).padStart(3, "0")}`,
-      title: `${title} ${i + 1}`,
-      status: status.name,
-      statusColor: status.color,
-      createdDate: `2025/06/${day} ${hour}:${minute}`,
-      updatedDate: `2025/06/${day} ${hour}:${minute}`,
-      creator,
-      rowColor: "bg-white",
+      id: `SRB${String(index + 1).padStart(3, "0")}`,
+      title: randomTitle,
+      status: randomStatus,
+      createdDate: "2025/06/04 08:00",
+      updatedDate: "2025/06/10 15:30",
+      creator: randomCreator,
     };
   });
 };
@@ -85,12 +81,33 @@ export function SurveyListSection() {
   const [allSurveys] = useState(() => generateSampleData()); // 初期化時に1回だけ実行
   const itemsPerPage = 20;
   const router = useRouter();
+  const { handleRowClick, handleIconClick } = useTableNavigation();
 
   const totalPages = Math.ceil(allSurveys.length / itemsPerPage);
 
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
   const currentSurveys = allSurveys.slice(startIndex, endIndex);
+
+  // ステータスに応じた色を取得
+  const getStatusColor = (status: Project["status"]) => {
+    switch (status) {
+      case "作成中":
+        return "bg-white text-[#4BBC80] border-[#4BBC80]";
+      case "レビュー待ち":
+        return "bg-white text-[#60ADC2] border-[#60ADC2]";
+      case "レビュー完了":
+        return "bg-[#60ADC2] text-white border-[#60ADC2]";
+      case "作成完了":
+        return "bg-[#4BBC80] text-white border-[#4BBC80]";
+      case "配信中":
+        return "bg-[#D96868] text-white border-[#D96868]";
+      case "配信終了":
+        return "bg-[#ABAEB1] text-white border-[#ABAEB1]";
+      default:
+        return "bg-white text-gray-600 border-gray-300";
+    }
+  };
 
   const handleSelectAll = (checked: boolean) => {
     if (checked) {
@@ -117,32 +134,6 @@ export function SurveyListSection() {
   const handleDownloadResults = () => {
     // テスト結果のダウンロード処理
     console.log("テスト結果をダウンロード");
-  };
-
-  // テーブル行クリック時の遷移処理
-  const handleRowClick = (
-    survey: (typeof allSurveys)[number],
-    event: React.MouseEvent,
-  ) => {
-    // クリックされた要素がインタラクティブ要素の場合は何もしない
-    const tag = (event.target as HTMLElement).tagName.toLowerCase();
-    if (
-      tag === "button" ||
-      tag === "a" ||
-      tag === "input" ||
-      tag === "svg" ||
-      (event.target as HTMLElement).closest("button") ||
-      (event.target as HTMLElement).closest("a") ||
-      (event.target as HTMLElement).closest("input") ||
-      (event.target as HTMLElement).closest("svg")
-    ) {
-      return;
-    }
-    if (["レビュー待ち", "レビュー完了", "作成完了"].includes(survey.status)) {
-      router.push(`/surveys/review/preview`);
-    } else if (survey.status === "作成中") {
-      router.push(`/surveys/question/edit`);
-    }
   };
 
   const generatePaginationItems = () => {
@@ -186,50 +177,47 @@ export function SurveyListSection() {
   };
 
   return (
-    <div className="relative">
-      <div className="absolute top-0 left-1 z-10 flex items-center justify-center p-6 bg-[#138fb5] text-white rounded-t-lg w-[240px] rounded-b-none h-10">
-        <h2 className="text-lg font-semibold text-center">
-          アンケート情報一覧
-        </h2>
-      </div>
-      <div className="pt-10">
-        <div className="bg-white rounded-lg border border-gray-200 p-5">
-          <div className="mb-2">
-            <p className="text-gray-700 mb-6">
-              アンケート情報の一覧です。新規で作成する場合は「新規調査作成」から行えます。
-            </p>
+    <div className="min-h-screen bg-gray-100">
+      <div className="container mx-auto px-6 py-8">
+        <div className="mb-6">
+          <h1 className="text-2xl font-bold text-gray-900 mb-2">調査一覧</h1>
+          <p className="text-gray-600">
+            作成済みの調査一覧です。調査の編集、削除、配信設定などができます。
+          </p>
+        </div>
 
-            <div className="flex items-center justify-between">
-              <div className="flex gap-3">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={handleDeleteSelected}
-                  disabled={selectedItems.length === 0}
-                  className="border-gray-300 hover:bg-gray-50 disabled:opacity-50 min-w-[140px] h-9 items-center justify-center"
-                >
-                  選択項目を削除
-                </Button>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={handleDownloadResults}
-                  className="border-gray-300 hover:bg-gray-50 min-w-[180px] h-9 items-center justify-center"
-                >
-                  <Download className="w-4 h-4 mr-1" />
-                  テスト結果をダウンロード
-                </Button>
-              </div>
+        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+          <div className="flex items-center justify-between mb-6">
+            <div className="flex gap-3">
               <Button
-                asChild
-                className="bg-[#138fb5] hover:bg-[#0f7a9e] text-white shadow-sm min-w-[160px] h-9 items-center justify-center"
+                variant="outline"
+                size="sm"
+                onClick={handleDeleteSelected}
+                disabled={selectedItems.length === 0}
+                className="border-gray-300 hover:bg-gray-50"
               >
-                <Link href="/surveys/new">
-                  <Plus className="w-4 h-4 mr-1" />
-                  新規調査作成
-                </Link>
+                選択項目を削除
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handleDownloadResults}
+                disabled={selectedItems.length === 0}
+                className="border-gray-300 hover:bg-gray-50"
+              >
+                <Download className="w-4 h-4 mr-1" />
+                テスト結果をダウンロード
               </Button>
             </div>
+            <Button
+              asChild
+              className="bg-[#138fb5] hover:bg-[#0f7a9e] text-white"
+            >
+              <Link href="/surveys/new">
+                <Plus className="w-4 h-4 mr-1" />
+                新規調査作成
+              </Link>
+            </Button>
           </div>
 
           <div className="rounded-lg border border-gray-200">
@@ -281,7 +269,7 @@ export function SurveyListSection() {
                 {currentSurveys.map((survey) => (
                   <TableRow
                     key={survey.id}
-                    className={`${selectedItems.includes(survey.id) ? "bg-[#BCD6E0]" : survey.rowColor} hover:bg-blue-50 transition-colors cursor-pointer`}
+                    className={`${selectedItems.includes(survey.id) ? "bg-[#BCD6E0]" : "bg-white"} hover:bg-blue-50 transition-colors cursor-pointer`}
                     onClick={(e) => handleRowClick(survey, e)}
                   >
                     <TableCell>
@@ -290,7 +278,6 @@ export function SurveyListSection() {
                         onCheckedChange={(checked) =>
                           handleSelectItem(survey.id, checked as boolean)
                         }
-                        // チェックボックス自体のクリックイベントは選択状態の切り替えのみ
                       />
                     </TableCell>
                     <TableCell className="font-medium text-gray-900">
@@ -302,7 +289,7 @@ export function SurveyListSection() {
                     <TableCell className="text-center">
                       <Badge
                         variant="outline"
-                        className={`${survey.statusColor} font-bold`}
+                        className={`${getStatusColor(survey.status)} font-bold`}
                       >
                         {survey.status}
                       </Badge>
@@ -320,14 +307,8 @@ export function SurveyListSection() {
                       <Button
                         variant="outline"
                         size="sm"
-                        className="border-gray-300 w-8 h-8 p-0 mx-auto relative z-10 transition-colors hover:bg-[#e0f2fe] focus:bg-[#bae6fd]"
-                        onClick={(e) => {
-                          e.preventDefault();
-                          e.stopPropagation();
-                          router.push("/surveys/review/reviewer/preview");
-                        }}
-                        aria-label="レビュワープレビュー画面へ"
-                        tabIndex={0}
+                        className="border-gray-300 hover:bg-gray-50 w-8 h-8 p-0 mx-auto"
+                        onClick={(e) => handleIconClick("review", survey.id, e)}
                       >
                         <Eye className="w-4 h-4" />
                       </Button>
@@ -337,6 +318,9 @@ export function SurveyListSection() {
                         variant="outline"
                         size="sm"
                         className="border-gray-300 hover:bg-gray-50 w-8 h-8 p-0 mx-auto"
+                        onClick={(e) =>
+                          handleIconClick("response", survey.id, e)
+                        }
                       >
                         <MessageSquare className="w-4 h-4" />
                       </Button>
@@ -346,6 +330,9 @@ export function SurveyListSection() {
                         variant="outline"
                         size="sm"
                         className="border-gray-300 hover:bg-gray-50 w-8 h-8 p-0 mx-auto"
+                        onClick={(e) =>
+                          handleIconClick("distribution", survey.id, e)
+                        }
                       >
                         <Settings className="w-4 h-4" />
                       </Button>
@@ -355,6 +342,9 @@ export function SurveyListSection() {
                         variant="outline"
                         size="sm"
                         className="border-gray-300 hover:bg-gray-50 w-8 h-8 p-0 mx-auto"
+                        onClick={(e) =>
+                          handleIconClick("gtTable", survey.id, e)
+                        }
                       >
                         <FileText className="w-4 h-4" />
                       </Button>
@@ -366,14 +356,12 @@ export function SurveyListSection() {
           </div>
 
           {/* ページネーション */}
-          <div className="mt-10">
+          <div className="mt-6">
             <Pagination>
               <PaginationContent>
                 <PaginationItem>
                   <PaginationPrevious
-                    onClick={() =>
-                      setCurrentPage((prev) => Math.max(1, prev - 1))
-                    }
+                    onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
                     className={
                       currentPage === 1
                         ? "pointer-events-none opacity-50"
@@ -388,8 +376,8 @@ export function SurveyListSection() {
                       <PaginationEllipsis />
                     ) : (
                       <PaginationLink
-                        isActive={currentPage === item}
                         onClick={() => setCurrentPage(item as number)}
+                        isActive={currentPage === item}
                         className="cursor-pointer"
                       >
                         {item}
@@ -401,7 +389,7 @@ export function SurveyListSection() {
                 <PaginationItem>
                   <PaginationNext
                     onClick={() =>
-                      setCurrentPage((prev) => Math.min(totalPages, prev + 1))
+                      setCurrentPage(Math.min(totalPages, currentPage + 1))
                     }
                     className={
                       currentPage === totalPages
@@ -412,11 +400,6 @@ export function SurveyListSection() {
                 </PaginationItem>
               </PaginationContent>
             </Pagination>
-
-            <div className="mt-4 text-center text-sm text-gray-600">
-              {startIndex + 1} - {Math.min(endIndex, allSurveys.length)} /{" "}
-              {allSurveys.length} 件
-            </div>
           </div>
         </div>
       </div>
