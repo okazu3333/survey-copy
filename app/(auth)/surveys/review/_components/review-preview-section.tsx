@@ -2,16 +2,16 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import type { Section } from "@/app/(auth)/surveys/_components/survey-section-card";
-import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import { Switch } from "@/components/ui/switch";
 import type { ReviewItem } from "@/lib/types/review";
 import { SurveySectionWithComments } from "../preview/_components/survey-section-with-comments";
+import { useReviewContext } from "../review-context";
 
 // Mock review items for demonstration (comments are only for questions)
-const mockReviewItems: ReviewItem[] = [
+const _mockReviewItems: ReviewItem[] = [
   {
     id: 1,
     questionNo: "Q1",
@@ -339,9 +339,11 @@ const TabSelectionSection = ({
         </span>
         <Switch
           checked={mode === "comment"}
-          onCheckedChange={(checked) =>
-            onModeChange(checked ? "comment" : "cursor")
-          }
+          onCheckedChange={(checked) => {
+            const newMode = checked ? "comment" : "cursor";
+            console.log("Mode switch changed to:", newMode);
+            onModeChange(newMode);
+          }}
           className="data-[state=checked]:bg-[#138FB5]"
         />
         <span
@@ -359,11 +361,21 @@ type ReviewPreviewSectionProps = {
 };
 
 export const ReviewPreviewSection = ({
-  userType = "reviewee",
+  userType = "reviewer",
 }: ReviewPreviewSectionProps) => {
+  const { reviewItems, addReviewItem, deleteReviewItem } = useReviewContext();
+
+  // デバッグ用ログ
+  console.log("ReviewPreviewSection - userType:", userType);
+
+  const handleDeleteComment = (id: number) => {
+    deleteReviewItem(id);
+  };
   const [activeTab, setActiveTab] = useState<TabType>("screening");
-  const [reviewItems, setReviewItems] = useState<ReviewItem[]>(mockReviewItems);
   const [mode, setMode] = useState<"comment" | "cursor">("comment");
+
+  // デバッグ用ログ - モード変更時
+  console.log("ReviewPreviewSection - mode:", mode, "userType:", userType);
   const { control, handleSubmit, watch, setValue, getValues } =
     useForm<QuestionFormData>({
       defaultValues: {
@@ -388,8 +400,13 @@ export const ReviewPreviewSection = ({
   };
 
   const handleAddComment = (newComment: ReviewItem) => {
-    setReviewItems((prev) => [...prev, newComment]);
+    addReviewItem(newComment);
   };
+
+  // プレビュー専用のコメントをフィルタリング（ロジックチェック専用コメントは除外）
+  const previewReviewItems = reviewItems.filter(
+    (item) => item.type !== "ロジック" && item.sectionId !== "logic",
+  );
 
   // Get current sections based on active tab
   const currentSections =
@@ -435,9 +452,10 @@ export const ReviewPreviewSection = ({
                   watch={watch as (name: string) => any}
                   setValue={setValue as (name: string, value: any) => void}
                   getValues={getValues as (name?: string) => any}
-                  reviewItems={reviewItems}
+                  reviewItems={previewReviewItems}
                   userType={userType}
                   onAddComment={handleAddComment}
+                  onDeleteComment={handleDeleteComment}
                   mode={mode}
                 />
               ))

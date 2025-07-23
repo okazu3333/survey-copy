@@ -20,4 +20,7 @@ export type ReviewItem = {
 export type CommentProps = ReviewItem & {
   className?: string;
   userType?: "reviewer" | "reviewee";
+  onDelete?: (id: number) => void;
+  onAdd?: (comment: ReviewItem) => void;
+  onUpdate?: (id: number, updatedComment: Partial<ReviewItem>) => void;
 };

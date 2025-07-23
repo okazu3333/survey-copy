@@ -11,6 +11,9 @@ type QuestionNodeProps = {
     question: string;
     isMainSurvey?: boolean;
     reviewItems?: ReviewItem[];
+    onDeleteComment?: (id: number) => void;
+    onAddComment?: (comment: ReviewItem) => void;
+    onUpdateComment?: (id: number, updatedComment: Partial<ReviewItem>) => void;
   };
   id: string;
 };
@@ -35,7 +38,12 @@ export const QuestionNode = ({ data, id }: QuestionNodeProps) => {
             zIndex: 10,
           }}
         >
-          <Comment {...comment} />
+          <Comment
+            {...comment}
+            onDelete={data.onDeleteComment}
+            onAdd={data.onAddComment}
+            onUpdate={data.onUpdateComment}
+          />
         </div>
       ))}
 

@@ -1,8 +1,7 @@
 #!/usr/bin/env node
 
-import fs from "fs";
+import fs from "node:fs";
 import { glob } from "glob";
-import path from "path";
 
 async function cleanupDebugCode() {
   console.log("🧹 デバッグコードの削除中...");
@@ -42,7 +41,7 @@ async function cleanupDebugCode() {
     const todoMatches = newContent.match(todoRegex) || [];
 
     if (todoMatches.length > 0) {
-      newContent = newContent.replace(todoRegex, (match, type, message) => {
+      newContent = newContent.replace(todoRegex, (_match, type, message) => {
         return `// ${type}: ${message}`;
       });
       modified = true;
@@ -123,7 +122,7 @@ async function generateCleanupReport() {
 
 async function main() {
   try {
-    const result = await cleanupDebugCode();
+    const _result = await cleanupDebugCode();
     await generateCleanupReport();
 
     console.log("\n✅ デバッグコードクリーンアップ完了！");

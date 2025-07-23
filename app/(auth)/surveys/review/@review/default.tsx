@@ -1,134 +1,100 @@
 "use client";
 
-import {
-  ChevronRight,
-  CircleCheck,
-  CircleHelp,
-  MessageSquareText,
-} from "lucide-react";
+import { ChevronRight, CircleHelp, MessageSquareText } from "lucide-react";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 import { AiReviewDialog } from "../_components/ai-review-dialog";
+import { ReviewItemComponent } from "../_components/review-item";
 import { UserReviewDialog } from "../_components/user-review-dialog";
 import { useReviewContext } from "../review-context";
 
 type ReviewType = "ai" | "team";
 type FilterStatus = "all" | "unresolved" | "resolved";
 
-type ReviewSidebarProps = {
-  userType?: "reviewer" | "reviewee";
+type ReviewItem = {
+  id: number;
+  questionNo: string;
+  type: string;
+  reviewerName: string;
+  time: string;
+  comment: string;
+  status: "unresolved" | "resolved";
+  reviewType: "ai" | "team";
+  replies?: number;
 };
 
-const ReviewSidebar = ({ userType = "reviewee" }: ReviewSidebarProps) => {
-  const { isReviewCollapsed, setIsReviewCollapsed } = useReviewContext();
+type ReviewSidebarProps = {
+  userType?: "reviewer" | "reviewee";
+  onDeleteComment?: (id: number) => void;
+  onAddComment?: (comment: ReviewItem) => void;
+  onUpdateComment?: (id: number, updatedComment: Partial<ReviewItem>) => void;
+};
+
+const ReviewSidebar = ({
+  userType = "reviewee",
+  onDeleteComment,
+  onAddComment,
+  onUpdateComment,
+}: ReviewSidebarProps) => {
+  const {
+    isReviewCollapsed,
+    setIsReviewCollapsed,
+    reviewItems,
+    addReviewItem,
+    updateReviewItem,
+    deleteReviewItem,
+  } = useReviewContext();
   const [selectedReviewType, setSelectedReviewType] =
     useState<ReviewType>("ai");
   const [filterStatus, setFilterStatus] = useState<FilterStatus>("all");
   const [isAiDialogOpen, setIsAiDialogOpen] = useState(false);
   const [isUserDialogOpen, setIsUserDialogOpen] = useState(false);
-
-  type ReviewItem = {
-    id: number;
-    questionNo: string;
-    type: string;
-    reviewerName: string;
-    time: string;
-    comment: string;
-    status: "unresolved" | "resolved";
-    reviewType: "ai" | "team";
-    replies?: number;
-  };
-
-  const [reviewItems, setReviewItems] = useState<ReviewItem[]>([
-    {
-      id: 1,
-      questionNo: "#5・スクリーニング調査・Q1",
-      type: "AIレビュー・回答テスト結果",
-      reviewerName: "佐藤花子",
-      time: "1分前",
-      comment:
-        "スクリーニング設問の1問目で、回答者の性別を尋ねています。設問タイプは単一選択で問題ないと考えられますが、LGBTQの人々の存在を考慮して、選択肢には「男性」「女性」以外に、「その他」や「答えたくない」もあると望ましいです。",
-      status: "unresolved",
-      reviewType: "ai",
-    },
-    {
-      id: 2,
-      questionNo: "#4・本調査・Q8",
-      type: "AIレビュー・カバレッジ検証結果",
-      reviewerName: "田中太郎",
-      time: "10分前",
-      comment:
-        "前の設問からジャンプ条件が設定されておらず、この設問に辿り着けませんでした。",
-      status: "unresolved",
-      reviewType: "ai",
-    },
-    {
-      id: 3,
-      questionNo: "#3・本調査・Q28",
-      type: "AIレビュー・カバレッジ検証結果",
-      reviewerName: "鈴木一郎",
-      time: "15分前",
-      comment:
-        "前の設問からジャンプ条件が設定されておらず、この設問に辿り着けませんでした。",
-      status: "resolved",
-      reviewType: "ai",
-    },
-    {
-      id: 4,
-      questionNo: "#2・本調査・Q18",
-      type: "AIレビュー・回答テスト結果",
-      reviewerName: "山田花子",
-      time: "2時間前",
-      comment:
-        "他の設問では「教えてください」ですが、この設問では「教えてください」になっています。",
-      status: "unresolved",
-      reviewType: "ai",
-      replies: 1,
-    },
-    {
-      id: 5,
-      questionNo: "#1・タイトル全体",
-      type: "AIレビュー・カバレッジ検証結果",
-      reviewerName: "高橋次郎",
-      time: "8時間前",
-      comment: "セクション",
-      status: "unresolved",
-      reviewType: "ai",
-    },
-    {
-      id: 6,
-      questionNo: "#2・本調査・Q5",
-      type: "佐藤花子",
-      reviewerName: "佐藤花子",
-      time: "30分前",
-      comment: "選択肢の順序を見直した方が良いと思います。",
-      status: "unresolved",
-      reviewType: "team",
-    },
-    {
-      id: 7,
-      questionNo: "#3・スクリーニング調査・Q3",
-      type: "田中太郎",
-      reviewerName: "田中太郎",
-      time: "1時間前",
-      comment:
-        "質問文が長すぎるので、もう少し簡潔にしてください。 質問文が長すぎるので、もう少し簡潔にしてください。",
-      status: "resolved",
-      reviewType: "team",
-    },
-  ]);
+  const [_isPasswordModalOpen, _setIsPasswordModalOpen] = useState(false);
+  const [_pendingDialogType, _setPendingDialogType] = useState<
+    "ai" | "user" | null
+  >(null);
+  const [_isAuthenticated, _setIsAuthenticated] = useState(false);
 
   const toggleItemStatus = (itemId: number) => {
-    setReviewItems((items) =>
-      items.map((item) =>
-        item.id === itemId
-          ? {
-              ...item,
-              status: item.status === "resolved" ? "unresolved" : "resolved",
-            }
-          : item,
-      ),
-    );
+    updateReviewItem(itemId, {
+      status:
+        reviewItems.find((item) => item.id === itemId)?.status === "resolved"
+          ? "unresolved"
+          : "resolved",
+    });
+  };
+
+  const handleDeleteComment = (itemId: number) => {
+    // Remove from context
+    deleteReviewItem(itemId);
+
+    // Call parent's delete callback if provided
+    if (onDeleteComment) {
+      onDeleteComment(itemId);
+    }
+  };
+
+  const handleAddComment = (newComment: ReviewItem) => {
+    // Add to context
+    addReviewItem(newComment);
+
+    // Call parent's add callback if provided
+    if (onAddComment) {
+      onAddComment(newComment);
+    }
+  };
+
+  const handleUpdateComment = (
+    itemId: number,
+    updatedComment: Partial<ReviewItem>,
+  ) => {
+    // Update in context
+    updateReviewItem(itemId, updatedComment);
+
+    // Call parent's update callback if provided
+    if (onUpdateComment) {
+      onUpdateComment(itemId, updatedComment);
+    }
   };
 
   const handleItemDoubleClick = (item: ReviewItem) => {
@@ -140,7 +106,10 @@ const ReviewSidebar = ({ userType = "reviewee" }: ReviewSidebarProps) => {
   };
 
   // Filter items based on selected review type and status
-  const filteredItems = reviewItems.filter((item) => {
+  const filteredItems = reviewItems.filter((item: ReviewItem) => {
+    // ロジックチェック専用のコメントは除外（レビューコメントパネルには表示しない）
+    if (item.type === "ロジック" || (item as any).sectionId === "logic") return false;
+
     if (item.reviewType !== selectedReviewType) return false;
     if (filterStatus === "all") return true;
     return item.status === filterStatus;
@@ -156,7 +125,9 @@ const ReviewSidebar = ({ userType = "reviewee" }: ReviewSidebarProps) => {
       <div
         className={cn(
           "bg-[#F4F7F9] shadow-[-4px_0px_12px_0px_rgba(0,0,0,0.04)] flex flex-col rounded-lg border-l-2 border-[#DCDCDC]",
-          isReviewCollapsed ? "h-16" : "h-[calc(100vh-6rem)]",
+          isReviewCollapsed
+            ? "h-16"
+            : "h-[calc(100vh-6rem)] min-h-[600px] max-h-[800px]",
         )}
       >
         {!isReviewCollapsed && (
@@ -255,52 +226,19 @@ const ReviewSidebar = ({ userType = "reviewee" }: ReviewSidebarProps) => {
             </div>
 
             {/* Review Items */}
-            <div className="flex-1 overflow-y-auto">
-              {filteredItems.map((item, _index) => (
-                // biome-ignore lint/a11y/noStaticElementInteractions: <>
-                <div
-                  key={item.id}
-                  className={cn(
-                    "px-6 py-4 border-b border-[#DCDCDC] hover:bg-[#E7ECF0] cursor-pointer bg-white",
-                  )}
-                  onDoubleClick={() => handleItemDoubleClick(item)}
-                >
-                  <div className="flex items-start justify-between mb-2">
-                    <div className="flex items-center gap-2">
-                      <span className="text-xs text-[#9DA0A7] font-medium">
-                        {item.questionNo}
-                      </span>
-                    </div>
-                    <button
-                      type="button"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        toggleItemStatus(item.id);
-                      }}
-                      className="hover:opacity-80 transition-opacity"
-                    >
-                      {item.status === "resolved" ? (
-                        <CircleCheck className="w-4 h-4 text-white fill-[#138FB5]" />
-                      ) : (
-                        <CircleCheck className="w-4 h-4 text-[#979BA2]" />
-                      )}
-                    </button>
-                  </div>
-                  <div className="flex items-center gap-2 mb-2">
-                    <span className="text-sm text-[#333333] font-medium">
-                      {selectedReviewType === "ai"
-                        ? item.type
-                        : item.reviewerName}
-                    </span>
-                    <span className="text-xs text-[#9DA0A7]">{item.time}</span>
-                  </div>
-                  <p className="text-sm text-[#333333]">{item.comment}</p>
-                  {item.replies && (
-                    <p className="text-xs text-[#9DA0A7] mt-2">
-                      {item.replies}件の返信
-                    </p>
-                  )}
-                </div>
+            <div className="flex-1 overflow-y-auto min-h-0 max-h-[calc(100vh-12rem)]">
+              {filteredItems.map((item: ReviewItem, index: number) => (
+                <ReviewItemComponent
+                  key={index}
+                  item={item}
+                  selectedReviewType={selectedReviewType}
+                  onToggleStatus={toggleItemStatus}
+                  onUpdateComment={handleUpdateComment}
+                  onDeleteComment={handleDeleteComment}
+                  onDoubleClick={handleItemDoubleClick}
+                  index={index}
+                  sectionId={(item as any).sectionId || "main"}
+                />
               ))}
             </div>
           </>
@@ -327,11 +265,17 @@ const ReviewSidebar = ({ userType = "reviewee" }: ReviewSidebarProps) => {
         open={isAiDialogOpen}
         onOpenChange={setIsAiDialogOpen}
         userType={userType}
+        onAddComment={handleAddComment}
+        onUpdateComment={handleUpdateComment}
+        onDeleteComment={handleDeleteComment}
       />
       <UserReviewDialog
         open={isUserDialogOpen}
         onOpenChange={setIsUserDialogOpen}
         userType={userType}
+        onAddComment={handleAddComment}
+        onUpdateComment={handleUpdateComment}
+        onDeleteComment={handleDeleteComment}
       />
     </div>
   );

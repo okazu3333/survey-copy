@@ -4,13 +4,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
-// import { Card, CardContent } from "@/components/ui/card";
-import { Checkbox } from "@/components/ui/checkbox";
-import { GripIcon } from "@/components/ui/grip-icon";
-import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Select, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Textarea } from "@/components/ui/textarea";
 import { DragDropProvider, type DraggableQuestion } from "./drag-drop-context";
 import { DraggableSection } from "./draggable-section";
 
@@ -31,7 +25,7 @@ const childrenSectionSettings = [
 ];
 
 // Data for main survey section settings
-const mainSurveySettings = [
+const _mainSurveySettings = [
   { label: "必須回答", value: "必須オン", isToggled: true },
   { label: "回答者条件", value: "全員" },
   { label: "回答制御", value: "なし" },
@@ -51,7 +45,7 @@ type SettingsFormData = {
   jumpCondition: string;
 };
 
-const childrenSection = {
+const _childrenSection = {
   title: "セクション：子どもの有無",
   questions: [
     {
@@ -193,7 +187,7 @@ const screeningQuestions: DraggableQuestion[] = [
   },
 ];
 
-const GridPattern = () => (
+const _GridPattern = () => (
   <div className="w-4 h-4 bg-[#f0f0f0] border border-[#dcdcdc] rounded-sm" />
 );
 
@@ -292,7 +286,7 @@ export const SurveyEditSection: React.FC<SurveyEditSectionProps> = ({
     return groupMap[id] || ["Q1", "Q2", "Q3", "Q4", "Q5", "Q6", "Q7"];
   };
 
-  const getTabForGroup = (id: string): TabType => {
+  const _getTabForGroup = (id: string): TabType => {
     const screeningGroups = ["group-1", "group-2"];
     const mainGroups = ["group-3"];
 
@@ -304,11 +298,11 @@ export const SurveyEditSection: React.FC<SurveyEditSectionProps> = ({
     return "screening";
   };
 
-  const onSubmit = (data: SettingsFormData) => {
+  const _onSubmit = (data: SettingsFormData) => {
     console.log("Form submitted:", data);
   };
 
-  const handleGoToReview = () => {
+  const _handleGoToReview = () => {
     router.push("/surveys/review");
   };
 

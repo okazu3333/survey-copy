@@ -1,9 +1,25 @@
 "use client";
 
-import { CircleCheck, MoreHorizontal, X } from "lucide-react";
+import { CircleCheck, Edit, MoreHorizontal, Trash2, X } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogPortal,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { Separator } from "@/components/ui/separator";
+import { Textarea } from "@/components/ui/textarea";
 import type { CommentProps } from "@/lib/types/review";
 import { cn } from "@/lib/utils";
 import { AiReviewDialog } from "./ai-review-dialog";
@@ -21,12 +37,25 @@ export const Comment = ({
   replies: _replies,
   className,
   userType = "reviewee",
+  onDelete,
 }: CommentProps) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editedComment, setEditedComment] = useState(comment);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
 
   const handleToggle = () => {
-    setIsExpanded(!isExpanded);
+    // 削除ダイアログが開いている時は他のダイアログを開かない
+    if (isDeleteDialogOpen) return;
+
+    // AIコメントの場合は直接ダイアログを開く
+    if (reviewType === "ai") {
+      setIsDialogOpen(true);
+    } else {
+      // 通常のコメントの場合は展開/折りたたみ
+      setIsExpanded(!isExpanded);
+    }
   };
 
   const toggleStatus = () => {
@@ -35,7 +64,48 @@ export const Comment = ({
   };
 
   const handleEditQuestion = () => {
+    // 削除ダイアログが開いている時は他のダイアログを開かない
+    if (isDeleteDialogOpen) return;
     setIsDialogOpen(true);
+  };
+
+  const handleEditComment = () => {
+    setIsEditing(true);
+  };
+
+  const handleSaveComment = () => {
+    // Here you would typically save the comment to your backend
+    console.log("Save comment:", _id, editedComment);
+    setIsEditing(false);
+  };
+
+  const handleCancelEdit = () => {
+    setEditedComment(comment);
+    setIsEditing(false);
+  };
+
+  const handleDeleteComment = () => {
+    // 削除ダイアログを開く前に、他のダイアログの状態をリセット
+    setIsDialogOpen(false);
+    setIsExpanded(false);
+    setIsEditing(false);
+    setIsDeleteDialogOpen(true);
+  };
+
+  const confirmDelete = () => {
+    // Here you would typically delete the comment from your backend
+    console.log("Delete comment:", _id);
+    setIsDeleteDialogOpen(false);
+    setIsExpanded(false);
+
+    // Call the parent's delete callback to remove the comment from the UI
+    if (onDelete) {
+      onDelete(_id);
+    }
+  };
+
+  const cancelDelete = () => {
+    setIsDeleteDialogOpen(false);
   };
 
   return (
@@ -185,8 +255,10 @@ export const Comment = ({
       )}
 
       {/* Expanded content */}
-      {isExpanded && (
-        <div className="bg-white rounded-3xl border border-[#DCDCDC] shadow-[0px_0px_16px_0px_rgba(0,0,0,0.16)]">
+      {isExpanded && !isDialogOpen && (
+        <div
+          className={`bg-white rounded-3xl border border-[#DCDCDC] shadow-[0px_0px_16px_0px_rgba(0,0,0,0.16)] max-w-[400px] max-h-[500px] overflow-hidden transform -translate-x-1/2 -translate-y-1/2 fixed ${isDialogOpen ? "z-[10]" : "z-[99999]"}`}
+        >
           {/* Header */}
           <div className="flex items-center justify-between px-6 py-3">
             <span className="text-sm font-medium text-[#333333]">
@@ -221,7 +293,7 @@ export const Comment = ({
           <Separator className="bg-[#DCDCDC]" />
 
           {/* Content */}
-          <div className="flex flex-col gap-4 px-6 py-4">
+          <div className="flex flex-col gap-4 px-6 py-4 max-h-[400px] overflow-y-auto">
             {/* Comment header */}
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
@@ -232,44 +304,124 @@ export const Comment = ({
                   {time}
                 </span>
               </div>
-              <Button variant="ghost" size="icon" className="h-5 w-5">
-                <MoreHorizontal className="h-4 w-4 text-[#979BA2]" />
-              </Button>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="h-5 w-5 hover:bg-gray-100"
+                  >
+                    <MoreHorizontal className="h-4 w-4 text-[#979BA2]" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent
+                  align="end"
+                  className="w-32 z-[99999]"
+                  sideOffset={5}
+                >
+                  <DropdownMenuItem onClick={handleEditComment}>
+                    <Edit className="mr-2 h-4 w-4" />
+                    <span>編集</span>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
+                    onClick={handleDeleteComment}
+                    className="text-red-600"
+                  >
+                    <Trash2 className="mr-2 h-4 w-4" />
+                    <span>削除</span>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
             </div>
 
             {/* Comment body */}
-            <p className="text-sm text-[#333333] whitespace-pre-wrap">
-              {comment}
-            </p>
+            {isEditing ? (
+              <div className="flex flex-col gap-3">
+                <Textarea
+                  value={editedComment}
+                  onChange={(e) => setEditedComment(e.target.value)}
+                  className="min-h-[150px] w-full min-w-[300px] text-sm border-[#DCDCDC] focus:border-[#138FB5] resize-none"
+                  placeholder="コメントを入力..."
+                />
+                <div className="flex gap-2 justify-end">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={handleCancelEdit}
+                    className="text-sm"
+                  >
+                    キャンセル
+                  </Button>
+                  <Button
+                    size="sm"
+                    onClick={handleSaveComment}
+                    className="text-sm bg-[#138FB5] hover:bg-[#0f7a9a]"
+                  >
+                    保存
+                  </Button>
+                </div>
+              </div>
+            ) : (
+              <>
+                <p className="text-sm text-[#333333] whitespace-pre-wrap break-words">
+                  {comment}
+                </p>
 
-            {/* Edit question button */}
-            <Button
-              variant="outline"
-              className="w-full rounded-[20px] border-[#DCDCDC] text-sm font-bold text-[#333333] hover:bg-gray-50"
-              onClick={handleEditQuestion}
-            >
-              {userType === "reviewer"
-                ? "レビュースレッドを確認する"
-                : "設問を編集する"}
-            </Button>
+                {/* Edit question button */}
+                <Button
+                  variant="outline"
+                  className="w-full rounded-[20px] border-[#DCDCDC] text-sm font-bold text-[#333333] hover:bg-gray-50"
+                  onClick={handleEditQuestion}
+                >
+                  {userType === "reviewer"
+                    ? "レビュースレッドを確認する"
+                    : "設問を編集する"}
+                </Button>
+              </>
+            )}
           </div>
         </div>
       )}
 
       {/* Dialog based on reviewType */}
-      {reviewType === "ai" ? (
-        <AiReviewDialog
-          open={isDialogOpen}
-          onOpenChange={setIsDialogOpen}
-          userType={userType}
-        />
-      ) : (
-        <UserReviewDialog
-          open={isDialogOpen}
-          onOpenChange={setIsDialogOpen}
-          userType={userType}
-        />
-      )}
+      {!isDeleteDialogOpen &&
+        (reviewType === "ai" ? (
+          <AiReviewDialog
+            open={isDialogOpen}
+            onOpenChange={setIsDialogOpen}
+            userType={userType}
+          />
+        ) : (
+          <UserReviewDialog
+            open={isDialogOpen}
+            onOpenChange={setIsDialogOpen}
+            userType={userType}
+          />
+        ))}
+
+      {/* Delete confirmation dialog */}
+      <Dialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
+        <DialogPortal>
+          {/* カスタムオーバーレイ - 高いz-index */}
+          <div className="fixed inset-0 z-[9999999] bg-black/80 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0" />
+          <DialogContent className="max-w-[400px] z-[9999999]">
+            <DialogHeader>
+              <DialogTitle>コメントを削除</DialogTitle>
+              <DialogDescription>
+                このコメントを削除しますか？この操作は取り消すことができません。
+              </DialogDescription>
+            </DialogHeader>
+            <DialogFooter className="gap-2">
+              <Button variant="outline" onClick={cancelDelete}>
+                キャンセル
+              </Button>
+              <Button variant="destructive" onClick={confirmDelete}>
+                削除
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </DialogPortal>
+      </Dialog>
     </div>
   );
 };

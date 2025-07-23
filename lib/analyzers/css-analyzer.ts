@@ -1,5 +1,5 @@
-import fs from "fs";
-import path from "path";
+import fs from "node:fs";
+import path from "node:path";
 
 // 分析結果の型定義
 export interface CSSAnalysisResult {
@@ -382,7 +382,7 @@ export class CSSDependencyAnalyzer {
     this.result.tailwindClasses.forEach((classes, component) => {
       const pattern = classes.sort().join(" ");
       if (classPatterns.has(pattern)) {
-        classPatterns.get(pattern)!.push(component);
+        classPatterns.get(pattern)?.push(component);
       } else {
         classPatterns.set(pattern, [component]);
       }

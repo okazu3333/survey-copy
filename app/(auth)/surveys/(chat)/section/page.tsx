@@ -121,9 +121,9 @@ const Page = () => {
                   <div className="flex flex-col items-end w-full">
                     <div className="flex h-10 items-center gap-4 w-full mt-5">
                       <div className="flex items-center gap-2">
-                        <label className="text-sm font-bold text-[#333333] whitespace-nowrap">
+                        <span className="text-sm font-bold text-[#333333] whitespace-nowrap">
                           スクリーニング設問【固定】
-                        </label>
+                        </span>
                         <CircleHelp className="w-4 h-4 text-gray-500" />
                       </div>
                     </div>
@@ -144,9 +144,9 @@ const Page = () => {
                   <div className="flex flex-col items-end w-full">
                     <div className="flex h-10 items-center gap-4 w-full">
                       <div className="flex items-center gap-2">
-                        <label className="text-sm font-bold text-[#333333] whitespace-nowrap">
+                        <span className="text-sm font-bold text-[#333333] whitespace-nowrap">
                           スクリーニング設問
-                        </label>
+                        </span>
                         <CircleHelp className="w-4 h-4 text-gray-500" />
                       </div>
                     </div>
@@ -173,9 +173,9 @@ const Page = () => {
                   <div className="flex flex-col items-end w-full">
                     <div className="flex h-10 items-center gap-4 w-full">
                       <div className="flex items-center gap-2">
-                        <label className="text-sm font-bold text-[#333333] whitespace-nowrap">
+                        <span className="text-sm font-bold text-[#333333] whitespace-nowrap">
                           本調査設問
-                        </label>
+                        </span>
                         <CircleHelp className="w-4 h-4 text-gray-500" />
                       </div>
                     </div>
@@ -199,7 +199,7 @@ const Page = () => {
                   </div>
                 </div>
               </form>
-              <div className="flex justify-center pb-10 bg-[#ffffff]">
+              <div className="flex justify-center mt-6 pb-10 bg-[#ffffff]">
                 <Button
                   type="submit"
                   className="w-[340px] h-14 bg-[#556064] rounded-[34px] flex items-center justify-center gap-4 px-4 py-0"

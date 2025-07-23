@@ -7,6 +7,7 @@ import { useForm } from "react-hook-form";
 import { Card } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import type { ReviewItem } from "@/lib/types/review";
+import { LogicComment } from "../../_components/logic-comment";
 import { LogicCheckSurveyContent } from "./logic-check-survey-content";
 
 type QuestionFormData = {
@@ -19,11 +20,23 @@ type QuestionFormData = {
 
 type PreviewLogicCheckSectionProps = {
   reviewItems?: ReviewItem[];
+  onDeleteComment?: (id: number) => void;
+  onAddComment?: (comment: ReviewItem) => void;
+  onUpdateComment?: (id: number, updatedComment: Partial<ReviewItem>) => void;
 };
 
 export const PreviewLogicCheckSection = ({
   reviewItems = [],
+  onDeleteComment,
+  onAddComment,
+  onUpdateComment,
 }: PreviewLogicCheckSectionProps) => {
+  const [localReviewItems, setLocalReviewItems] =
+    useState<ReviewItem[]>(reviewItems);
+
+  const handleDeleteComment = (id: number) => {
+    setLocalReviewItems((prev) => prev.filter((item) => item.id !== id));
+  };
   const { handleSubmit } = useForm<QuestionFormData>({
     defaultValues: {
       q1: "",
@@ -71,11 +84,39 @@ export const PreviewLogicCheckSection = ({
                   </div>
                 }
               >
-                <LogicCheckSurveyContent reviewItems={reviewItems} />
+                <LogicCheckSurveyContent
+                  reviewItems={localReviewItems}
+                  onDeleteComment={handleDeleteComment}
+                  onAddComment={onAddComment}
+                  onUpdateComment={onUpdateComment}
+                />
               </Suspense>
             </form>
           </ScrollArea>
         </Card>
+
+        {/* Logic Comments Section */}
+        <div className="w-full max-w-4xl">
+          <h3 className="text-lg font-semibold text-gray-800 mb-4">
+            ロジックレビューコメント
+          </h3>
+          <div className="space-y-4 max-h-96 overflow-y-auto">
+            {localReviewItems.length === 0 ? (
+              <div className="text-center py-8 text-gray-500">
+                ロジックレビューコメントがありません
+              </div>
+            ) : (
+              localReviewItems.map((item) => (
+                <LogicComment
+                  key={item.id}
+                  {...item}
+                  onDelete={handleDeleteComment}
+                  onUpdate={onUpdateComment}
+                />
+              ))
+            )}
+          </div>
+        </div>
       </motion.div>
 
       {/* Expanded View Modal */}

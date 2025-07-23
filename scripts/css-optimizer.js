@@ -1,8 +1,7 @@
 #!/usr/bin/env node
 
-import fs from "fs";
+import fs from "node:fs";
 import { glob } from "glob";
-import path from "path";
 
 const HARDCODED_COLORS = {
   "#138FB5": "brand-primary",
@@ -33,7 +32,7 @@ async function analyzeCSSDependencies() {
   for (const file of tsxFiles) {
     const content = fs.readFileSync(file, "utf-8");
 
-    for (const [color, className] of Object.entries(HARDCODED_COLORS)) {
+    for (const [color, _className] of Object.entries(HARDCODED_COLORS)) {
       const regex = new RegExp(color.replace("#", "\\#"), "g");
       const matches = content.match(regex);
 

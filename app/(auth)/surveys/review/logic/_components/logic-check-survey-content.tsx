@@ -22,15 +22,41 @@ import { GroupDetailsPanel } from "../../../(chat)/question/check/_components/gr
 
 type LogicCheckSurveyContentProps = {
   reviewItems?: ReviewItem[];
+  onDeleteComment?: (id: number) => void;
+  onAddComment?: (comment: ReviewItem) => void;
+  onUpdateComment?: (id: number, updatedComment: Partial<ReviewItem>) => void;
 };
 
-const createNodeTypes = (reviewItems: ReviewItem[]) => ({
+const createNodeTypes = (
+  reviewItems: ReviewItem[],
+  onDeleteComment?: (id: number) => void,
+  onAddComment?: (comment: ReviewItem) => void,
+  onUpdateComment?: (id: number, updatedComment: Partial<ReviewItem>) => void,
+) => ({
   start: StartNode,
   question: (props: any) => (
-    <QuestionNode {...props} data={{ ...props.data, reviewItems }} />
+    <QuestionNode
+      {...props}
+      data={{
+        ...props.data,
+        reviewItems,
+        onDeleteComment,
+        onAddComment,
+        onUpdateComment,
+      }}
+    />
   ),
   marriageQuestion: (props: any) => (
-    <MarriageQuestionNode {...props} data={{ ...props.data, reviewItems }} />
+    <MarriageQuestionNode
+      {...props}
+      data={{
+        ...props.data,
+        reviewItems,
+        onDeleteComment,
+        onAddComment,
+        onUpdateComment,
+      }}
+    />
   ),
   group: GroupNode,
 });
@@ -489,6 +515,9 @@ const initialEdges: Edge[] = [
 
 export const LogicCheckSurveyContent = ({
   reviewItems = [],
+  onDeleteComment,
+  onAddComment,
+  onUpdateComment,
 }: LogicCheckSurveyContentProps) => {
   const [nodes, , onNodesChange] = useNodesState(initialNodes);
   const [edges, , onEdgesChange] = useEdgesState(initialEdges);
@@ -509,7 +538,16 @@ export const LogicCheckSurveyContent = ({
   };
 
   // Create node types with review items - memoized for performance
-  const nodeTypes = useMemo(() => createNodeTypes(reviewItems), [reviewItems]);
+  const nodeTypes = useMemo(
+    () =>
+      createNodeTypes(
+        reviewItems,
+        onDeleteComment,
+        onAddComment,
+        onUpdateComment,
+      ),
+    [reviewItems, onDeleteComment, onAddComment, onUpdateComment],
+  );
 
   return (
     <div className="w-full h-[3000px] bg-gray-50 rounded-lg overflow-x-auto relative">

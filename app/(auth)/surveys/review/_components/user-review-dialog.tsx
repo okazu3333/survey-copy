@@ -3,9 +3,11 @@
 import {
   ChevronDown,
   CircleCheck,
+  Edit,
   HelpCircle,
   Plus,
   SendIcon,
+  Trash2,
   X,
 } from "lucide-react";
 import { useState } from "react";
@@ -13,6 +15,12 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
@@ -27,21 +35,38 @@ import { Separator } from "@/components/ui/separator";
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
 
+type ReviewItem = {
+  id: number;
+  questionNo: string;
+  type: string;
+  reviewerName: string;
+  time: string;
+  comment: string;
+  status: "unresolved" | "resolved";
+  reviewType: "ai" | "team";
+  replies?: number;
+};
+
 type UserReviewDialogProps = {
   userType?: "reviewer" | "reviewee";
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  onAddComment?: (comment: ReviewItem) => void;
+  onUpdateComment?: (id: number, updatedComment: Partial<ReviewItem>) => void;
+  onDeleteComment?: (id: number) => void;
 };
 
 export const UserReviewDialog = ({
   userType = "reviewee",
   open,
   onOpenChange,
+  onAddComment,
+  onUpdateComment,
+  onDeleteComment,
 }: UserReviewDialogProps) => {
   const [commentText, setCommentText] = useState("");
-  const [status, _setStatus] = useState<"resolved" | "unresolved">(
-    "unresolved",
-  );
+  const [status, setStatus] = useState<"resolved" | "unresolved">("unresolved");
+  const [questionChecked, setQuestionChecked] = useState(false);
   const [comments, setComments] = useState([
     {
       author: "佐藤花子",
@@ -83,19 +108,47 @@ export const UserReviewDialog = ({
   // Handle comment submission
   const handleSendComment = () => {
     if (commentText.trim()) {
+      // Add to local comments
       const newComment = {
         author: "現在のユーザー", // In real app, this would be the current user's name
         time: "今",
         content: commentText,
       };
       setComments([...comments, newComment]);
+
+      // Add to review panel if callback provided
+      if (onAddComment) {
+        const newReviewItem: ReviewItem = {
+          id: Date.now(), // Generate unique ID
+          questionNo: "#1・スクリーニング調査・Q1", // Default question number
+          type: "チームレビュー",
+          reviewerName: "現在のユーザー",
+          time: "今",
+          comment: commentText,
+          status: "unresolved",
+          reviewType: "team",
+        };
+        onAddComment(newReviewItem);
+      }
+
       setCommentText("");
+      onOpenChange(false); // Close dialog
     }
+  };
+
+  const handleEditComment = (commentIndex: number) => {
+    // Handle edit comment action
+    console.log("Edit comment:", commentIndex);
+  };
+
+  const handleDeleteComment = (commentIndex: number) => {
+    // Handle delete comment action
+    console.log("Delete comment:", commentIndex);
   };
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-[1376px] max-h-[90vh] h-[960px] p-0 gap-0 bg-white rounded-[48px] shadow-[0px_0px_8px_0px_rgba(0,0,0,0.04)] overflow-hidden flex">
+      <DialogContent className="max-w-[1600px] max-h-[90vh] h-[960px] p-0 gap-0 bg-white rounded-[48px] shadow-[0px_0px_8px_0px_rgba(0,0,0,0.04)] overflow-hidden flex">
         <DialogTitle className="sr-only">レビュー・編集画面</DialogTitle>
         <div className="flex flex-col items-start gap-2.5 pt-16 pb-10 px-16 h-full w-full">
           <div className="flex items-start gap-8 relative w-full h-full overflow-hidden">
@@ -112,13 +165,23 @@ export const UserReviewDialog = ({
                     <div className="font-medium text-xs text-[#333333] whitespace-nowrap">
                       レビューステータス
                     </div>
-                    {status === "resolved" ? (
-                      <CircleCheck className="w-4 h-4 text-white fill-[#138FB5]" />
-                    ) : (
-                      <CircleCheck className="w-4 h-4 text-[#979BA2]" />
-                    )}
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setStatus(
+                          status === "resolved" ? "unresolved" : "resolved",
+                        )
+                      }
+                      className="cursor-pointer hover:opacity-80 transition-opacity"
+                    >
+                      {status === "resolved" ? (
+                        <CircleCheck className="w-4 h-4 text-white fill-[#138FB5]" />
+                      ) : (
+                        <CircleCheck className="w-4 h-4 text-[#979BA2]" />
+                      )}
+                    </button>
                     <div className="w-10 font-bold text-xs text-[#333333] text-center">
-                      未完了
+                      {status === "resolved" ? "完了" : "未完了"}
                     </div>
                   </div>
                 </div>
@@ -136,7 +199,13 @@ export const UserReviewDialog = ({
 
                         <Card className="flex flex-col items-start w-full bg-white rounded-lg border border-solid border-[#dcdcdc]">
                           <div className="flex items-center gap-3 pl-3 pr-0 py-0 w-full bg-[#f5f5f5] rounded-[8px_8px_0px_0px] border border-solid border-[#dcdcdc]">
-                            <Checkbox className="w-4 h-4" />
+                            <Checkbox
+                              className="w-4 h-4"
+                              checked={questionChecked}
+                              onCheckedChange={(checked) =>
+                                setQuestionChecked(checked as boolean)
+                              }
+                            />
                             <div className="inline-flex items-center justify-center px-4 py-2 bg-[#138FB5]">
                               <div className="w-fit mt-[-1.00px] font-medium text-white text-base text-center whitespace-nowrap">
                                 Q1
@@ -321,13 +390,40 @@ export const UserReviewDialog = ({
                               {comment.time}
                             </div>
                           </div>
-                          <div className="inline-flex h-5 items-center gap-1">
-                            <div className="inline-flex items-center gap-1">
-                              <div className="w-1 h-1 bg-icongray rounded-sm" />
-                              <div className="w-1 h-1 bg-icongray rounded-sm" />
-                              <div className="w-1 h-1 bg-icongray rounded-sm" />
-                            </div>
-                          </div>
+                          <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                              <button
+                                type="button"
+                                className="inline-flex h-5 items-center gap-1 hover:bg-gray-100 rounded p-1"
+                              >
+                                <div className="inline-flex items-center gap-1">
+                                  <div className="w-1 h-1 bg-[#979BA2] rounded-sm" />
+                                  <div className="w-1 h-1 bg-[#979BA2] rounded-sm" />
+                                  <div className="w-1 h-1 bg-[#979BA2] rounded-sm" />
+                                </div>
+                              </button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent
+                              align="end"
+                              className="w-32 z-[9999]"
+                              sideOffset={5}
+                            >
+                              <DropdownMenuItem
+                                onClick={() => handleEditComment(index)}
+                                className="flex items-center gap-2"
+                              >
+                                <Edit className="w-4 h-4" />
+                                編集
+                              </DropdownMenuItem>
+                              <DropdownMenuItem
+                                onClick={() => handleDeleteComment(index)}
+                                className="flex items-center gap-2 text-red-600"
+                              >
+                                <Trash2 className="w-4 h-4" />
+                                削除
+                              </DropdownMenuItem>
+                            </DropdownMenuContent>
+                          </DropdownMenu>
                         </div>
                         <div className="flex flex-col items-start justify-center relative self-stretch w-full">
                           <div className="self-stretch font-medium text-sm text-fontdefault">

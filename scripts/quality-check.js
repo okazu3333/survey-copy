@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 
-import { execSync, spawn } from "child_process";
-import fs from "fs";
-import path from "path";
+import { execSync } from "node:child_process";
+import fs from "node:fs";
+import path from "node:path";
 
 // 色付きログ出力
 const colors = {
@@ -19,7 +19,7 @@ function log(message, color = "reset") {
   console.log(`${colors[color]}${message}${colors.reset}`);
 }
 
-function logError(message) {
+function _logError(message) {
   log(`❌ ${message}`, "red");
 }
 
@@ -27,7 +27,7 @@ function logSuccess(message) {
   log(`✅ ${message}`, "green");
 }
 
-function logWarning(message) {
+function _logWarning(message) {
   log(`⚠️  ${message}`, "yellow");
 }
 
@@ -80,7 +80,7 @@ function checkDependencies() {
     try {
       execSync("npm ls --depth=0", { stdio: "pipe" });
       logSuccess("依存関係のバージョン競合なし");
-    } catch (error) {
+    } catch (_error) {
       results.warnings.push("依存関係のバージョン競合が検出されました");
     }
 
@@ -100,7 +100,7 @@ function checkTypeScript() {
     execSync("npx tsc --noEmit", { stdio: "pipe" });
     results.passed.push("TypeScript型チェック完了");
     return true;
-  } catch (error) {
+  } catch (_error) {
     results.failed.push("TypeScript型エラーが検出されました");
     return false;
   }
@@ -114,7 +114,7 @@ function checkLinting() {
     execSync("npm run lint", { stdio: "pipe" });
     results.passed.push("リントチェック完了");
     return true;
-  } catch (error) {
+  } catch (_error) {
     results.failed.push("リントエラーが検出されました");
     return false;
   }
@@ -128,7 +128,7 @@ function checkFormatting() {
     execSync("npx biome check --write", { stdio: "pipe" });
     results.passed.push("フォーマットチェック完了");
     return true;
-  } catch (error) {
+  } catch (_error) {
     results.warnings.push("フォーマットの問題が検出されました（自動修正済み）");
     return true;
   }
@@ -241,7 +241,7 @@ function checkBuild() {
     execSync("npm run build", { stdio: "pipe" });
     results.passed.push("ビルドテスト完了");
     return true;
-  } catch (error) {
+  } catch (_error) {
     results.failed.push("ビルドエラーが検出されました");
     return false;
   }
@@ -255,7 +255,7 @@ function checkSecurity() {
     execSync("npm audit --audit-level=moderate", { stdio: "pipe" });
     results.passed.push("セキュリティチェック完了");
     return true;
-  } catch (error) {
+  } catch (_error) {
     results.warnings.push("セキュリティの脆弱性が検出されました");
     return false;
   }
@@ -301,7 +301,7 @@ async function checkCSSDependencies() {
 
 // 結果の表示
 function displayResults() {
-  console.log("\n" + "=".repeat(60));
+  console.log(`\n${"=".repeat(60)}`);
   log("品質チェック結果", "cyan");
   console.log("=".repeat(60));
 
@@ -320,7 +320,7 @@ function displayResults() {
     results.failed.forEach((item) => log(`  • ${item}`, "red"));
   }
 
-  console.log("\n" + "=".repeat(60));
+  console.log(`\n${"=".repeat(60)}`);
 
   const totalChecks =
     results.passed.length + results.warnings.length + results.failed.length;

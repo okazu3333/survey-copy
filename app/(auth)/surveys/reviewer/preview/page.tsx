@@ -1,12 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import { SurveyCardHeader } from "@/components/survey-card-header";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { ReviewModeToggle } from "../../review/_components/review-mode-toggle";
-import { ReviewPreviewSection } from "../../review/_components/review-preview-section";
 
 const Page = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
