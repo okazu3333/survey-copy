@@ -34,6 +34,7 @@ type SurveyAiChatProps = {
   userMessages?: string[];
   aiResponses?: AiResponse[];
   autoExpand?: boolean;
+  showTestProgress?: boolean;
 };
 
 export const SurveyAiChat = ({
@@ -41,6 +42,7 @@ export const SurveyAiChat = ({
   userMessages = [],
   aiResponses = [],
   autoExpand = false,
+  showTestProgress = false,
 }: SurveyAiChatProps) => {
   // const router = useRouter();
   const [isCollapsed, setIsCollapsed] = useState(!autoExpand);
@@ -60,6 +62,18 @@ export const SurveyAiChat = ({
     }, 100);
     return () => clearTimeout(timer);
   }, [autoExpand, onCollapseChange]);
+
+  // チャット履歴パネルを開くイベントリスナー
+  useEffect(() => {
+    const handleOpenChatHistory = () => {
+      setIsChatHistoryOpen(true);
+    };
+
+    window.addEventListener('openChatHistory', handleOpenChatHistory);
+    return () => {
+      window.removeEventListener('openChatHistory', handleOpenChatHistory);
+    };
+  }, []);
 
   const handleFileImport = (file: File) => {
     console.log("Imported file:", file.name);
@@ -275,6 +289,7 @@ export const SurveyAiChat = ({
         isOpen={isChatHistoryOpen}
         onClose={() => setIsChatHistoryOpen(false)}
         onSelectHistory={handleChatHistorySelect}
+        showTestProgress={showTestProgress}
       />
 
       {/* Survey Import Dialog */}

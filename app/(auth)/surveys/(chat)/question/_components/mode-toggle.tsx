@@ -19,9 +19,10 @@ const modes: Mode[] = [
 
 type ModeToggleProps = {
   currentMode: string;
+  onTestExecution?: () => void;
 };
 
-export const ModeToggle = ({ currentMode }: ModeToggleProps) => {
+export const ModeToggle = ({ currentMode, onTestExecution }: ModeToggleProps) => {
   const router = useRouter();
 
   const handleModeChange = (path: string) => {
@@ -33,8 +34,9 @@ export const ModeToggle = ({ currentMode }: ModeToggleProps) => {
   };
 
   const handleTestExecution = () => {
-    // TODO: テスト実行のロジックを実装
+    // テスト実行のロジックを実装
     console.log("テスト実行を開始します");
+    onTestExecution?.();
   };
 
   return (

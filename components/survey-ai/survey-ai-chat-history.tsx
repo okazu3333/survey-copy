@@ -1,6 +1,7 @@
 import { ChevronDown, List, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { TestProgressSection } from "./test-progress-section";
 
 type ChatHistoryItem = {
   id: string;
@@ -40,12 +41,14 @@ type SurveyAiChatHistoryProps = {
   isOpen: boolean;
   onClose: () => void;
   onSelectHistory?: (historyId: string) => void;
+  showTestProgress?: boolean;
 };
 
 export const SurveyAiChatHistory = ({
   isOpen,
   onClose,
   onSelectHistory,
+  showTestProgress = false,
 }: SurveyAiChatHistoryProps) => {
   if (!isOpen) return null;
 
@@ -67,6 +70,9 @@ export const SurveyAiChatHistory = ({
           <X className="w-4 h-4 text-[#0098C7] stroke-[#138FB5]" />
         </Button>
       </div>
+
+      {/* Test Progress Section */}
+      <TestProgressSection isVisible={showTestProgress} />
 
       {/* Chat History List */}
       <ScrollArea className="flex-1 h-[calc(100vh-152px)]">

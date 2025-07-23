@@ -18,6 +18,7 @@ const aiResponses = [
 const Page = () => {
   const [isChatOpen, setIsChatOpen] = useState(true);
   const [isTransitioning, setIsTransitioning] = useState(false);
+  const [showTestProgress, setShowTestProgress] = useState(false);
 
   // AIチャットパネルの開閉イベント処理
   const handleChatToggle = (collapsed: boolean) => {
@@ -37,6 +38,24 @@ const Page = () => {
       console.log("AIチャットパネルが閉じられました - メインエリアを拡大");
     }
   }, [isChatOpen, isTransitioning]);
+
+  // テスト実行ボタンが押された時の処理
+  const handleTestExecution = () => {
+    console.log("テスト実行ボタンが押されました");
+    setShowTestProgress(true);
+    
+    // AIチャットパネルが閉じている場合は開く
+    if (!isChatOpen) {
+      setIsChatOpen(true);
+    }
+    
+    // 少し遅延してからチャット履歴パネルを開く
+    setTimeout(() => {
+      // SurveyAiChatコンポーネント内でチャット履歴パネルを開くためのトリガー
+      const event = new CustomEvent('openChatHistory');
+      window.dispatchEvent(event);
+    }, 100);
+  };
 
   return (
     <div className="min-h-screen bg-gray-100">
@@ -63,7 +82,7 @@ const Page = () => {
             />
             <div className="flex flex-col w-full items-center gap-6 p-6 bg-[#ffffff] rounded-b-lg shadow-main-bg">
               {/* Header Section with Mode Toggle */}
-              <ModeToggle currentMode="edit" />
+              <ModeToggle currentMode="edit" onTestExecution={handleTestExecution} />
 
               {/* Survey Edit Area */}
               <SurveyEditSection />
@@ -82,6 +101,7 @@ const Page = () => {
                 userMessages={userMessages}
                 aiResponses={aiResponses}
                 onCollapseChange={handleChatToggle}
+                showTestProgress={showTestProgress}
               />
             ) : (
               <div className="w-16 h-16 bg-[#138fb5] rounded-[0px_0px_0px_8px] transition-all duration-300 ease-in-out">

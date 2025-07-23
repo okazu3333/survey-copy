@@ -1,7 +1,7 @@
 "use client";
 
-import { Check, Copy } from "lucide-react";
-import { useState } from "react";
+import { Check, Copy, RefreshCw } from "lucide-react";
+import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -10,6 +10,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
 type UrlModalProps = {
   open: boolean;
@@ -25,6 +26,24 @@ export const UrlModal = ({
   title = "レビュー画面URL",
 }: UrlModalProps) => {
   const [copied, setCopied] = useState(false);
+  const [password, setPassword] = useState("");
+
+  // 8桁のランダムパスワードを生成する関数
+  const generatePassword = () => {
+    const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    let result = "";
+    for (let i = 0; i < 8; i++) {
+      result += chars.charAt(Math.floor(Math.random() * chars.length));
+    }
+    return result;
+  };
+
+  // モーダルが開かれた時にパスワードを生成（レビュー画面URLの場合のみ）
+  useEffect(() => {
+    if (open && title === "レビュー画面URL") {
+      setPassword(generatePassword());
+    }
+  }, [open, title]);
 
   const handleCopy = async () => {
     try {
@@ -34,6 +53,22 @@ export const UrlModal = ({
     } catch (err) {
       console.error("Failed to copy URL:", err);
     }
+  };
+
+  const handleCopyPassword = async () => {
+    if (password) {
+      try {
+        await navigator.clipboard.writeText(password);
+        setCopied(true);
+        setTimeout(() => setCopied(false), 2000);
+      } catch (err) {
+        console.error("Failed to copy password:", err);
+      }
+    }
+  };
+
+  const handleRegeneratePassword = () => {
+    setPassword(generatePassword());
   };
 
   return (
@@ -47,7 +82,7 @@ export const UrlModal = ({
 
         <div className="flex flex-col gap-4">
           <div className="flex flex-col gap-2">
-            <label className="text-sm font-medium text-[#333333]">URL</label>
+            <Label className="text-sm font-medium text-[#333333]">URL</Label>
             <div className="flex items-center gap-2">
               <Input
                 value={url}
@@ -68,6 +103,45 @@ export const UrlModal = ({
               </Button>
             </div>
           </div>
+
+          {/* パスワード機能はレビュー画面URLの場合のみ表示 */}
+          {title === "レビュー画面URL" && (
+            <div className="flex flex-col gap-2">
+              <div className="flex items-center justify-between">
+                <Label className="text-sm font-medium text-[#333333]">パスワード</Label>
+                <Button
+                  onClick={handleRegeneratePassword}
+                  variant="outline"
+                  size="sm"
+                  className="h-8 px-2 border-[#60ADC2] text-[#60ADC2] hover:bg-[#60ADC2] hover:text-white text-xs"
+                >
+                  <RefreshCw className="w-3 h-3 mr-1" />
+                  再生成
+                </Button>
+              </div>
+              <div className="flex items-center gap-2">
+                <Input
+                  type="text"
+                  value={password}
+                  readOnly
+                  className="flex-1 bg-gray-50 text-[#333333] font-mono text-sm"
+                />
+                <Button
+                  onClick={handleCopyPassword}
+                  variant="outline"
+                  size="icon"
+                  className="h-10 w-10 border-[#60ADC2] text-[#60ADC2] hover:bg-[#60ADC2] hover:text-white"
+                  disabled={!password}
+                >
+                  {copied ? (
+                    <Check className="h-4 w-4" />
+                  ) : (
+                    <Copy className="h-4 w-4" />
+                  )}
+                </Button>
+              </div>
+            </div>
+          )}
 
           <div className="flex justify-end gap-2 pt-2">
             <Button
