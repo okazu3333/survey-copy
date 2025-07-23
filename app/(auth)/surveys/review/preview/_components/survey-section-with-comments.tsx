@@ -1,6 +1,6 @@
 /** biome-ignore-all lint/suspicious/noExplicitAny: <> */
 import { Lock, MessageCircle, Send } from "lucide-react";
-import { useRef, useState, useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 import { type Control, Controller } from "react-hook-form";
 import type { Section } from "@/app/(auth)/surveys/_components/survey-section-card";
 import { Comment } from "@/app/(auth)/surveys/review/_components/comment";
@@ -51,7 +51,10 @@ export const SurveySectionWithComments = ({
   useEffect(() => {
     if (!isAddingComment) return;
     const handleClick = (e: MouseEvent | TouchEvent) => {
-      if (commentInputRef.current && !commentInputRef.current.contains(e.target as Node)) {
+      if (
+        commentInputRef.current &&
+        !commentInputRef.current.contains(e.target as Node)
+      ) {
         setIsAddingComment(false);
         setNewCommentText("");
         setCursorPosition(null);
@@ -66,7 +69,8 @@ export const SurveySectionWithComments = ({
   }, [isAddingComment]);
 
   const handleMouseMove = (e: React.MouseEvent, questionId: string) => {
-    if (userType !== "reviewer" || isAddingComment || mode !== "comment") return;
+    if (userType !== "reviewer" || isAddingComment || mode !== "comment")
+      return;
 
     const rect = questionRefs.current[questionId]?.getBoundingClientRect();
     if (!rect) return;
@@ -261,16 +265,23 @@ export const SurveySectionWithComments = ({
                     style={(() => {
                       const popupWidth = 448;
                       const margin = 8;
-                      const parent = questionRefs.current[question.id]?.parentElement;
-                      let left = 0, top = 0;
+                      const parent =
+                        questionRefs.current[question.id]?.parentElement;
+                      let left = 0,
+                        top = 0;
                       let popupHeight = 100; // デフォルト高さ
                       if (commentInputRef.current) {
-                        popupHeight = commentInputRef.current.offsetHeight || 100;
+                        popupHeight =
+                          commentInputRef.current.offsetHeight || 100;
                       }
                       if (parent) {
                         const parentRect = parent.getBoundingClientRect();
-                        const baseLeft = parentRect.left + (parentRect.width * (cursorPosition.x / 100));
-                        const baseTop = parentRect.top + (parentRect.height * (cursorPosition.y / 100));
+                        const baseLeft =
+                          parentRect.left +
+                          parentRect.width * (cursorPosition.x / 100);
+                        const baseTop =
+                          parentRect.top +
+                          parentRect.height * (cursorPosition.y / 100);
                         left = baseLeft;
                         top = baseTop;
                         // 右端が画面からはみ出す場合
@@ -298,7 +309,7 @@ export const SurveySectionWithComments = ({
                     <div
                       ref={commentInputRef}
                       className="bg-white rounded-2xl border-2 border-[#838383] shadow-[0px_0px_16px_0px_rgba(0,0,0,0.16)] w-[448px]"
-                      onClick={e => e.stopPropagation()}
+                      onClick={(e) => e.stopPropagation()}
                     >
                       <div className="flex items-center gap-2.5 p-3 pl-6">
                         <Textarea

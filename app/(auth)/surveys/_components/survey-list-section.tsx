@@ -9,6 +9,7 @@ import {
   Settings,
 } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -30,7 +31,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { useRouter } from "next/navigation";
 
 // サンプルデータ（実際の実装ではAPIから取得）
 const generateSampleData = () => {
@@ -63,8 +63,8 @@ const generateSampleData = () => {
     const title = titles[i % titles.length];
     const creator = creators[i % creators.length];
     const day = ((i % 30) + 1).toString().padStart(2, "0");
-    const hour = ((i % 24)).toString().padStart(2, "0");
-    const minute = ((i % 60)).toString().padStart(2, "0");
+    const hour = (i % 24).toString().padStart(2, "0");
+    const minute = (i % 60).toString().padStart(2, "0");
 
     return {
       id: `SRB${String(i + 1).padStart(3, "0")}`,
@@ -120,7 +120,10 @@ export function SurveyListSection() {
   };
 
   // テーブル行クリック時の遷移処理
-  const handleRowClick = (survey: typeof allSurveys[number], event: React.MouseEvent) => {
+  const handleRowClick = (
+    survey: (typeof allSurveys)[number],
+    event: React.MouseEvent,
+  ) => {
     // クリックされた要素がインタラクティブ要素の場合は何もしない
     const tag = (event.target as HTMLElement).tagName.toLowerCase();
     if (

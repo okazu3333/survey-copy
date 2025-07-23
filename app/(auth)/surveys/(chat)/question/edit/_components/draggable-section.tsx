@@ -50,7 +50,7 @@ export const DraggableSection: React.FC<DraggableSectionProps> = ({
             <DraggableQuestionComponent
               key={question.id}
               question={question}
-                              _index={index}
+              _index={index}
               isFixed={isFixed}
             />
           ))}

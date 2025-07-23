@@ -29,6 +29,30 @@
     --chart-4: 43 74% 66%;
     --chart-5: 27 87% 67%;
     --radius: 0.5rem;
+
+    /* Brand Colors */
+    --brand-primary: 199 100% 38%; /* #138FB5 */
+    --brand-primary-hover: 199 100% 34%; /* #0f7a9b */
+    --brand-secondary: 210 40% 96%; /* #F4F7F9 */
+    --brand-accent: 199 100% 45%; /* #60adc2 */
+    --brand-success: 142 76% 36%; /* #4BBC80 */
+    --brand-warning: 45 100% 51%; /* #FFE9A3 */
+    --brand-error: 0 84% 60%; /* #D96868 */
+
+    /* Text Colors */
+    --text-primary: 0 0% 20%; /* #333333 */
+    --text-secondary: 0 0% 55%; /* #888888 */
+    --text-muted: 0 0% 67%; /* #ABABAB */
+
+    /* Border Colors */
+    --border-light: 0 0% 86%; /* #DCDCDC */
+    --border-medium: 0 0% 80%; /* #CBCBCB */
+    --border-dark: 0 0% 73%; /* #8E99A2 */
+
+    /* Background Colors */
+    --bg-light: 0 0% 98%; /* #F9F9F9 */
+    --bg-card: 0 0% 96%; /* #F4F7F9 */
+    --bg-overlay: 0 0% 100%; /* #FFFFFF */
   }
 
   .dark {
@@ -81,4 +105,141 @@
   display: inline-flex !important;
   align-items: center !important;
   justify-content: center !important;
+}
+
+/* Brand Color Utility Classes */
+@layer utilities {
+  .bg-brand-primary {
+    background-color: hsl(var(--brand-primary));
+  }
+
+  .bg-brand-primary-hover {
+    background-color: hsl(var(--brand-primary-hover));
+  }
+
+  .bg-brand-secondary {
+    background-color: hsl(var(--brand-secondary));
+  }
+
+  .bg-brand-accent {
+    background-color: hsl(var(--brand-accent));
+  }
+
+  .bg-brand-success {
+    background-color: hsl(var(--brand-success));
+  }
+
+  .bg-brand-warning {
+    background-color: hsl(var(--brand-warning));
+  }
+
+  .bg-brand-error {
+    background-color: hsl(var(--brand-error));
+  }
+
+  .text-brand-primary {
+    color: hsl(var(--brand-primary));
+  }
+
+  .text-brand-secondary {
+    color: hsl(var(--brand-secondary));
+  }
+
+  .text-text-primary {
+    color: hsl(var(--text-primary));
+  }
+
+  .text-text-secondary {
+    color: hsl(var(--text-secondary));
+  }
+
+  .text-text-muted {
+    color: hsl(var(--text-muted));
+  }
+
+  .border-brand-primary {
+    border-color: hsl(var(--brand-primary));
+  }
+
+  .border-border-light {
+    border-color: hsl(var(--border-light));
+  }
+
+  .border-border-medium {
+    border-color: hsl(var(--border-medium));
+  }
+
+  .border-border-dark {
+    border-color: hsl(var(--border-dark));
+  }
+
+  .bg-bg-light {
+    background-color: hsl(var(--bg-light));
+  }
+
+  .bg-bg-card {
+    background-color: hsl(var(--bg-card));
+  }
+
+  .bg-bg-overlay {
+    background-color: hsl(var(--bg-overlay));
+  }
+}
+
+/* Common Component Classes */
+@layer components {
+  /* Survey Card - 最も頻繁に使用されるパターン */
+  .survey-card {
+    @apply flex flex-col items-start gap-4 p-4 relative w-full bg-bg-card rounded-lg border border-border-light shadow-sm;
+  }
+
+  .survey-card-primary {
+    @apply flex flex-col items-start gap-4 p-4 relative w-full bg-brand-primary text-white rounded-lg;
+  }
+
+  /* Survey Header - ヘッダー部分の共通スタイル */
+  .survey-header {
+    @apply flex items-center justify-between w-full h-16 px-6 bg-brand-primary text-white;
+  }
+
+  /* Survey Section - セクション部分の共通スタイル */
+  .survey-section {
+    @apply flex flex-col items-start gap-2 w-full;
+  }
+
+  /* Survey Question - 質問部分の共通スタイル */
+  .survey-question {
+    @apply flex flex-col items-start gap-2 w-full p-4 bg-white rounded-lg border border-border-light;
+  }
+
+  /* Button Variants */
+  .btn-primary {
+    @apply bg-brand-primary hover:bg-brand-primary-hover text-white font-bold rounded-lg px-4 py-2 transition-colors;
+  }
+
+  .btn-secondary {
+    @apply bg-white hover:bg-gray-50 text-brand-primary font-bold border border-brand-primary rounded-lg px-4 py-2 transition-colors;
+  }
+
+  /* Layout Classes */
+  .page-container {
+    @apply min-h-screen bg-gray-100;
+  }
+
+  .content-container {
+    @apply flex flex-col w-full items-center gap-6 p-6 bg-bg-overlay rounded-b-lg shadow-main-bg;
+  }
+
+  /* Text Classes */
+  .text-heading {
+    @apply font-bold text-text-primary text-lg;
+  }
+
+  .text-body {
+    @apply font-medium text-text-primary text-sm;
+  }
+
+  .text-caption {
+    @apply font-medium text-text-secondary text-xs;
+  }
 }

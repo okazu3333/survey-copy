@@ -1,7 +1,7 @@
 "use client";
 
 import { Bot } from "lucide-react";
-import { useRouter } from "next/navigation";
+// import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { SurveyAiChat } from "@/components/survey-ai/survey-ai-chat";
 import { SurveyCardHeader } from "@/components/survey-card-header";
@@ -28,13 +28,13 @@ const aiResponses = [
 ];
 
 const Page = () => {
-  const router = useRouter();
+  // const router = useRouter();
   const [isChatOpen, setIsChatOpen] = useState(true);
   const [isTransitioning, setIsTransitioning] = useState(false);
 
-  const _handleGoToReview = () => {
-    router.push("/surveys/review/preview");
-  };
+  // const _handleGoToReview = () => {
+  //   router.push("/surveys/review/preview");
+  // };
 
   // AIチャットパネルの開閉イベント処理
   const handleChatToggle = (collapsed: boolean) => {

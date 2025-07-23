@@ -17,7 +17,7 @@ interface DraggableQuestionClientProps {
 
 export const DraggableQuestionClient: React.FC<
   DraggableQuestionClientProps
-> = ({ question, _index, isFixed = false }) => {
+> = ({ question, isFixed = false }) => {
   const {
     attributes,
     listeners,

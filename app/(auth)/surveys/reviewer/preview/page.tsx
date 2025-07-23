@@ -1,10 +1,10 @@
 "use client";
 
 import { useState } from "react";
+import { SurveyCardHeader } from "@/components/survey-card-header";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { SurveyCardHeader } from "@/components/survey-card-header";
 import { ReviewModeToggle } from "../../review/_components/review-mode-toggle";
 import { ReviewPreviewSection } from "../../review/_components/review-preview-section";
 
@@ -37,12 +37,19 @@ const Page = () => {
       <div className="min-h-screen bg-gray-100 flex flex-col items-center justify-center">
         <div className="bg-white rounded-lg shadow-lg p-8 w-full max-w-md">
           <div className="text-center mb-6">
-            <h1 className="text-2xl font-bold text-gray-900 mb-2">レビュワーログイン</h1>
-            <p className="text-gray-600">表示名とパスワードを入力してください</p>
+            <h1 className="text-2xl font-bold text-gray-900 mb-2">
+              レビュワーログイン
+            </h1>
+            <p className="text-gray-600">
+              表示名とパスワードを入力してください
+            </p>
           </div>
           <form onSubmit={handleLogin} className="space-y-4">
             <div>
-              <Label htmlFor="displayName" className="text-sm font-medium text-gray-700">
+              <Label
+                htmlFor="displayName"
+                className="text-sm font-medium text-gray-700"
+              >
                 表示名
               </Label>
               <Input
@@ -56,7 +63,10 @@ const Page = () => {
               />
             </div>
             <div>
-              <Label htmlFor="password" className="text-sm font-medium text-gray-700">
+              <Label
+                htmlFor="password"
+                className="text-sm font-medium text-gray-700"
+              >
                 パスワード
               </Label>
               <Input
@@ -91,7 +101,9 @@ const Page = () => {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
       <div className="bg-white rounded-lg shadow-lg p-8 w-full max-w-md text-center">
-        <h1 className="text-2xl font-bold text-gray-900 mb-4">レビュワープレビュー画面</h1>
+        <h1 className="text-2xl font-bold text-gray-900 mb-4">
+          レビュワープレビュー画面
+        </h1>
         <p className="text-gray-600">ログイン後の新規画面（仮）です。</p>
       </div>
     </div>

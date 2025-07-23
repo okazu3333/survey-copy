@@ -5,16 +5,19 @@ interface GripIconProps {
   className?: string;
 }
 
-export const GripIcon = ({ size = 21, className = "text-[#556064]" }: GripIconProps) => {
+export const GripIcon = ({
+  size = 21,
+  className = "text-[#556064]",
+}: GripIconProps) => {
   return (
-    <svg 
-      width={size} 
-      height={size} 
-      viewBox="0 0 24 24" 
-      fill="none" 
-      stroke="currentColor" 
-      strokeWidth="2" 
-      strokeLinecap="round" 
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
       strokeLinejoin="round"
       className={className}
     >

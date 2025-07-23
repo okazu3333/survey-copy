@@ -2,13 +2,13 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import type { Section } from "@/app/(auth)/surveys/_components/survey-section-card";
+import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
+import { Switch } from "@/components/ui/switch";
 import type { ReviewItem } from "@/lib/types/review";
 import { SurveySectionWithComments } from "../preview/_components/survey-section-with-comments";
-import { Button } from "@/components/ui/button";
-import { Switch } from "@/components/ui/switch";
 
 // Mock review items for demonstration (comments are only for questions)
 const mockReviewItems: ReviewItem[] = [
@@ -332,13 +332,23 @@ const TabSelectionSection = ({
         ))}
       </div>
       <div className="flex items-center gap-2 ml-auto">
-        <span className={`text-xs font-bold ${mode === "comment" ? "text-[#138FB5]" : "text-[#888]"}`}>コメントモード</span>
+        <span
+          className={`text-xs font-bold ${mode === "comment" ? "text-[#138FB5]" : "text-[#888]"}`}
+        >
+          コメントモード
+        </span>
         <Switch
           checked={mode === "comment"}
-          onCheckedChange={checked => onModeChange(checked ? "comment" : "cursor")}
+          onCheckedChange={(checked) =>
+            onModeChange(checked ? "comment" : "cursor")
+          }
           className="data-[state=checked]:bg-[#138FB5]"
         />
-        <span className={`text-xs font-bold ${mode === "cursor" ? "text-[#138FB5]" : "text-[#888]"}`}>カーソルモード</span>
+        <span
+          className={`text-xs font-bold ${mode === "cursor" ? "text-[#138FB5]" : "text-[#888]"}`}
+        >
+          カーソルモード
+        </span>
       </div>
     </div>
   );
