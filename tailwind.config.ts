@@ -8,6 +8,98 @@ const config: Config = {
     "./app/**/*.{js,ts,jsx,tsx,mdx}",
   ],
   prefix: "",
+  // 使用されているクラスのみをsafelistに追加
+  safelist: [
+    // レイアウト
+    "flex",
+    "flex-col",
+    "grid",
+    "block",
+    "relative",
+    "absolute",
+    // サイズ
+    "w-full",
+    "h-full",
+    "min-h-screen",
+    "h-screen",
+    // パディング
+    "p-0",
+    "p-1",
+    "p-2",
+    "p-3",
+    "p-4",
+    "p-5",
+    "p-6",
+    "p-8",
+    "px-0",
+    "px-1",
+    "px-2",
+    "px-3",
+    "px-4",
+    "px-6",
+    "px-8",
+    "py-0",
+    "py-1",
+    "py-2",
+    "py-3",
+    "py-4",
+    "py-6",
+    "py-8",
+    // マージン
+    "mx-0",
+    "mx-1",
+    "mx-4",
+    "my-4", // テキスト
+    "text-xs",
+    "text-sm",
+    "text-base",
+    "text-lg",
+    "text-xl",
+    "text-2xl",
+    "font-normal",
+    "font-medium",
+    "font-semibold",
+    "font-bold",
+    // 背景色
+    "bg-white",
+    "bg-black",
+    "bg-gray-50",
+    "bg-gray-100",
+    "bg-gray-200", // テキスト色
+    "text-white", // ボーダー
+    "border",
+    "border-0",
+    "border-2",
+    "border-4", // 角丸
+    "rounded",
+    "rounded-sm",
+    "rounded-md",
+    "rounded-lg",
+    "rounded-xl",
+    "rounded-2xl",
+    "rounded-full",
+    // シャドウ
+    "shadow",
+    "shadow-sm",
+    "shadow-lg",
+    "shadow-xl", // 配置
+    "items-center",
+    "items-start",
+    "items-end",
+    "justify-center",
+    "justify-between",
+    "justify-start",
+    "justify-end",
+    // ギャップ
+    "gap-1",
+    "gap-2",
+    "gap-3",
+    "gap-4",
+    "gap-6",
+    "gap-8",
+    // その他
+    "block",
+  ],
   theme: {
     container: {
       center: true,
@@ -50,6 +142,34 @@ const config: Config = {
         card: {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
+        },
+        // Brand Colors
+        brand: {
+          primary: "hsl(var(--brand-primary))",
+          "primary-hover": "hsl(var(--brand-primary-hover))",
+          secondary: "hsl(var(--brand-secondary))",
+          accent: "hsl(var(--brand-accent))",
+          success: "hsl(var(--brand-success))",
+          warning: "hsl(var(--brand-warning))",
+          error: "hsl(var(--brand-error))",
+        },
+        // Text Colors
+        text: {
+          primary: "hsl(var(--text-primary))",
+          secondary: "hsl(var(--text-secondary))",
+          muted: "hsl(var(--text-muted))",
+        },
+        // Border Colors
+        borderColor: {
+          light: "hsl(var(--border-light))",
+          medium: "hsl(var(--border-medium))",
+          dark: "hsl(var(--border-dark))",
+        },
+        // Background Colors
+        bg: {
+          light: "hsl(var(--bg-light))",
+          card: "hsl(var(--bg-card))",
+          overlay: "hsl(var(--bg-overlay))",
         },
       },
       borderRadius: {

@@ -79,7 +79,11 @@ export const Header = () => {
                       {item.dropdownItems.map((dropdownItem) => (
                         <Link
                           key={dropdownItem}
-                          href={dropdownItem === "アンケート情報一覧" ? "/surveys/list" : "#"}
+                          href={
+                            dropdownItem === "アンケート情報一覧"
+                              ? "/surveys/list"
+                              : "#"
+                          }
                           className="block whitespace-nowrap px-4 py-3 text-sm font-bold tracking-[0.04em] text-[#202020] hover:bg-[#e8ecef]"
                         >
                           {dropdownItem}

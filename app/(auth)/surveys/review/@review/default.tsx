@@ -1,7 +1,6 @@
 "use client";
 
 import {
-  ChevronLeft,
   ChevronRight,
   CircleCheck,
   CircleHelp,
@@ -151,13 +150,13 @@ const ReviewSidebar = ({ userType = "reviewee" }: ReviewSidebarProps) => {
     <div
       className={cn(
         "transition-all duration-300 flex",
-        isReviewCollapsed ? "w-12" : "w-[500px]",
+        isReviewCollapsed ? "w-16" : "w-[500px]",
       )}
     >
       <div
         className={cn(
           "bg-[#F4F7F9] shadow-[-4px_0px_12px_0px_rgba(0,0,0,0.04)] flex flex-col rounded-lg border-l-2 border-[#DCDCDC]",
-          isReviewCollapsed ? "h-12" : "h-[calc(100vh-6rem)]",
+          isReviewCollapsed ? "h-16" : "h-[calc(100vh-6rem)]",
         )}
       >
         {!isReviewCollapsed && (
@@ -308,13 +307,18 @@ const ReviewSidebar = ({ userType = "reviewee" }: ReviewSidebarProps) => {
         )}
 
         {isReviewCollapsed && (
-          <button
-            type="button"
-            onClick={() => setIsReviewCollapsed(false)}
-            className="w-12 h-12 flex items-center justify-center bg-[#138FB5] hover:opacity-80 transition-opacity"
-          >
-            <ChevronLeft className="w-6 h-6 text-white" />
-          </button>
+          <div className="w-16 h-16 bg-[#138fb5] rounded-[0px_0px_0px_8px] transition-all duration-300 ease-in-out">
+            <button
+              onClick={() => setIsReviewCollapsed(false)}
+              className="flex flex-col items-center justify-center w-full h-16 cursor-pointer"
+              type="button"
+            >
+              <div className="flex flex-col items-center gap-0">
+                <MessageSquareText className="w-6 h-6 text-white" />
+                <span className="text-white text-xs font-bold">レビュー</span>
+              </div>
+            </button>
+          </div>
         )}
       </div>
 

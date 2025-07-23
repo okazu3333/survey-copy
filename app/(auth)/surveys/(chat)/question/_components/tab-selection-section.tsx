@@ -6,8 +6,8 @@ export const TabSelectionSection = () => {
   ];
 
   return (
-    <div className="px-6">
-      <div className="flex items-center gap-2">
+    <div className="ml-1">
+      <div className="flex items-center gap-1">
         {tabItems.map((tab) => (
           <div
             key={tab.id}

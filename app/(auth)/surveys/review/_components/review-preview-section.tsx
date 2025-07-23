@@ -2,9 +2,11 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import type { Section } from "@/app/(auth)/surveys/_components/survey-section-card";
+import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
+import { Switch } from "@/components/ui/switch";
 import type { ReviewItem } from "@/lib/types/review";
 import { SurveySectionWithComments } from "../preview/_components/survey-section-with-comments";
 
@@ -295,9 +297,13 @@ type TabType = "title" | "screening" | "main";
 const TabSelectionSection = ({
   activeTab,
   onTabChange,
+  mode,
+  onModeChange,
 }: {
   activeTab: TabType;
   onTabChange: (tab: TabType) => void;
+  mode: "comment" | "cursor";
+  onModeChange: (mode: "comment" | "cursor") => void;
 }) => {
   const tabItems = [
     { id: "title" as TabType, label: "タイトル全体" },
@@ -306,8 +312,8 @@ const TabSelectionSection = ({
   ];
 
   return (
-    <div className="px-6">
-      <div className="flex items-center gap-2">
+    <div className="ml-1 flex items-center justify-between w-full">
+      <div className="flex items-center gap-1">
         {tabItems.map((tab) => (
           <button
             key={tab.id}
@@ -325,6 +331,25 @@ const TabSelectionSection = ({
           </button>
         ))}
       </div>
+      <div className="flex items-center gap-2 ml-auto">
+        <span
+          className={`text-xs font-bold ${mode === "comment" ? "text-[#138FB5]" : "text-[#888]"}`}
+        >
+          コメントモード
+        </span>
+        <Switch
+          checked={mode === "comment"}
+          onCheckedChange={(checked) =>
+            onModeChange(checked ? "comment" : "cursor")
+          }
+          className="data-[state=checked]:bg-[#138FB5]"
+        />
+        <span
+          className={`text-xs font-bold ${mode === "cursor" ? "text-[#138FB5]" : "text-[#888]"}`}
+        >
+          カーソルモード
+        </span>
+      </div>
     </div>
   );
 };
@@ -338,6 +363,7 @@ export const ReviewPreviewSection = ({
 }: ReviewPreviewSectionProps) => {
   const [activeTab, setActiveTab] = useState<TabType>("screening");
   const [reviewItems, setReviewItems] = useState<ReviewItem[]>(mockReviewItems);
+  const [mode, setMode] = useState<"comment" | "cursor">("comment");
   const { control, handleSubmit, watch, setValue, getValues } =
     useForm<QuestionFormData>({
       defaultValues: {
@@ -378,7 +404,12 @@ export const ReviewPreviewSection = ({
       onSubmit={handleSubmit(onSubmit)}
       className="flex flex-col items-start relative self-stretch w-full"
     >
-      <TabSelectionSection activeTab={activeTab} onTabChange={setActiveTab} />
+      <TabSelectionSection
+        activeTab={activeTab}
+        onTabChange={setActiveTab}
+        mode={mode}
+        onModeChange={setMode}
+      />
       <Card className="flex flex-col items-start gap-4 p-4 relative self-stretch w-full bg-[#138FB5] rounded-lg">
         <ScrollArea className="w-full h-[620px]">
           <div className="flex flex-col items-start gap-4 relative w-full">
@@ -407,6 +438,7 @@ export const ReviewPreviewSection = ({
                   reviewItems={reviewItems}
                   userType={userType}
                   onAddComment={handleAddComment}
+                  mode={mode}
                 />
               ))
             )}

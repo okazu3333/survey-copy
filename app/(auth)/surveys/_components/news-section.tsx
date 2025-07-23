@@ -1,6 +1,6 @@
+import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import Link from "next/link";
 
 export function NewsSection() {
   const newsItems = [
@@ -35,7 +35,10 @@ export function NewsSection() {
           <h2 className="text-lg font-semibold text-center">最新のお知らせ</h2>
         </div>
         <div className="pt-10">
-          <div className="bg-white rounded-lg border border-gray-200 p-5" style={{ paddingLeft: '30px' }}>
+          <div
+            className="bg-white rounded-lg border border-gray-200 p-5"
+            style={{ paddingLeft: "30px" }}
+          >
             <div className="mb-6 flex items-center justify-between">
               <p className="text-gray-700">山田 太郎 さん こんにちは！</p>
               <Button
@@ -43,22 +46,25 @@ export function NewsSection() {
                 className="border-gray-300 hover:bg-gray-50 bg-transparent min-w-[140px]"
                 asChild
               >
-                <Link href="/surveys/news">
-                  お知らせ一覧へ
-                </Link>
+                <Link href="/surveys/news">お知らせ一覧へ</Link>
               </Button>
             </div>
 
             <div className="space-y-4">
               {newsItems.map((item) => (
-                <div key={item.id} className="flex items-center gap-3 border-b border-gray-200 pb-6">
+                <div
+                  key={item.id}
+                  className="flex items-center gap-3 border-b border-gray-200 pb-6"
+                >
                   <span className="text-sm text-gray-600 min-w-[80px] font-medium">
                     {item.date}
                   </span>
                   <Badge className={`${item.typeColor} ml-1 mr-2`}>
                     {item.type}
                   </Badge>
-                  <p className="text-sm text-gray-700 flex-1 leading-relaxed font-bold">{item.content}</p>
+                  <p className="text-sm text-gray-700 flex-1 leading-relaxed font-bold">
+                    {item.content}
+                  </p>
                 </div>
               ))}
             </div>

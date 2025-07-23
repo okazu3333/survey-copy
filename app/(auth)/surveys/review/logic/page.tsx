@@ -1,5 +1,6 @@
 "use client";
 
+import { Suspense } from "react";
 import { SurveyCardHeader } from "@/components/survey-card-header";
 import type { ReviewItem } from "@/lib/types/review";
 import { ReviewModeToggle } from "../_components/review-mode-toggle";
@@ -53,14 +54,31 @@ const mockReviewItems: ReviewItem[] = [
 
 const Page = () => {
   return (
-    <div className="flex flex-col gap-4">
-      <SurveyCardHeader workingTitle="○○○に関する意識調査" currentStep={3} />
+    <div className="flex flex-col gap-0">
+      <SurveyCardHeader
+        workingTitle=""
+        currentStep={3}
+        enableDefaultNavigation={true}
+      />
       <div className="flex flex-col w-full items-center gap-6 p-6 bg-[#ffffff] rounded-b-lg shadow-main-bg">
         {/* Header Section with Mode Toggle */}
         <ReviewModeToggle currentMode="logic" />
 
         {/* Logic Check Section with Comments */}
-        <PreviewLogicCheckSection reviewItems={mockReviewItems} />
+        <Suspense
+          fallback={
+            <div className="flex items-center justify-center w-full h-64">
+              <div className="flex flex-col items-center gap-4">
+                <div className="w-8 h-8 border-4 border-[#138FB5] border-t-transparent rounded-full animate-spin"></div>
+                <p className="text-sm text-gray-600">
+                  ロジックチェックを読み込み中...
+                </p>
+              </div>
+            </div>
+          }
+        >
+          <PreviewLogicCheckSection reviewItems={mockReviewItems} />
+        </Suspense>
       </div>
     </div>
   );

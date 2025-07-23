@@ -10,4 +10,4 @@ const NewsListPage = () => {
   );
 };
 
-export default NewsListPage; 
+export default NewsListPage;

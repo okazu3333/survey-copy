@@ -1,10 +1,13 @@
 /** biome-ignore-all lint/suspicious/noExplicitAny: so many any */
+
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import {
   type Section,
   SurveySectionCard,
 } from "@/app/(auth)/surveys/_components/survey-section-card";
+import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
@@ -245,8 +248,8 @@ const TabSelectionSection = ({
   ];
 
   return (
-    <div className="px-6">
-      <div className="flex items-center gap-2">
+    <div className="ml-1">
+      <div className="flex items-center gap-1">
         {tabItems.map((tab) => (
           <button
             key={tab.id}
@@ -269,6 +272,7 @@ const TabSelectionSection = ({
 };
 
 export const SurveyPreviewSection = () => {
+  const router = useRouter();
   const [activeTab, setActiveTab] = useState<TabType>("screening");
   const { control, handleSubmit, watch, setValue, getValues } =
     useForm<QuestionFormData>({
@@ -293,6 +297,10 @@ export const SurveyPreviewSection = () => {
     console.log("Form submitted:", data);
   };
 
+  const handleGoToReview = () => {
+    router.push("/surveys/review/preview");
+  };
+
   // Get current sections based on active tab
   const currentSections =
     activeTab === "screening" ? screeningSections : mainSurveySections;
@@ -302,7 +310,32 @@ export const SurveyPreviewSection = () => {
       onSubmit={handleSubmit(onSubmit)}
       className="flex flex-col items-start relative self-stretch w-full"
     >
-      <TabSelectionSection activeTab={activeTab} onTabChange={setActiveTab} />
+      <div className="flex items-center justify-between w-full">
+        <TabSelectionSection activeTab={activeTab} onTabChange={setActiveTab} />
+        <Button
+          onClick={handleGoToReview}
+          className="whitespace-nowrap text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 text-primary-foreground shadow hover:bg-primary/90 w-[176px] h-10 bg-[#556064] rounded-[20px] flex items-center justify-center gap-3 px-4 py-0"
+        >
+          <span className="font-bold text-white text-base text-center tracking-[0] leading-[22.4px] font-['Noto_Sans_JP',Helvetica]">
+            レビューへ進む
+          </span>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            className="lucide lucide-chevron-right w-[6.68px] h-[11.89px]"
+            aria-hidden="true"
+          >
+            <path d="m9 18 6-6-6-6"></path>
+          </svg>
+        </Button>
+      </div>
       <Card className="flex flex-col items-start gap-4 p-4 relative self-stretch w-full bg-[#138FB5] rounded-lg">
         <ScrollArea className="w-full h-[620px]">
           <div className="flex flex-col items-start gap-4 relative w-full">

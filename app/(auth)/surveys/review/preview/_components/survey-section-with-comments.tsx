@@ -1,6 +1,6 @@
 /** biome-ignore-all lint/suspicious/noExplicitAny: <> */
 import { Lock, MessageCircle, Send } from "lucide-react";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { type Control, Controller } from "react-hook-form";
 import type { Section } from "@/app/(auth)/surveys/_components/survey-section-card";
 import { Comment } from "@/app/(auth)/surveys/review/_components/comment";
@@ -22,6 +22,7 @@ type SurveySectionWithCommentsProps = {
   reviewItems: ReviewItem[];
   userType?: "reviewer" | "reviewee";
   onAddComment?: (comment: ReviewItem) => void;
+  mode?: "comment" | "cursor";
 };
 
 export const SurveySectionWithComments = ({
@@ -33,6 +34,7 @@ export const SurveySectionWithComments = ({
   reviewItems,
   userType = "reviewee",
   onAddComment,
+  mode = "comment",
 }: SurveySectionWithCommentsProps) => {
   const [cursorPosition, setCursorPosition] = useState<{
     x: number;
@@ -42,9 +44,33 @@ export const SurveySectionWithComments = ({
   const [isAddingComment, setIsAddingComment] = useState(false);
   const [newCommentText, setNewCommentText] = useState("");
   const questionRefs = useRef<{ [key: string]: HTMLDivElement | null }>({});
+  // コメント入力UIのref
+  const commentInputRef = useRef<HTMLDivElement | null>(null);
+
+  // 外側クリックでコメント入力UIを閉じる
+  useEffect(() => {
+    if (!isAddingComment) return;
+    const handleClick = (e: MouseEvent | TouchEvent) => {
+      if (
+        commentInputRef.current &&
+        !commentInputRef.current.contains(e.target as Node)
+      ) {
+        setIsAddingComment(false);
+        setNewCommentText("");
+        setCursorPosition(null);
+      }
+    };
+    window.addEventListener("mousedown", handleClick);
+    window.addEventListener("touchstart", handleClick);
+    return () => {
+      window.removeEventListener("mousedown", handleClick);
+      window.removeEventListener("touchstart", handleClick);
+    };
+  }, [isAddingComment]);
 
   const handleMouseMove = (e: React.MouseEvent, questionId: string) => {
-    if (userType !== "reviewer" || isAddingComment) return;
+    if (userType !== "reviewer" || isAddingComment || mode !== "comment")
+      return;
 
     const rect = questionRefs.current[questionId]?.getBoundingClientRect();
     if (!rect) return;
@@ -202,6 +228,7 @@ export const SurveySectionWithComments = ({
 
               {/* Show message circle icon at cursor position for reviewer */}
               {userType === "reviewer" &&
+                mode === "comment" &&
                 cursorPosition &&
                 cursorPosition.questionId === question.id &&
                 !isAddingComment && (
@@ -234,23 +261,56 @@ export const SurveySectionWithComments = ({
                 cursorPosition &&
                 cursorPosition.questionId === question.id && (
                   <div
-                    className="absolute"
-                    style={{
-                      left:
-                        cursorPosition.x > 50 ? "auto" : `${cursorPosition.x}%`,
-                      right:
-                        cursorPosition.x > 50
-                          ? `${100 - cursorPosition.x}%`
-                          : "auto",
-                      top: `${cursorPosition.y}%`,
-                      transform:
-                        cursorPosition.x > 50
-                          ? "translateX(10px)"
-                          : "translateX(-10px)",
-                      zIndex: 40, // 最前面に表示
-                    }}
+                    className="fixed"
+                    style={(() => {
+                      const popupWidth = 448;
+                      const margin = 8;
+                      const parent =
+                        questionRefs.current[question.id]?.parentElement;
+                      let left = 0,
+                        top = 0;
+                      let popupHeight = 100; // デフォルト高さ
+                      if (commentInputRef.current) {
+                        popupHeight =
+                          commentInputRef.current.offsetHeight || 100;
+                      }
+                      if (parent) {
+                        const parentRect = parent.getBoundingClientRect();
+                        const baseLeft =
+                          parentRect.left +
+                          parentRect.width * (cursorPosition.x / 100);
+                        const baseTop =
+                          parentRect.top +
+                          parentRect.height * (cursorPosition.y / 100);
+                        left = baseLeft;
+                        top = baseTop;
+                        // 右端が画面からはみ出す場合
+                        if (left + popupWidth + margin > window.innerWidth) {
+                          left = window.innerWidth - popupWidth - margin;
+                        }
+                        // 左端
+                        if (left < margin) left = margin;
+                        // 下端
+                        if (top + popupHeight + margin > window.innerHeight) {
+                          top = window.innerHeight - popupHeight - margin;
+                        }
+                        // 上端
+                        if (top < margin) top = margin;
+                      }
+                      return {
+                        left: left + "px",
+                        top: top + "px",
+                        zIndex: 40,
+                        width: popupWidth + "px",
+                        pointerEvents: "auto",
+                      };
+                    })()}
                   >
-                    <div className="bg-white rounded-2xl border-2 border-[#838383] shadow-[0px_0px_16px_0px_rgba(0,0,0,0.16)] w-[448px]">
+                    <div
+                      ref={commentInputRef}
+                      className="bg-white rounded-2xl border-2 border-[#838383] shadow-[0px_0px_16px_0px_rgba(0,0,0,0.16)] w-[448px]"
+                      onClick={(e) => e.stopPropagation()}
+                    >
                       <div className="flex items-center gap-2.5 p-3 pl-6">
                         <Textarea
                           value={newCommentText}
@@ -276,18 +336,6 @@ export const SurveySectionWithComments = ({
                         </Button>
                       </div>
                     </div>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className="mt-2 text-xs text-[#666666] hover:text-[#333333]"
-                      onClick={() => {
-                        setIsAddingComment(false);
-                        setCursorPosition(null);
-                        setNewCommentText("");
-                      }}
-                    >
-                      キャンセル
-                    </Button>
                   </div>
                 )}
 

@@ -8,8 +8,8 @@ import {
   Send,
   Trash2,
 } from "lucide-react";
-import React, { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
+// import { useRouter } from "next/navigation";
+import React, { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -42,7 +42,7 @@ export const SurveyAiChat = ({
   aiResponses = [],
   autoExpand = false,
 }: SurveyAiChatProps) => {
-  const router = useRouter();
+  // const router = useRouter();
   const [isCollapsed, setIsCollapsed] = useState(!autoExpand);
   const [isChatHistoryOpen, setIsChatHistoryOpen] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
@@ -76,7 +76,7 @@ export const SurveyAiChat = ({
     const newState = !isCollapsed;
     setIsCollapsed(newState);
     onCollapseChange?.(newState);
-    
+
     // アニメーションのための状態リセット
     setIsVisible(false);
     setTimeout(() => {
@@ -87,9 +87,11 @@ export const SurveyAiChat = ({
   // 折りたたまれた状態の場合のみ「AIと話す」ボタンを表示
   if (isCollapsed) {
     return (
-      <div className={`relative w-16 h-16 bg-[#138fb5] rounded-[0px_0px_0px_8px] transition-all duration-500 ease-out transform hover:scale-105 ${
-        isVisible ? 'scale-100 opacity-100' : 'scale-95 opacity-0'
-      }`}>
+      <div
+        className={`relative w-16 h-16 bg-[#138fb5] rounded-[0px_0px_0px_8px] transition-all duration-500 ease-out transform hover:scale-105 ${
+          isVisible ? "scale-100 opacity-100" : "scale-95 opacity-0"
+        }`}
+      >
         <button
           onClick={toggleCollapse}
           className="flex flex-col items-center justify-center w-full h-16 cursor-pointer"
@@ -106,9 +108,11 @@ export const SurveyAiChat = ({
 
   // 展開された状態を表示
   return (
-    <div className={`flex flex-col w-[480px] h-[calc(100vh-88px)] relative transition-all duration-500 ease-out transform ${
-      isVisible ? 'scale-100 opacity-100' : 'scale-95 opacity-0'
-    }`}>
+    <div
+      className={`flex flex-col w-[480px] h-[calc(100vh-88px)] relative transition-all duration-500 ease-out transform ${
+        isVisible ? "scale-100 opacity-100" : "scale-95 opacity-0"
+      }`}
+    >
       {/* Header */}
       <header className="flex w-full h-16 items-center justify-between px-6 py-0 bg-[#138fb5] flex-shrink-0">
         <div className="flex w-[212px] items-center gap-2 relative">
@@ -134,11 +138,11 @@ export const SurveyAiChat = ({
       </header>
 
       {/* Chat Messages Area */}
-      <ScrollArea className="flex-1 w-full bg-gray-50 py-2">
-        <div className="relative w-full -top-2">
+      <ScrollArea className="flex-1 w-full bg-gray-50 py-0">
+        <div className="relative w-full">
           {/* First AI Message with File Upload Button */}
           {aiResponses.length > 0 && (
-            <div className="flex items-start mb-4">
+            <div className="flex items-start mb-4 pt-2">
               <Bot className="w-6 h-6 mt-4 ml-3 mr-1 text-[#138fb5]" />
               <Card className="max-w-[340px] bg-white rounded-[20px_20px_20px_0px] border-[#d0cfcf]">
                 <CardContent className="p-4">
@@ -239,7 +243,7 @@ export const SurveyAiChat = ({
               <Send className="w-[14px] h-[14px] text-white" />
             </Button>
           </div>
-          
+
           {/* File Upload Button */}
           <div className="flex items-center gap-4 w-full">
             <Button

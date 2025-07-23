@@ -1,7 +1,9 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { Maximize, X } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { SurveyContent } from "./survey-content";
@@ -15,6 +17,7 @@ type QuestionFormData = {
 };
 
 export const LogicCheckSection = () => {
+  const router = useRouter();
   const { handleSubmit } = useForm<QuestionFormData>({
     defaultValues: {
       q1: "",
@@ -29,10 +32,40 @@ export const LogicCheckSection = () => {
     console.log("Form submitted:", data);
   };
 
+  const handleGoToReview = () => {
+    router.push("/surveys/review/preview");
+  };
+
   const [isExpanded, setIsExpanded] = useState(false);
 
   return (
     <div className="flex flex-col items-start relative self-stretch w-full">
+      <div className="flex items-center justify-between w-full">
+        <div></div>
+        <Button
+          onClick={handleGoToReview}
+          className="whitespace-nowrap text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 text-primary-foreground shadow hover:bg-primary/90 w-[176px] h-10 bg-[#556064] rounded-[20px] flex items-center justify-center gap-3 px-4 py-0"
+        >
+          <span className="font-bold text-white text-base text-center tracking-[0] leading-[22.4px] font-['Noto_Sans_JP',Helvetica]">
+            レビューへ進む
+          </span>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            className="lucide lucide-chevron-right w-[6.68px] h-[11.89px]"
+            aria-hidden="true"
+          >
+            <path d="m9 18 6-6-6-6"></path>
+          </svg>
+        </Button>
+      </div>
       <motion.div
         layoutId="survey-card"
         className="flex flex-col items-start relative self-stretch w-full"

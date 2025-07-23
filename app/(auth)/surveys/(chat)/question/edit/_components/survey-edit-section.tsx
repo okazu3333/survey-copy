@@ -1,8 +1,11 @@
 import { RadioGroup, RadioGroupItem } from "@radix-ui/react-radio-group";
 import { Separator } from "@radix-ui/react-separator";
-import { GripVertical, HelpCircle, Lock, Plus, Trash, X } from "lucide-react";
+import { HelpCircle, Lock, Plus, Trash, X } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { GripIcon } from "@/components/ui";
+import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
@@ -219,8 +222,8 @@ const TabSelectionSection = ({
   ];
 
   return (
-    <div className="px-6">
-      <div className="flex items-center gap-2">
+    <div className="ml-1">
+      <div className="flex items-center gap-1">
         {tabItems.map((tab) => (
           <button
             key={tab.id}
@@ -247,6 +250,8 @@ type SurveyEditSectionProps = {
 };
 
 export const SurveyEditSection = ({ groupId }: SurveyEditSectionProps) => {
+  const router = useRouter();
+
   // Function to get questions based on groupId
   const getQuestionsForGroup = (id: string) => {
     switch (id) {
@@ -304,6 +309,10 @@ export const SurveyEditSection = ({ groupId }: SurveyEditSectionProps) => {
     console.log("Settings form submitted:", data);
   };
 
+  const handleGoToReview = () => {
+    router.push("/surveys/review/preview");
+  };
+
   // Render screening survey content
   const renderScreeningContent = () => {
     const targetQuestions = groupId
@@ -318,7 +327,7 @@ export const SurveyEditSection = ({ groupId }: SurveyEditSectionProps) => {
           targetQuestions.includes("Q3")) && (
           <Card className="flex flex-col items-start gap-4 px-6 py-4 relative self-stretch w-full flex-[0_0_auto] bg-[#f4f7f9] rounded-lg border border-solid border-[#dcdcdc]">
             <div className="items-center inline-flex gap-2 relative flex-[0_0_auto]">
-              <GripVertical className="w-4 h-4 text-[#556064]" />
+              <GripIcon size={21} />
               <div className="relative w-fit mt-[-1.00px] font-bold text-[#333333] text-xs whitespace-nowrap">
                 固定セクション：性別・年齢・居住地
               </div>
@@ -570,7 +579,7 @@ export const SurveyEditSection = ({ groupId }: SurveyEditSectionProps) => {
         {targetQuestions.includes("Q4") && (
           <Card className="flex flex-col items-start gap-4 px-6 py-4 relative self-stretch w-full flex-[0_0_auto] bg-[#f4f7f9] rounded-lg border border-solid border-[#dcdcdc]">
             <div className="items-start inline-flex gap-2 relative flex-[0_0_auto]">
-              <GripVertical className="w-4 h-4 text-[#556064]" />
+              <GripIcon size={21} />
               <div className="relative w-fit mt-[-1.00px] font-bold text-[#333333] text-xs whitespace-nowrap">
                 セクション：未既婚
               </div>
@@ -668,7 +677,7 @@ export const SurveyEditSection = ({ groupId }: SurveyEditSectionProps) => {
         {targetQuestions.includes("Q5") && (
           <Card className="flex flex-col items-start gap-4 px-6 py-4 relative self-stretch w-full flex-[0_0_auto] bg-[#f4f7f9] rounded-lg border border-solid border-[#dcdcdc]">
             <div className="items-start inline-flex gap-2 relative flex-[0_0_auto]">
-              <GripVertical className="w-4 h-4 text-[#556064]" />
+              <GripIcon size={21} />
               <div className="relative w-fit mt-[-1.00px] font-bold text-[#333333] text-xs whitespace-nowrap">
                 セクション：子どもの有無
               </div>
@@ -805,7 +814,7 @@ export const SurveyEditSection = ({ groupId }: SurveyEditSectionProps) => {
         {(targetQuestions.includes("Q6") || targetQuestions.includes("Q7")) && (
           <Card className="flex flex-col items-start gap-4 px-6 py-4 relative self-stretch w-full flex-[0_0_auto] bg-[#f4f7f9] rounded-lg border border-solid border-[#dcdcdc]">
             <div className="items-start inline-flex gap-2 relative flex-[0_0_auto]">
-              <GripVertical className="w-4 h-4 text-[#556064]" />
+              <GripIcon size={21} />
               <div className="relative w-fit mt-[-1.00px] font-bold text-[#333333] text-xs whitespace-nowrap">
                 セクション：職業
               </div>
@@ -899,7 +908,7 @@ export const SurveyEditSection = ({ groupId }: SurveyEditSectionProps) => {
               className="flex flex-col items-start gap-4 px-6 py-4 relative self-stretch w-full flex-[0_0_auto] bg-[#f4f7f9] rounded-lg border border-solid border-[#dcdcdc]"
             >
               <div className="items-start inline-flex gap-2 relative flex-[0_0_auto]">
-                <GripVertical className="w-4 h-4 text-[#556064]" />
+                <GripIcon size={21} />
                 <div className="relative w-fit mt-[-1.00px] font-bold text-[#333333] text-xs whitespace-nowrap">
                   {section.title}
                 </div>
@@ -1049,9 +1058,37 @@ export const SurveyEditSection = ({ groupId }: SurveyEditSectionProps) => {
 
   return (
     <div className="flex flex-col items-start relative self-stretch w-full">
-      {!groupId && (
-        <TabSelectionSection activeTab={activeTab} onTabChange={setActiveTab} />
-      )}
+      <div className="flex items-center justify-between w-full">
+        {!groupId && (
+          <TabSelectionSection
+            activeTab={activeTab}
+            onTabChange={setActiveTab}
+          />
+        )}
+        <Button
+          onClick={handleGoToReview}
+          className="whitespace-nowrap text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 text-primary-foreground shadow hover:bg-primary/90 w-[176px] h-10 bg-[#556064] rounded-[20px] flex items-center justify-center gap-3 px-4 py-0"
+        >
+          <span className="font-bold text-white text-base text-center tracking-[0] leading-[22.4px] font-['Noto_Sans_JP',Helvetica]">
+            レビューへ進む
+          </span>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            className="lucide lucide-chevron-right w-[6.68px] h-[11.89px]"
+            aria-hidden="true"
+          >
+            <path d="m9 18 6-6-6-6"></path>
+          </svg>
+        </Button>
+      </div>
       <Card className="flex flex-col items-start gap-4 p-4 relative self-stretch w-full flex-[0_0_auto] bg-[#138fb5] rounded-lg">
         <div className="inline-flex items-start gap-1 relative flex-[0_0_auto]">
           <div className="inline-flex h-6 items-center gap-2 pl-2 pr-3 py-0 relative flex-[0_0_auto] bg-white rounded border border-solid border-white cursor-pointer">
