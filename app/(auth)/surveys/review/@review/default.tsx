@@ -1,10 +1,6 @@
 "use client";
 
-import {
-  ChevronRight,
-  CircleHelp,
-  MessageSquareText,
-} from "lucide-react";
+import { ChevronRight, CircleHelp, MessageSquareText } from "lucide-react";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 import { AiReviewDialog } from "../_components/ai-review-dialog";
@@ -112,7 +108,7 @@ const ReviewSidebar = ({
   // Filter items based on selected review type and status
   const filteredItems = reviewItems.filter((item: ReviewItem) => {
     // ロジックチェック専用のコメントは除外（レビューコメントパネルには表示しない）
-    if (item.type === "ロジック" || item.sectionId === "logic") return false;
+    if (item.type === "ロジック" || (item as any).sectionId === "logic") return false;
 
     if (item.reviewType !== selectedReviewType) return false;
     if (filterStatus === "all") return true;
@@ -241,7 +237,7 @@ const ReviewSidebar = ({
                   onDeleteComment={handleDeleteComment}
                   onDoubleClick={handleItemDoubleClick}
                   index={index}
-                  sectionId={item.sectionId || "main"}
+                  sectionId={(item as any).sectionId || "main"}
                 />
               ))}
             </div>

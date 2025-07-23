@@ -211,7 +211,10 @@ export const LogicComment = ({
 
         {isExpanded && (
           <div className="pt-2 border-t border-gray-100">
-            <button type="button" className="w-full text-sm font-bold text-gray-800 hover:bg-gray-50 rounded-lg py-2 transition-colors">
+            <button
+              type="button"
+              className="w-full text-sm font-bold text-gray-800 hover:bg-gray-50 rounded-lg py-2 transition-colors"
+            >
               ロジックスレッドを確認する
             </button>
           </div>

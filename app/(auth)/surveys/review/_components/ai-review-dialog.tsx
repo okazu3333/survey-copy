@@ -179,7 +179,9 @@ export const AiReviewDialog = ({
                     <button
                       type="button"
                       onClick={() =>
-                        setStatus(status === "resolved" ? "unresolved" : "resolved")
+                        setStatus(
+                          status === "resolved" ? "unresolved" : "resolved",
+                        )
                       }
                       className="cursor-pointer hover:opacity-80 transition-opacity"
                     >

@@ -302,8 +302,8 @@ export const SurveySectionWithComments = ({
                 <div
                   className="absolute pointer-events-none"
                   style={{
-                    left: `${cursorPosition.x}%`,
-                    top: `${cursorPosition.y}%`,
+                    left: `${cursorPosition?.x || 0}%`,
+                    top: `${cursorPosition?.y || 0}%`,
                     transform: "translate(-50%, -50%)",
                     zIndex: 10, // 既存のコメントより低いz-index
                   }}

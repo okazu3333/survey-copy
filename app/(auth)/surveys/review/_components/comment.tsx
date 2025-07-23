@@ -384,8 +384,8 @@ export const Comment = ({
       )}
 
       {/* Dialog based on reviewType */}
-      {!isDeleteDialogOpen && (
-        reviewType === "ai" ? (
+      {!isDeleteDialogOpen &&
+        (reviewType === "ai" ? (
           <AiReviewDialog
             open={isDialogOpen}
             onOpenChange={setIsDialogOpen}
@@ -397,8 +397,7 @@ export const Comment = ({
             onOpenChange={setIsDialogOpen}
             userType={userType}
           />
-        )
-      )}
+        ))}
 
       {/* Delete confirmation dialog */}
       <Dialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
