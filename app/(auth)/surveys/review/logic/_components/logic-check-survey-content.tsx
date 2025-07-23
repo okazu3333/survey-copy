@@ -550,7 +550,7 @@ export const LogicCheckSurveyContent = ({
   );
 
   return (
-    <div className="w-full h-[3000px] bg-gray-50 rounded-lg overflow-x-auto relative">
+    <div className="w-full h-[800px] bg-gray-50 rounded-lg overflow-x-auto relative">
       {selectedGroup && (
         <div className="absolute top-4 right-4 z-50">
           <GroupDetailsPanel
@@ -574,7 +574,7 @@ export const LogicCheckSurveyContent = ({
         defaultViewport={{ x: 0, y: 0, zoom: 0.8 }}
       >
         <Background />
-        <Controls />
+        {/* <Controls /> 削除 */}
       </ReactFlow>
     </div>
   );

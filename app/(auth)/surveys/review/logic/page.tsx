@@ -45,8 +45,8 @@ const Page = () => {
         {/* Header Section with Mode Toggle */}
         <ReviewModeToggle currentMode="logic" />
 
-        {/* Logic Review Buttons */}
-        <div className="flex gap-4 w-full max-w-4xl">
+        {/* Logic Review Buttons 削除済み */}
+        {/* <div className="flex gap-4 w-full max-w-4xl">
           <button
             type="button"
             onClick={() => setIsAiDialogOpen(true)}
@@ -61,7 +61,7 @@ const Page = () => {
           >
             ロジックレビュー
           </button>
-        </div>
+        </div> */}
 
         {/* Logic Check Section with Comments */}
         <Suspense
