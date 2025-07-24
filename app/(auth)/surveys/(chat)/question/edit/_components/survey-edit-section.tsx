@@ -292,7 +292,7 @@ export const SurveyEditSection = ({ groupId }: SurveyEditSectionProps) => {
     groupId ? getTabForGroup(groupId) : "screening",
   );
 
-  const { register, handleSubmit } = useForm<SettingsFormData>({
+  useForm<SettingsFormData>({
     defaultValues: {
       requiredAnswer: true,
       targetCondition: "全員 カテゴリ.2 - SC4 = 2",
@@ -304,10 +304,6 @@ export const SurveyEditSection = ({ groupId }: SurveyEditSectionProps) => {
       jumpCondition: "なし",
     },
   });
-
-  const _onSubmit = (data: SettingsFormData) => {
-    console.log("Settings form submitted:", data);
-  };
 
   const handleGoToReview = () => {
     router.push("/surveys/review/preview");

@@ -1,14 +1,13 @@
 "use client";
 
 import { AnimatePresence, motion } from "framer-motion";
-import { GitBranch, List, Maximize, Minus, Plus, X } from "lucide-react";
+import { GitBranch, List, Maximize, X } from "lucide-react";
 import { Suspense, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Card } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Switch } from "@/components/ui/switch";
 import type { ReviewItem } from "@/lib/types/review";
-import { LogicComment } from "../../_components/logic-comment";
 import { LogicCheckSurveyContent } from "./logic-check-survey-content";
 
 type QuestionFormData = {
@@ -21,14 +20,12 @@ type QuestionFormData = {
 
 type PreviewLogicCheckSectionProps = {
   reviewItems?: ReviewItem[];
-  onDeleteComment?: (id: number) => void;
   onAddComment?: (comment: ReviewItem) => void;
   onUpdateComment?: (id: number, updatedComment: Partial<ReviewItem>) => void;
 };
 
 export const PreviewLogicCheckSection = ({
   reviewItems = [],
-  onDeleteComment,
   onAddComment,
   onUpdateComment,
 }: PreviewLogicCheckSectionProps) => {
@@ -54,11 +51,6 @@ export const PreviewLogicCheckSection = ({
 
   const [isExpanded, setIsExpanded] = useState(false);
   const [mode, setMode] = useState<"sheet" | "tree">("tree");
-  const [zoom, setZoom] = useState(1);
-
-  // 仮のズーム関数
-  const zoomIn = () => setZoom((z) => Math.min(z + 0.1, 2));
-  const zoomOut = () => setZoom((z) => Math.max(z - 0.1, 0.5));
 
   return (
     <div

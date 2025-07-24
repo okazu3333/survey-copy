@@ -21,13 +21,21 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { type Project, useTableNavigation } from "@/hooks/use-table-navigation";
+import { useTableNavigation } from "@/hooks/use-table-navigation";
+import { ProjectStatus } from "@/lib/types/survey";
 
 export function ProjectsSection() {
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
   const { handleRowClick, handleIconClick } = useTableNavigation();
 
-  const projects: Project[] = [
+  const projects: {
+    id: string;
+    title: string;
+    status: string;
+    createdDate: string;
+    updatedDate: string;
+    creator: string;
+  }[] = [
     {
       id: "SRB008",
       title: "家族構成に関する調査",
@@ -95,7 +103,7 @@ export function ProjectsSection() {
   ];
 
   // ステータスに応じた色を取得
-  const getStatusColor = (status: Project["status"]) => {
+  const getStatusColor = (status: string) => {
     switch (status) {
       case "作成中":
         return "bg-white text-[#4BBC80] border-[#4BBC80]";
@@ -222,7 +230,10 @@ export function ProjectsSection() {
                   <TableRow
                     key={project.id}
                     className={`${selectedItems.includes(project.id) ? "bg-[#BCD6E0]" : "bg-white"} hover:bg-blue-50 transition-colors cursor-pointer`}
-                    onClick={(e) => handleRowClick(project, e)}
+                    onClick={(e) => handleRowClick({
+                      ...project,
+                      status: project.status as ProjectStatus
+                    }, e)}
                   >
                     <TableCell>
                       <Checkbox

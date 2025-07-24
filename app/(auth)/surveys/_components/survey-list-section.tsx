@@ -9,7 +9,6 @@ import {
   Settings,
 } from "lucide-react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -31,7 +30,8 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { type Project, useTableNavigation } from "@/hooks/use-table-navigation";
+import { useTableNavigation } from "@/hooks/use-table-navigation";
+import { Project } from "@/lib/types/survey";
 
 // サンプルデータ（実際の実装ではAPIから取得）
 const generateSampleData = (): Project[] => {
@@ -80,7 +80,6 @@ export function SurveyListSection() {
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
   const [allSurveys] = useState(() => generateSampleData()); // 初期化時に1回だけ実行
   const itemsPerPage = 20;
-  const _router = useRouter();
   const { handleRowClick, handleIconClick } = useTableNavigation();
 
   const totalPages = Math.ceil(allSurveys.length / itemsPerPage);

@@ -35,11 +35,9 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({
   onSave,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const { register, handleSubmit, watch } = useForm<SettingsFormData>({
+  const { register, handleSubmit } = useForm<SettingsFormData>({
     defaultValues,
   });
-
-  const _requiredAnswer = watch("requiredAnswer");
 
   const onSubmit = (data: SettingsFormData) => {
     onSave?.(data);

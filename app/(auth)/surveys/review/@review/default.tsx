@@ -266,16 +266,12 @@ const ReviewSidebar = ({
         onOpenChange={setIsAiDialogOpen}
         userType={userType}
         onAddComment={handleAddComment}
-        onUpdateComment={handleUpdateComment}
-        onDeleteComment={handleDeleteComment}
       />
       <UserReviewDialog
         open={isUserDialogOpen}
         onOpenChange={setIsUserDialogOpen}
         userType={userType}
         onAddComment={handleAddComment}
-        onUpdateComment={handleUpdateComment}
-        onDeleteComment={handleDeleteComment}
       />
     </div>
   );

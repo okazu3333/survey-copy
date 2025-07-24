@@ -52,8 +52,6 @@ type UserReviewDialogProps = {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onAddComment?: (comment: ReviewItem) => void;
-  onUpdateComment?: (id: number, updatedComment: Partial<ReviewItem>) => void;
-  onDeleteComment?: (id: number) => void;
 };
 
 export const UserReviewDialog = ({
@@ -61,8 +59,6 @@ export const UserReviewDialog = ({
   open,
   onOpenChange,
   onAddComment,
-  onUpdateComment,
-  onDeleteComment,
 }: UserReviewDialogProps) => {
   const [commentText, setCommentText] = useState("");
   const [status, setStatus] = useState<"resolved" | "unresolved">("unresolved");

@@ -1,3 +1,10 @@
+"use client";
+
+import { useMemo } from "react";
+import { useRouter } from "next/navigation";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import {
   Background,
   Controls,
@@ -7,12 +14,6 @@ import {
   useEdgesState,
   useNodesState,
 } from "@xyflow/react";
-import { useRouter } from "next/navigation";
-import { useMemo } from "react";
-import { useForm } from "react-hook-form";
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import "@xyflow/react/dist/style.css";
 import {
   GroupNode,
@@ -653,41 +654,9 @@ const initialEdges: Edge[] = [
   },
 ];
 
-type QuestionFormData = {
-  Q5: string[];
-  Q6: string;
-  Q7: string;
-  Q8: string;
-  Q9: string;
-  Q10: string[];
-  Q11: string;
-  Q12: string;
-  Q13: string;
-  Q14: string;
-  Q15: string[];
-};
-
 export const LogicCheckSection = () => {
   const router = useRouter();
-  const { handleSubmit: _handleSubmit } = useForm<QuestionFormData>({
-    defaultValues: {
-      Q5: [],
-      Q6: "",
-      Q7: "",
-      Q8: "",
-      Q9: "",
-      Q10: [],
-      Q11: "",
-      Q12: "",
-      Q13: "",
-      Q14: "",
-      Q15: [],
-    },
-  });
-
-  const _onSubmit = (data: QuestionFormData) => {
-    console.log("Form submitted:", data);
-  };
+  // Remove unused handleSubmit
 
   const handleGoToReview = () => {
     router.push("/surveys/review/preview");

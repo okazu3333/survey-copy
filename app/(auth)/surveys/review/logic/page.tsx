@@ -9,8 +9,7 @@ import { useReviewContext } from "../review-context";
 import { PreviewLogicCheckSection } from "./_components/preview-logic-check-section";
 
 const Page = () => {
-  const { reviewItems, addReviewItem, updateReviewItem, deleteReviewItem } =
-    useReviewContext();
+  const { reviewItems, addReviewItem, updateReviewItem } = useReviewContext();
   const [isAiDialogOpen, setIsAiDialogOpen] = useState(false);
   const [isUserDialogOpen, setIsUserDialogOpen] = useState(false);
 
@@ -18,10 +17,6 @@ const Page = () => {
   const logicCheckItems = reviewItems.filter(
     (item) => item.type === "ロジック" || item.sectionId === "logic",
   );
-
-  const handleDeleteComment = (id: number) => {
-    deleteReviewItem(id);
-  };
 
   const handleAddComment = (comment: ReviewItem) => {
     addReviewItem(comment);
@@ -78,7 +73,6 @@ const Page = () => {
         >
           <PreviewLogicCheckSection
             reviewItems={logicCheckItems}
-            onDeleteComment={handleDeleteComment}
             onAddComment={handleAddComment}
             onUpdateComment={handleUpdateComment}
           />

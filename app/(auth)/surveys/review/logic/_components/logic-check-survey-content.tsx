@@ -2,7 +2,6 @@
 
 import {
   Background,
-  Controls,
   type Edge,
   type Node,
   ReactFlow,

@@ -79,8 +79,6 @@ export const AiReviewDialog = ({
   onOpenChange,
   userType = "reviewee",
   onAddComment,
-  onUpdateComment,
-  onDeleteComment,
 }: AiReviewDialogProps) => {
   const [status, setStatus] = useState<"resolved" | "unresolved">("unresolved");
   const [questionChecked, setQuestionChecked] = useState(false);

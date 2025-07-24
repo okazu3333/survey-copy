@@ -10,67 +10,6 @@ import type { ReviewItem } from "@/lib/types/review";
 import { SurveySectionWithComments } from "../preview/_components/survey-section-with-comments";
 import { useReviewContext } from "../review-context";
 
-// Mock review items for demonstration (comments are only for questions)
-const _mockReviewItems: ReviewItem[] = [
-  {
-    id: 1,
-    questionNo: "Q1",
-    type: "SA",
-    reviewerName: "佐藤花子",
-    time: "5分前",
-    comment:
-      "スクリーニング設問の1問目で、回答者の性別を尋ねています。設問タイプは単一選択で問題ないと考えられますが、LGBTQの人々の存在を考慮して、選択肢には「男性」「女性」以外に、「その他」や「答えたくない」もあると望ましいです。",
-    status: "unresolved",
-    reviewType: "team",
-    sectionId: "fixed",
-    questionId: "q1",
-    position: { x: 35, y: 10 }, // Position at 85% from left, 80% from top
-  },
-  {
-    id: 2,
-    questionNo: "Q5",
-    type: "MA",
-    reviewerName: "AIレビュー",
-    time: "10分前",
-    comment:
-      "複数選択の選択肢が多いため、回答者の負担を考慮して、グループ化や階層化を検討してください。",
-    status: "unresolved",
-    reviewType: "ai",
-    sectionId: "children",
-    questionId: "q5", // Added questionId since comments are only for questions
-    position: { x: 30, y: 5 }, // Position at 80% from left, 5% from top
-  },
-  {
-    id: 3,
-    questionNo: "Q8",
-    type: "SA",
-    reviewerName: "田中太郎",
-    time: "1時間前",
-    comment:
-      "前の設問からジャンプ条件が設定されておらず、この設問に辿り着けませんでした。",
-    status: "resolved",
-    reviewType: "team",
-    replies: 2,
-    sectionId: "cosmetics-usage-1",
-    questionId: "q8",
-    position: { x: 30, y: 5 }, // Position at 80% from left, 5% from top
-  },
-  {
-    id: 4,
-    questionNo: "Q10",
-    type: "TE",
-    reviewerName: "AIレビュー",
-    time: "2時間前",
-    comment:
-      "自由記述の文字数制限が設定されていません。適切な文字数制限を設定することをお勧めします。",
-    status: "unresolved",
-    reviewType: "ai",
-    sectionId: "cosmetics-usage-2",
-    questionId: "q10",
-    position: { x: 50, y: 50 }, // Position at 90% from left, 85% from top
-  },
-];
-
 // Data for screening survey questions
 const screeningSections: Section[] = [
   {
