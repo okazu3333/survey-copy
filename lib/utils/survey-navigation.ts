@@ -18,7 +18,7 @@ export const useSurveyStepNavigation = () => {
         router.push("/surveys/question/edit");
         break;
       case 3: // レビュー
-        router.push("/surveys/review");
+        router.push("/surveys/review/preview");
         break;
       case 4: // 調査票の確定
         router.push("/surveys/complete");

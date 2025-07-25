@@ -1,19 +1,19 @@
 "use client";
 
-import { useMemo } from "react";
-import { useRouter } from "next/navigation";
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import {
   Background,
-  Controls,
   type Edge,
   type Node,
   ReactFlow,
   useEdgesState,
   useNodesState,
 } from "@xyflow/react";
+import { useRouter } from "next/navigation";
+import { useMemo, useState } from "react";
+import { useForm } from "react-hook-form";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import "@xyflow/react/dist/style.css";
 import {
   GroupNode,
@@ -21,6 +21,20 @@ import {
   QuestionNode,
   StartNode,
 } from "@/components/survey-flow-nodes";
+
+type QuestionFormData = {
+  Q5: string[];
+  Q6: string;
+  Q7: string;
+  Q8: string;
+  Q9: string;
+  Q10: string[];
+  Q11: string;
+  Q12: string;
+  Q13: string;
+  Q14: string;
+  Q15: string[];
+};
 
 // Data for children section settings (screening) - 編集画面と同期
 const childrenSectionSettings = [
@@ -48,7 +62,7 @@ const mainSurveySettings = [
 ];
 
 // 編集画面と同じデータ構造
-const childrenSection = {
+const _childrenSection = {
   title: "セクション：子どもの有無",
   questions: [
     {
@@ -73,7 +87,7 @@ const childrenSection = {
   ],
 };
 
-const mainSurveySections = [
+const _mainSurveySections = [
   {
     title: "セクション：男性化粧品の使用状況（使用有無、頻度）",
     questions: [
@@ -206,7 +220,7 @@ const initialNodes: Node[] = [
   {
     id: "start",
     type: "start",
-    position: { x: 300, y: 50 },
+    position: { x: 300, y: 20 },
     data: {
       label: "スクリーニング設問開始",
     },
@@ -214,10 +228,10 @@ const initialNodes: Node[] = [
   {
     id: "group-1",
     type: "group",
-    position: { x: 200, y: 200 },
+    position: { x: 200, y: 100 },
     style: {
       width: 300,
-      height: 400,
+      height: 300,
       backgroundColor: "#f5f5f5",
       border: "1px solid #dcdcdc",
       borderRadius: "4px",
@@ -229,7 +243,7 @@ const initialNodes: Node[] = [
   {
     id: "q1",
     type: "question",
-    position: { x: 20, y: 40 },
+    position: { x: 20, y: 30 },
     parentId: "group-1",
     extent: "parent",
     data: {
@@ -241,7 +255,7 @@ const initialNodes: Node[] = [
   {
     id: "q2",
     type: "question",
-    position: { x: 20, y: 160 },
+    position: { x: 20, y: 120 },
     parentId: "group-1",
     extent: "parent",
     data: {
@@ -253,7 +267,7 @@ const initialNodes: Node[] = [
   {
     id: "q3",
     type: "question",
-    position: { x: 20, y: 280 },
+    position: { x: 20, y: 210 },
     parentId: "group-1",
     extent: "parent",
     data: {
@@ -265,10 +279,10 @@ const initialNodes: Node[] = [
   {
     id: "group-marriage",
     type: "group",
-    position: { x: 200, y: 650 },
+    position: { x: 200, y: 450 },
     style: {
       width: 300,
-      height: 220,
+      height: 180,
       backgroundColor: "#f5f5f5",
       border: "1px solid #dcdcdc",
       borderRadius: "4px",
@@ -280,7 +294,7 @@ const initialNodes: Node[] = [
   {
     id: "q4",
     type: "marriageQuestion",
-    position: { x: 20, y: 40 },
+    position: { x: 20, y: 30 },
     parentId: "group-marriage",
     extent: "parent",
     data: {},
@@ -288,10 +302,10 @@ const initialNodes: Node[] = [
   {
     id: "group-children",
     type: "group",
-    position: { x: 550, y: 650 },
+    position: { x: 550, y: 450 },
     style: {
       width: 300,
-      height: 180,
+      height: 150,
       backgroundColor: "#f5f5f5",
       border: "1px solid #dcdcdc",
       borderRadius: "4px",
@@ -303,7 +317,7 @@ const initialNodes: Node[] = [
   {
     id: "q5",
     type: "question",
-    position: { x: 20, y: 40 },
+    position: { x: 20, y: 30 },
     parentId: "group-children",
     extent: "parent",
     data: {
@@ -656,10 +670,33 @@ const initialEdges: Edge[] = [
 
 export const LogicCheckSection = () => {
   const router = useRouter();
-  // Remove unused handleSubmit
+  const [isFullscreen, setIsFullscreen] = useState(false);
+  const { handleSubmit: _handleSubmit } = useForm<QuestionFormData>({
+    defaultValues: {
+      Q5: [],
+      Q6: "",
+      Q7: "",
+      Q8: "",
+      Q9: "",
+      Q10: [],
+      Q11: "",
+      Q12: "",
+      Q13: "",
+      Q14: "",
+      Q15: [],
+    },
+  });
+
+  const _onSubmit = (data: QuestionFormData) => {
+    console.log("Form submitted:", data);
+  };
 
   const handleGoToReview = () => {
     router.push("/surveys/review/preview");
+  };
+
+  const toggleFullscreen = () => {
+    setIsFullscreen(!isFullscreen);
   };
 
   // ノードUI用の状態管理
@@ -682,12 +719,35 @@ export const LogicCheckSection = () => {
       </div>
       <Card className="flex flex-col items-start gap-4 p-4 relative self-stretch w-full flex-[0_0_auto] bg-[#138fb5] rounded-lg">
         <ScrollArea className="flex flex-col h-[580px] items-start gap-4 relative self-stretch rounded-lg">
-          {/* ロジックチェックの内容 */}
+                      {/* ロジックチェックの内容 */}
           <div className="w-full p-6 bg-gray-50 rounded-lg">
-            <h2 className="text-xl font-bold mb-4">ロジックチェック結果</h2>
 
-            {/* ノードUI */}
-            <div className="w-full h-[3000px] mb-6 border rounded-lg overflow-hidden">
+                        {/* ノードUI */}
+            <div className="w-full h-[600px] mb-6 overflow-hidden relative">
+              {/* フルスクリーンボタン */}
+              <div className="absolute top-4 right-4 z-10">
+                <button
+                  type="button"
+                  onClick={toggleFullscreen}
+                  className="p-2 text-gray-600 hover:text-gray-800 transition-colors"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    aria-label="拡大"
+                  >
+                    <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/>
+                  </svg>
+                </button>
+              </div>
+
               <ReactFlow
                 nodes={nodes}
                 edges={edges}
@@ -704,105 +764,63 @@ export const LogicCheckSection = () => {
                 className="bg-white"
               >
                 <Background />
-                <Controls />
               </ReactFlow>
             </div>
 
-            {/* スクリーニング設問 */}
-            <div className="mb-6">
-              <h3 className="text-lg font-semibold mb-3">
-                固定セクション：性別・年齢・居住地
-              </h3>
-              <div className="mb-4 p-3 bg-white rounded border">
-                <p className="font-medium mb-2">
-                  あなたの性別を教えてください。
-                </p>
-                <p className="text-sm text-gray-600">
-                  ID: Q1 | タイプ: SA・単一選択方式
-                </p>
-              </div>
-              <div className="mb-4 p-3 bg-white rounded border">
-                <p className="font-medium mb-2">
-                  あなたの年齢を教えてください。
-                </p>
-                <p className="text-sm text-gray-600">
-                  ID: Q2 | タイプ: NU・数値回答形式
-                </p>
-              </div>
-              <div className="mb-4 p-3 bg-white rounded border">
-                <p className="font-medium mb-2">
-                  あなたのお住まい（都道府県）を教えてください。
-                </p>
-                <p className="text-sm text-gray-600">
-                  ID: Q3 | タイプ: SA・単一選択方式
-                </p>
-              </div>
-            </div>
-
-            <div className="mb-6">
-              <h3 className="text-lg font-semibold mb-3">セクション：未既婚</h3>
-              <div className="mb-4 p-3 bg-white rounded border">
-                <p className="font-medium mb-2">あなたは結婚していますか。</p>
-                <p className="text-sm text-gray-600">
-                  ID: Q4 | タイプ: SA・単一選択方式
-                </p>
-              </div>
-            </div>
-
-            <div className="mb-6">
-              <h3 className="text-lg font-semibold mb-3">
-                {childrenSection.title}
-              </h3>
-              {childrenSection.questions.map((question) => (
-                <div
-                  key={question.id}
-                  className="mb-4 p-3 bg-white rounded border"
-                >
-                  <p className="font-medium mb-2">{question.question}</p>
-                  <p className="text-sm text-gray-600">
-                    ID: {question.id} | タイプ: {question.typeLabel}
-                  </p>
-                </div>
-              ))}
-            </div>
-
-            <div className="mb-6">
-              <h3 className="text-lg font-semibold mb-3">セクション：職業</h3>
-              <div className="mb-4 p-3 bg-white rounded border">
-                <p className="font-medium mb-2">
-                  あなたの職業を教えてください。
-                </p>
-                <p className="text-sm text-gray-600">
-                  ID: Q6 | タイプ: GR・グループ選択
-                </p>
-              </div>
-              <div className="mb-4 p-3 bg-white rounded border">
-                <p className="font-medium mb-2">
-                  ご家族の職業を教えてください。
-                </p>
-                <p className="text-sm text-gray-600">
-                  ID: Q7 | タイプ: GR・グループ選択
-                </p>
-              </div>
-            </div>
-
-            {/* 本調査設問 */}
-            {mainSurveySections.map((section, sectionIndex) => (
-              <div key={sectionIndex} className="mb-6">
-                <h3 className="text-lg font-semibold mb-3">{section.title}</h3>
-                {section.questions.map((question) => (
-                  <div
-                    key={question.id}
-                    className="mb-4 p-3 bg-white rounded border"
+            {/* フルスクリーンモーダル */}
+            {isFullscreen && (
+              <div className="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center p-6">
+                <div className="bg-white rounded-lg w-full h-full max-w-6xl max-h-[95vh] relative shadow-2xl border-[10px] border-[#138fb5]">
+                  {/* 閉じるボタン */}
+                  <button
+                    type="button"
+                    onClick={toggleFullscreen}
+                    className="absolute top-4 right-4 z-10 p-2 text-gray-600 hover:text-gray-800 transition-colors rounded-md hover:bg-gray-100"
                   >
-                    <p className="font-medium mb-2">{question.question}</p>
-                    <p className="text-sm text-gray-600">
-                      ID: {question.id} | タイプ: {question.typeLabel}
-                    </p>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="24"
+                      height="24"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      aria-label="閉じる"
+                    >
+                      <path d="M18 6 6 18"/>
+                      <path d="m6 6 12 12"/>
+                    </svg>
+                  </button>
+                  
+                  {/* フルスクリーンコンテンツ */}
+                  <div className="w-full h-full p-4">
+                    <div className="w-full h-full border border-gray-200 rounded-lg overflow-hidden">
+                      <ReactFlow
+                        nodes={nodes}
+                        edges={edges}
+                        onNodesChange={onNodesChange}
+                        onEdgesChange={onEdgesChange}
+                        onNodeClick={handleNodeClick}
+                        onPaneClick={handlePaneClick}
+                        nodeTypes={nodeTypes}
+                        fitView
+                        proOptions={{ hideAttribution: true }}
+                        minZoom={0.1}
+                        maxZoom={2}
+                        defaultViewport={{ x: 0, y: 0, zoom: 0.8 }}
+                        className="bg-white"
+                      >
+                        <Background />
+                      </ReactFlow>
+                    </div>
                   </div>
-                ))}
+                </div>
               </div>
-            ))}
+            )}
+
+
           </div>
         </ScrollArea>
       </Card>
