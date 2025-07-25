@@ -31,7 +31,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { useTableNavigation } from "@/hooks/use-table-navigation";
-import { Project } from "@/lib/types/survey";
+import type { Project } from "@/lib/types/survey";
 
 // サンプルデータ（実際の実装ではAPIから取得）
 const generateSampleData = (): Project[] => {

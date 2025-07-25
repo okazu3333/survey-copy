@@ -97,7 +97,7 @@ export const SurveyPreviewSection = () => {
   const router = useRouter();
   const [activeTab, setActiveTab] = useState<TabType>("screening");
   const { handleSubmit } = useForm<QuestionFormData>({
-      defaultValues: {
+    defaultValues: {
       Q1: "",
       Q2: "",
       Q3: "",
@@ -113,8 +113,8 @@ export const SurveyPreviewSection = () => {
       Q13: "",
       Q14: "",
       Q15: [],
-      },
-    });
+    },
+  });
 
   const onSubmit = (data: QuestionFormData) => {
     console.log("Form submitted:", data);
@@ -1780,7 +1780,7 @@ export const SurveyPreviewSection = () => {
         <TabSelectionSection activeTab={activeTab} onTabChange={setActiveTab} />
       </div>
       <Card className="flex flex-col items-start gap-4 p-4 relative self-stretch w-full flex-[0_0_auto] bg-[#138fb5] rounded-lg">
-        <ScrollArea className="flex flex-col h-[580px] items-start gap-4 relative self-stretch rounded-lg">
+        <ScrollArea className="flex flex-col h-[600px] items-start gap-4 relative self-stretch rounded-lg">
           {activeTab === "screening"
             ? renderScreeningContent()
             : renderMainSurveyContent()}
