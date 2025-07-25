@@ -3,9 +3,9 @@
 import { Bot } from "lucide-react";
 // import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import SpreadsheetView from "@/components/spreadsheet-view";
 import { SurveyAiChat } from "@/components/survey-ai/survey-ai-chat";
 import { SurveyCardHeader } from "@/components/survey-card-header";
-
 import { cn } from "@/lib/utils";
 import { ModeToggle } from "../_components/mode-toggle";
 import { LogicCheckSection } from "./_components/logic-check-section";
@@ -31,6 +31,7 @@ const Page = () => {
   // const router = useRouter();
   const [isChatOpen, setIsChatOpen] = useState(true);
   const [isTransitioning, setIsTransitioning] = useState(false);
+  const [showExcelSheet, setShowExcelSheet] = useState(false);
 
   // const _handleGoToReview = () => {
   //   router.push("/surveys/review/preview");
@@ -82,8 +83,32 @@ const Page = () => {
               {/* Header Section with Mode Toggle */}
               <ModeToggle currentMode="logic" />
 
-              {/* User Information Section */}
-              <LogicCheckSection />
+              {/* 表示モード切り替えボタン */}
+              <div className="flex gap-2 mb-4">
+                <button
+                  onClick={() => setShowExcelSheet(false)}
+                  className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
+                    !showExcelSheet
+                      ? "bg-blue-600 text-white"
+                      : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+                  }`}
+                >
+                  📋 通常表示
+                </button>
+                <button
+                  onClick={() => setShowExcelSheet(true)}
+                  className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
+                    showExcelSheet
+                      ? "bg-blue-600 text-white"
+                      : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+                  }`}
+                >
+                  📊 スプレッドシート表示
+                </button>
+              </div>
+
+              {/* コンテンツ表示 */}
+              {showExcelSheet ? <SpreadsheetView /> : <LogicCheckSection />}
             </div>
           </div>
 

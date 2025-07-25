@@ -36,178 +36,6 @@ type QuestionFormData = {
   Q15: string[];
 };
 
-// Data for children section settings (screening) - 編集画面と同期
-const childrenSectionSettings = [
-  { label: "必須回答", value: "必須オン", isToggled: true },
-  { label: "回答者条件", value: "全員\nカテゴリ.2 - SC4 = 2" },
-  {
-    label: "回答制御",
-    value: "カテゴリ.1 - ：SC5 ≠ 2 ～ 10　に該当しない場合はアラートを表示",
-  },
-  { label: "対象者条件", value: "なし" },
-  { label: "スキップ条件", value: "なし" },
-  { label: "カテゴリ表示順", value: "通常" },
-  { label: "ジャンプ条件", value: "なし" },
-];
-
-// Data for main survey section settings - 編集画面と同期
-const mainSurveySettings = [
-  { label: "必須回答", value: "必須オン", isToggled: true },
-  { label: "回答者条件", value: "全員" },
-  { label: "回答制御", value: "なし" },
-  { label: "対象者条件", value: "なし" },
-  { label: "スキップ条件", value: "なし" },
-  { label: "カテゴリ表示順", value: "通常" },
-  { label: "ジャンプ条件", value: "なし" },
-];
-
-// 編集画面と同じデータ構造
-const _childrenSection = {
-  title: "セクション：子どもの有無",
-  questions: [
-    {
-      id: "Q5",
-      type: "MA",
-      typeLabel: "MA・複数選択方式",
-      question: "あなたと同居している方をお知らせください。",
-      options: [
-        { id: 1, label: "自分のみ（一人暮らし）" },
-        { id: 2, label: "配偶者" },
-        { id: 3, label: "こども（未就学児）" },
-        { id: 4, label: "こども（小学生）" },
-        { id: 5, label: "こども（中高生）" },
-        { id: 6, label: "こども（高校生を除く18歳以上）" },
-        { id: 7, label: "自分（配偶者）の親" },
-        { id: 8, label: "自分（配偶者）の兄弟姉妹" },
-        { id: 9, label: "自分（配偶者）の祖父母" },
-        { id: 10, label: "その他" },
-      ],
-      settings: [...childrenSectionSettings],
-    },
-  ],
-};
-
-const _mainSurveySections = [
-  {
-    title: "セクション：男性化粧品の使用状況（使用有無、頻度）",
-    questions: [
-      {
-        id: "Q8",
-        type: "SA",
-        typeLabel: "SA・単一選択方式",
-        question: "あなたはどのくらいの頻度で化粧品を使用しますか？",
-        options: [
-          { id: 1, label: "毎日" },
-          { id: 2, label: "週に数回" },
-          { id: 3, label: "月に数回" },
-          { id: 4, label: "ほとんど使用しない" },
-        ],
-        settings: [...mainSurveySettings],
-      },
-      {
-        id: "Q9",
-        type: "GR",
-        typeLabel: "GR・グループ選択",
-        question: "あなたが使用している化粧品の種類を教えてください。",
-        options: [
-          { id: 1, label: "スキンケア用品" },
-          { id: 2, label: "洗顔料" },
-          { id: 3, label: "化粧水" },
-          { id: 4, label: "乳液・クリーム" },
-          { id: 5, label: "日焼け止め" },
-          { id: 6, label: "ヘアケア用品" },
-        ],
-        settings: [...mainSurveySettings],
-      },
-      {
-        id: "Q10",
-        type: "MA",
-        typeLabel: "MA・複数選択方式",
-        question: "化粧品を購入する際に重視する要素を教えてください。",
-        options: [
-          { id: 1, label: "価格" },
-          { id: 2, label: "ブランド" },
-          { id: 3, label: "効果" },
-          { id: 4, label: "口コミ・評価" },
-          { id: 5, label: "パッケージデザイン" },
-          { id: 6, label: "成分" },
-        ],
-        settings: [...mainSurveySettings],
-      },
-      {
-        id: "Q11",
-        type: "SA",
-        typeLabel: "SA・単一選択方式",
-        question: "化粧品の情報を主にどこから得ていますか？",
-        options: [
-          { id: 1, label: "インターネット（SNS含む）" },
-          { id: 2, label: "友人・知人" },
-          { id: 3, label: "店舗スタッフ" },
-          { id: 4, label: "雑誌・広告" },
-          { id: 5, label: "テレビ" },
-        ],
-        settings: [...mainSurveySettings],
-      },
-      {
-        id: "Q12",
-        type: "NU",
-        typeLabel: "NU・数値回答形式",
-        question: "化粧品に月にどの程度の金額を使いますか？（円）",
-        settings: [...mainSurveySettings],
-      },
-    ],
-  },
-  {
-    title: "セクション：化粧品ブランドの認知・購入意向",
-    questions: [
-      {
-        id: "Q13",
-        type: "SA",
-        typeLabel: "SA・単一選択方式",
-        question: "最も信頼している化粧品ブランドを教えてください。",
-        options: [
-          { id: 1, label: "資生堂" },
-          { id: 2, label: "花王" },
-          { id: 3, label: "ユニリーバ" },
-          { id: 4, label: "ロレアル" },
-          { id: 5, label: "その他" },
-        ],
-        settings: [...mainSurveySettings],
-      },
-      {
-        id: "Q14",
-        type: "GR",
-        typeLabel: "GR・グループ選択",
-        question: "今後使用してみたい化粧品カテゴリを教えてください。",
-        options: [
-          { id: 1, label: "アンチエイジング製品" },
-          { id: 2, label: "ニキビケア製品" },
-          { id: 3, label: "美白製品" },
-          { id: 4, label: "保湿製品" },
-          { id: 5, label: "UV対策製品" },
-          { id: 6, label: "メイクアップ製品" },
-        ],
-        settings: [...mainSurveySettings],
-      },
-      {
-        id: "Q15",
-        type: "MA",
-        typeLabel: "MA・複数選択方式",
-        question: "化粧品を購入する場所を教えてください。",
-        options: [
-          { id: 1, label: "ドラッグストア" },
-          { id: 2, label: "デパート・百貨店" },
-          { id: 3, label: "オンラインショップ" },
-          { id: 4, label: "コンビニエンスストア" },
-          { id: 5, label: "専門店" },
-          { id: 6, label: "ディスカウントストア" },
-        ],
-        settings: [...mainSurveySettings],
-      },
-    ],
-  },
-];
-
 // ノードUI用のデータ構造
 const createNodeTypes = () => ({
   start: StartNode,
@@ -687,10 +515,6 @@ export const LogicCheckSection = () => {
     },
   });
 
-  const _onSubmit = (data: QuestionFormData) => {
-    console.log("Form submitted:", data);
-  };
-
   const handleGoToReview = () => {
     router.push("/surveys/review/preview");
   };
@@ -719,10 +543,9 @@ export const LogicCheckSection = () => {
       </div>
       <Card className="flex flex-col items-start gap-4 p-4 relative self-stretch w-full flex-[0_0_auto] bg-[#138fb5] rounded-lg">
         <ScrollArea className="flex flex-col h-[580px] items-start gap-4 relative self-stretch rounded-lg">
-                      {/* ロジックチェックの内容 */}
+          {/* ロジックチェックの内容 */}
           <div className="w-full p-6 bg-gray-50 rounded-lg">
-
-                        {/* ノードUI */}
+            {/* ノードUI */}
             <div className="w-full h-[600px] mb-6 overflow-hidden relative">
               {/* フルスクリーンボタン */}
               <div className="absolute top-4 right-4 z-10">
@@ -743,7 +566,7 @@ export const LogicCheckSection = () => {
                     strokeLinejoin="round"
                     aria-label="拡大"
                   >
-                    <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/>
+                    <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3" />
                   </svg>
                 </button>
               </div>
@@ -789,11 +612,11 @@ export const LogicCheckSection = () => {
                       strokeLinejoin="round"
                       aria-label="閉じる"
                     >
-                      <path d="M18 6 6 18"/>
-                      <path d="m6 6 12 12"/>
+                      <path d="M18 6 6 18" />
+                      <path d="m6 6 12 12" />
                     </svg>
                   </button>
-                  
+
                   {/* フルスクリーンコンテンツ */}
                   <div className="w-full h-full p-4">
                     <div className="w-full h-full border border-gray-200 rounded-lg overflow-hidden">
@@ -819,8 +642,6 @@ export const LogicCheckSection = () => {
                 </div>
               </div>
             )}
-
-
           </div>
         </ScrollArea>
       </Card>
