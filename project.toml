@@ -1,0 +1,19 @@
+[build]
+  env = [
+    "NODE_ENV=production",
+    "NPM_CONFIG_PRODUCTION=false"
+  ]
+
+[build.env]
+  NODE_ENV = "production"
+  NPM_CONFIG_PRODUCTION = "false"
+
+[run]
+  env = [
+    "NODE_ENV=production",
+    "PORT=8080"
+  ]
+
+[run.env]
+  NODE_ENV = "production"
+  PORT = "8080" 

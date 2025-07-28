@@ -25,7 +25,15 @@
     "css-analyze-size": "node scripts/css-size-analyzer.js",
     "css-purge": "node scripts/css-purge.js",
     "code-quality": "node scripts/code-quality-analyzer.js",
-    "cleanup-debug": "node scripts/cleanup-debug-code.js"
+    "cleanup-debug": "node scripts/cleanup-debug-code.js",
+    "clean": "rm -rf .next && rm -rf node_modules/.cache",
+    "clean:all": "rm -rf .next && rm -rf node_modules/.cache && rm -rf node_modules && npm install",
+    "dev:clean": "npm run clean && npm run dev",
+    "cache:clear": "node scripts/clear-cache.cjs",
+    "cache:clear:sh": "./scripts/clear-cache.sh",
+    "deploy:cloudrun": "./scripts/deploy-cloudrun.sh",
+    "build:cloudrun": "npm run build && pack build gcr.io/your-project-id/survey-app --builder gcr.io/buildpacks/builder:v1 --env NODE_ENV=production --env NPM_CONFIG_PRODUCTION=false",
+    "test:buildpack": "./scripts/test-buildpack.sh"
   },
   "dependencies": {
     "@dnd-kit/core": "^6.3.1",
