@@ -92,9 +92,10 @@ export const ReviewItemComponent = ({
 
   return (
     <>
-      <div
+      <button
+        type="button"
         className={cn(
-          "px-6 py-4 border-b border-[#DCDCDC] hover:bg-[#E7ECF0] cursor-pointer bg-white min-h-[120px] max-h-[200px]",
+          "px-6 py-4 border-b border-[#DCDCDC] hover:bg-[#E7ECF0] cursor-pointer bg-white min-h-[120px] max-h-[200px] text-left w-full",
         )}
         onDoubleClick={() => {
           // 削除ダイアログが開いている時はダブルクリックを無効化
@@ -200,7 +201,7 @@ export const ReviewItemComponent = ({
         {item.replies && (
           <p className="text-xs text-[#9DA0A7] mt-2">{item.replies}件の返信</p>
         )}
-      </div>
+      </button>
 
       {/* 削除確認ダイアログ */}
       <Dialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>

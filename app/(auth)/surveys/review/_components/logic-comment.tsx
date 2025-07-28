@@ -99,9 +99,10 @@ export const LogicComment = ({
 
   return (
     <>
-      <div
+      <button
+        type="button"
         className={cn(
-          "flex flex-col gap-4 px-6 py-4 bg-white rounded-lg border border-gray-200 shadow-sm hover:shadow-md transition-shadow cursor-pointer",
+          "flex flex-col gap-4 px-6 py-4 bg-white rounded-lg border border-gray-200 shadow-sm hover:shadow-md transition-shadow cursor-pointer text-left",
           status === "resolved" && "opacity-75",
           className,
         )}
@@ -219,7 +220,7 @@ export const LogicComment = ({
             </button>
           </div>
         )}
-      </div>
+      </button>
 
       {/* Delete Confirmation Dialog */}
       <Dialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>

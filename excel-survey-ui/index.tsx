@@ -43,7 +43,11 @@ function ExcelCellDetailsPanel({
         <h3 className="text-sm font-bold text-gray-700">
           セル詳細: {selectedCell}
         </h3>
-        <button onClick={onClose} className="text-gray-500 hover:text-gray-700">
+        <button
+          type="button"
+          onClick={onClose}
+          className="text-gray-500 hover:text-gray-700"
+        >
           ✕
         </button>
       </div>
@@ -54,8 +58,11 @@ function ExcelCellDetailsPanel({
           <h4 className="text-xs font-bold text-gray-600 mb-2">基本情報</h4>
           <div className="space-y-2">
             <div>
-              <label className="text-xs text-gray-500">値</label>
+              <label htmlFor="cell-value" className="text-xs text-gray-500">
+                値
+              </label>
               <input
+                id="cell-value"
                 type="text"
                 value={cellParams.value}
                 onChange={(e) =>
@@ -65,8 +72,11 @@ function ExcelCellDetailsPanel({
               />
             </div>
             <div>
-              <label className="text-xs text-gray-500">数式</label>
+              <label htmlFor="cell-formula" className="text-xs text-gray-500">
+                数式
+              </label>
               <input
+                id="cell-formula"
                 type="text"
                 value={cellParams.formula || ""}
                 onChange={(e) =>
@@ -77,8 +87,11 @@ function ExcelCellDetailsPanel({
               />
             </div>
             <div>
-              <label className="text-xs text-gray-500">データ型</label>
+              <label htmlFor="cell-data-type" className="text-xs text-gray-500">
+                データ型
+              </label>
               <select
+                id="cell-data-type"
                 value={cellParams.dataType}
                 onChange={(e) =>
                   onCellParamsChange({
@@ -103,8 +116,11 @@ function ExcelCellDetailsPanel({
           <h4 className="text-xs font-bold text-gray-600 mb-2">フォーマット</h4>
           <div className="space-y-2">
             <div>
-              <label className="text-xs text-gray-500">フォーマット</label>
+              <label htmlFor="cell-format" className="text-xs text-gray-500">
+                フォーマット
+              </label>
               <select
+                id="cell-format"
                 value={cellParams.format}
                 onChange={(e) =>
                   onCellParamsChange({ ...cellParams, format: e.target.value })
@@ -124,8 +140,14 @@ function ExcelCellDetailsPanel({
               </select>
             </div>
             <div>
-              <label className="text-xs text-gray-500">フォント</label>
+              <label
+                htmlFor="cell-font-family"
+                className="text-xs text-gray-500"
+              >
+                フォント
+              </label>
               <select
+                id="cell-font-family"
                 value={cellParams.fontFamily}
                 onChange={(e) =>
                   onCellParamsChange({
@@ -143,8 +165,11 @@ function ExcelCellDetailsPanel({
               </select>
             </div>
             <div>
-              <label className="text-xs text-gray-500">サイズ</label>
+              <label htmlFor="cell-font-size" className="text-xs text-gray-500">
+                サイズ
+              </label>
               <select
+                id="cell-font-size"
                 value={cellParams.fontSize}
                 onChange={(e) =>
                   onCellParamsChange({
@@ -173,6 +198,7 @@ function ExcelCellDetailsPanel({
           <div className="space-y-2">
             <div className="flex items-center gap-2">
               <input
+                id="cell-bold"
                 type="checkbox"
                 checked={cellParams.isBold}
                 onChange={(e) =>
@@ -183,10 +209,13 @@ function ExcelCellDetailsPanel({
                 }
                 className="text-xs"
               />
-              <label className="text-xs text-gray-500">太字</label>
+              <label htmlFor="cell-bold" className="text-xs text-gray-500">
+                太字
+              </label>
             </div>
             <div className="flex items-center gap-2">
               <input
+                id="cell-italic"
                 type="checkbox"
                 checked={cellParams.isItalic}
                 onChange={(e) =>
@@ -197,10 +226,13 @@ function ExcelCellDetailsPanel({
                 }
                 className="text-xs"
               />
-              <label className="text-xs text-gray-500">斜体</label>
+              <label htmlFor="cell-italic" className="text-xs text-gray-500">
+                斜体
+              </label>
             </div>
             <div className="flex items-center gap-2">
               <input
+                id="cell-underline"
                 type="checkbox"
                 checked={cellParams.isUnderline}
                 onChange={(e) =>
@@ -211,11 +243,19 @@ function ExcelCellDetailsPanel({
                 }
                 className="text-xs"
               />
-              <label className="text-xs text-gray-500">下線</label>
+              <label htmlFor="cell-underline" className="text-xs text-gray-500">
+                下線
+              </label>
             </div>
             <div>
-              <label className="text-xs text-gray-500">配置</label>
+              <label
+                htmlFor="cell-text-align"
+                className="text-xs text-gray-500"
+              >
+                配置
+              </label>
               <select
+                id="cell-text-align"
                 value={cellParams.textAlign}
                 onChange={(e) =>
                   onCellParamsChange({
@@ -238,8 +278,11 @@ function ExcelCellDetailsPanel({
           <h4 className="text-xs font-bold text-gray-600 mb-2">色と境界線</h4>
           <div className="space-y-2">
             <div>
-              <label className="text-xs text-gray-500">背景色</label>
+              <label htmlFor="cell-bg-color" className="text-xs text-gray-500">
+                背景色
+              </label>
               <input
+                id="cell-bg-color"
                 type="color"
                 value={cellParams.backgroundColor}
                 onChange={(e) =>
@@ -252,8 +295,14 @@ function ExcelCellDetailsPanel({
               />
             </div>
             <div>
-              <label className="text-xs text-gray-500">文字色</label>
+              <label
+                htmlFor="cell-text-color"
+                className="text-xs text-gray-500"
+              >
+                文字色
+              </label>
               <input
+                id="cell-text-color"
                 type="color"
                 value={cellParams.textColor}
                 onChange={(e) =>
@@ -266,8 +315,14 @@ function ExcelCellDetailsPanel({
               />
             </div>
             <div>
-              <label className="text-xs text-gray-500">境界線</label>
+              <label
+                htmlFor="cell-border-style"
+                className="text-xs text-gray-500"
+              >
+                境界線
+              </label>
               <select
+                id="cell-border-style"
                 value={cellParams.borderStyle}
                 onChange={(e) =>
                   onCellParamsChange({
@@ -292,8 +347,14 @@ function ExcelCellDetailsPanel({
           <h4 className="text-xs font-bold text-gray-600 mb-2">データ検証</h4>
           <div className="space-y-2">
             <div>
-              <label className="text-xs text-gray-500">検証ルール</label>
+              <label
+                htmlFor="cell-validation"
+                className="text-xs text-gray-500"
+              >
+                検証ルール
+              </label>
               <input
+                id="cell-validation"
                 type="text"
                 value={cellParams.validation || ""}
                 onChange={(e) =>
@@ -307,8 +368,11 @@ function ExcelCellDetailsPanel({
               />
             </div>
             <div>
-              <label className="text-xs text-gray-500">コメント</label>
+              <label htmlFor="cell-comment" className="text-xs text-gray-500">
+                コメント
+              </label>
               <textarea
+                id="cell-comment"
                 value={cellParams.comment || ""}
                 onChange={(e) =>
                   onCellParamsChange({ ...cellParams, comment: e.target.value })
@@ -326,7 +390,7 @@ function ExcelCellDetailsPanel({
 }
 
 // Excel風の追加機能コンポーネント
-function ExcelToolbar({
+function _ExcelToolbar({
   onShowCellDetails,
 }: {
   onShowCellDetails: () => void;
@@ -376,6 +440,7 @@ function ExcelToolbar({
       {/* フォーマット */}
       <div className="flex items-center gap-1">
         <button
+          type="button"
           onClick={() => setIsBold(!isBold)}
           className={`px-3 py-1 border border-gray-300 rounded text-xs hover:bg-gray-50 ${
             isBold ? "bg-blue-100 border-blue-500" : "bg-white"
@@ -384,6 +449,7 @@ function ExcelToolbar({
           <strong>B</strong>
         </button>
         <button
+          type="button"
           onClick={() => setIsItalic(!isItalic)}
           className={`px-3 py-1 border border-gray-300 rounded text-xs hover:bg-gray-50 ${
             isItalic ? "bg-blue-100 border-blue-500" : "bg-white"
@@ -392,6 +458,7 @@ function ExcelToolbar({
           <em>I</em>
         </button>
         <button
+          type="button"
           onClick={() => setIsUnderline(!isUnderline)}
           className={`px-3 py-1 border border-gray-300 rounded text-xs hover:bg-gray-50 ${
             isUnderline ? "bg-blue-100 border-blue-500" : "bg-white"
@@ -399,7 +466,10 @@ function ExcelToolbar({
         >
           <u>U</u>
         </button>
-        <button className="px-3 py-1 bg-white border border-gray-300 rounded text-xs hover:bg-gray-50">
+        <button
+          type="button"
+          className="px-3 py-1 bg-white border border-gray-300 rounded text-xs hover:bg-gray-50"
+        >
           ~~
         </button>
       </div>
@@ -409,6 +479,7 @@ function ExcelToolbar({
       {/* 配置 */}
       <div className="flex items-center gap-1">
         <button
+          type="button"
           onClick={() => setTextAlign("left")}
           className={`px-3 py-1 border border-gray-300 rounded text-xs hover:bg-gray-50 ${
             textAlign === "left" ? "bg-blue-100 border-blue-500" : "bg-white"
@@ -417,6 +488,7 @@ function ExcelToolbar({
           ⬅
         </button>
         <button
+          type="button"
           onClick={() => setTextAlign("center")}
           className={`px-3 py-1 border border-gray-300 rounded text-xs hover:bg-gray-50 ${
             textAlign === "center" ? "bg-blue-100 border-blue-500" : "bg-white"
@@ -425,6 +497,7 @@ function ExcelToolbar({
           ⬆
         </button>
         <button
+          type="button"
           onClick={() => setTextAlign("right")}
           className={`px-3 py-1 border border-gray-300 rounded text-xs hover:bg-gray-50 ${
             textAlign === "right" ? "bg-blue-100 border-blue-500" : "bg-white"
@@ -438,16 +511,26 @@ function ExcelToolbar({
 
       {/* セル操作 */}
       <div className="flex items-center gap-1">
-        <button className="px-3 py-1 bg-white border border-gray-300 rounded text-xs hover:bg-gray-50">
+        <button
+          type="button"
+          className="px-3 py-1 bg-white border border-gray-300 rounded text-xs hover:bg-gray-50"
+        >
           セル結合
         </button>
-        <button className="px-3 py-1 bg-white border border-gray-300 rounded text-xs hover:bg-gray-50">
+        <button
+          type="button"
+          className="px-3 py-1 bg-white border border-gray-300 rounded text-xs hover:bg-gray-50"
+        >
           セル分割
         </button>
-        <button className="px-3 py-1 bg-white border border-gray-300 rounded text-xs hover:bg-gray-50">
+        <button
+          type="button"
+          className="px-3 py-1 bg-white border border-gray-300 rounded text-xs hover:bg-gray-50"
+        >
           境界線
         </button>
         <button
+          type="button"
           onClick={onShowCellDetails}
           className="px-3 py-1 bg-blue-100 border border-blue-500 rounded text-xs hover:bg-gray-50"
         >
@@ -459,16 +542,28 @@ function ExcelToolbar({
 
       {/* 行・列操作 */}
       <div className="flex items-center gap-1">
-        <button className="px-3 py-1 bg-white border border-gray-300 rounded text-xs hover:bg-gray-50">
+        <button
+          type="button"
+          className="px-3 py-1 bg-white border border-gray-300 rounded text-xs hover:bg-gray-50"
+        >
           行挿入
         </button>
-        <button className="px-3 py-1 bg-white border border-gray-300 rounded text-xs hover:bg-gray-50">
+        <button
+          type="button"
+          className="px-3 py-1 bg-white border border-gray-300 rounded text-xs hover:bg-gray-50"
+        >
           列挿入
         </button>
-        <button className="px-3 py-1 bg-white border border-gray-300 rounded text-xs hover:bg-gray-50">
+        <button
+          type="button"
+          className="px-3 py-1 bg-white border border-gray-300 rounded text-xs hover:bg-gray-50"
+        >
           行削除
         </button>
-        <button className="px-3 py-1 bg-white border border-gray-300 rounded text-xs hover:bg-gray-50">
+        <button
+          type="button"
+          className="px-3 py-1 bg-white border border-gray-300 rounded text-xs hover:bg-gray-50"
+        >
           列削除
         </button>
       </div>
@@ -477,16 +572,28 @@ function ExcelToolbar({
 
       {/* 追加機能 */}
       <div className="flex items-center gap-1">
-        <button className="px-3 py-1 bg-white border border-gray-300 rounded text-xs hover:bg-gray-50">
+        <button
+          type="button"
+          className="px-3 py-1 bg-white border border-gray-300 rounded text-xs hover:bg-gray-50"
+        >
           フィルター
         </button>
-        <button className="px-3 py-1 bg-white border border-gray-300 rounded text-xs hover:bg-gray-50">
+        <button
+          type="button"
+          className="px-3 py-1 bg-white border border-gray-300 rounded text-xs hover:bg-gray-50"
+        >
           ソート
         </button>
-        <button className="px-3 py-1 bg-white border border-gray-300 rounded text-xs hover:bg-gray-50">
+        <button
+          type="button"
+          className="px-3 py-1 bg-white border border-gray-300 rounded text-xs hover:bg-gray-50"
+        >
           検索
         </button>
-        <button className="px-3 py-1 bg-white border border-gray-300 rounded text-xs hover:bg-gray-50">
+        <button
+          type="button"
+          className="px-3 py-1 bg-white border border-gray-300 rounded text-xs hover:bg-gray-50"
+        >
           置換
         </button>
       </div>
@@ -495,13 +602,22 @@ function ExcelToolbar({
 
       {/* 数式機能 */}
       <div className="flex items-center gap-1">
-        <button className="px-3 py-1 bg-white border border-gray-300 rounded text-xs hover:bg-gray-50">
+        <button
+          type="button"
+          className="px-3 py-1 bg-white border border-gray-300 rounded text-xs hover:bg-gray-50"
+        >
           Σ
         </button>
-        <button className="px-3 py-1 bg-white border border-gray-300 rounded text-xs hover:bg-gray-50">
+        <button
+          type="button"
+          className="px-3 py-1 bg-white border border-gray-300 rounded text-xs hover:bg-gray-50"
+        >
           fx
         </button>
-        <button className="px-3 py-1 bg-white border border-gray-300 rounded text-xs hover:bg-gray-50">
+        <button
+          type="button"
+          className="px-3 py-1 bg-white border border-gray-300 rounded text-xs hover:bg-gray-50"
+        >
           %
         </button>
       </div>
@@ -512,7 +628,7 @@ function ExcelToolbar({
 // Excel風の数式バー
 function ExcelFormulaBar() {
   const [formula, setFormula] = React.useState("");
-  const [selectedCell, setSelectedCell] = React.useState("A1");
+  const [selectedCell, _setSelectedCell] = React.useState("A1");
   const [isEditing, setIsEditing] = React.useState(false);
 
   return (
@@ -535,10 +651,16 @@ function ExcelFormulaBar() {
         />
       </div>
       <div className="flex items-center gap-1">
-        <button className="px-2 py-1 bg-white border border-gray-300 rounded text-xs hover:bg-gray-50">
+        <button
+          type="button"
+          className="px-2 py-1 bg-white border border-gray-300 rounded text-xs hover:bg-gray-50"
+        >
           ✓
         </button>
-        <button className="px-2 py-1 bg-white border border-gray-300 rounded text-xs hover:bg-gray-50">
+        <button
+          type="button"
+          className="px-2 py-1 bg-white border border-gray-300 rounded text-xs hover:bg-gray-50"
+        >
           ✗
         </button>
       </div>
@@ -548,12 +670,12 @@ function ExcelFormulaBar() {
 
 // Excel風のステータスバー
 function ExcelStatusBar() {
-  const [selectedRange, setSelectedRange] = React.useState("A1");
-  const [sum, setSum] = React.useState(0);
-  const [average, setAverage] = React.useState(0);
-  const [count, setCount] = React.useState(0);
-  const [max, setMax] = React.useState(0);
-  const [min, setMin] = React.useState(0);
+  const [selectedRange, _setSelectedRange] = React.useState("A1");
+  const [sum, _setSum] = React.useState(0);
+  const [average, _setAverage] = React.useState(0);
+  const [count, _setCount] = React.useState(0);
+  const [max, _setMax] = React.useState(0);
+  const [min, _setMin] = React.useState(0);
 
   return (
     <div className="bg-gray-100 border-t border-gray-300 p-1 flex items-center justify-between text-xs text-gray-600">
@@ -588,8 +710,9 @@ function ExcelSheetTabs() {
   return (
     <div className="bg-gray-200 border-t border-gray-300 flex items-center">
       <div className="flex items-center">
-        {sheets.map((sheet, index) => (
+        {sheets.map((sheet, _index) => (
           <button
+            type="button"
             key={sheet}
             onClick={() => setActiveSheet(sheet)}
             className={`px-4 py-2 text-sm border-r border-gray-300 hover:bg-gray-100 ${
@@ -602,6 +725,7 @@ function ExcelSheetTabs() {
           </button>
         ))}
         <button
+          type="button"
           onClick={addNewSheet}
           className="px-2 py-2 text-gray-500 hover:bg-gray-100 hover:text-gray-700"
         >
@@ -620,6 +744,7 @@ function ExcelMenuBar() {
     <div className="bg-gray-100 border-b border-gray-300 p-1 flex items-center gap-4 text-xs">
       <div className="flex items-center gap-4">
         <button
+          type="button"
           onClick={() =>
             setActiveMenu(activeMenu === "ファイル" ? "" : "ファイル")
           }
@@ -630,6 +755,7 @@ function ExcelMenuBar() {
           ファイル
         </button>
         <button
+          type="button"
           onClick={() => setActiveMenu(activeMenu === "ホーム" ? "" : "ホーム")}
           className={`px-2 py-1 rounded hover:bg-gray-200 ${
             activeMenu === "ホーム" ? "bg-gray-200" : ""
@@ -638,6 +764,7 @@ function ExcelMenuBar() {
           ホーム
         </button>
         <button
+          type="button"
           onClick={() => setActiveMenu(activeMenu === "挿入" ? "" : "挿入")}
           className={`px-2 py-1 rounded hover:bg-gray-200 ${
             activeMenu === "挿入" ? "bg-gray-200" : ""
@@ -646,6 +773,7 @@ function ExcelMenuBar() {
           挿入
         </button>
         <button
+          type="button"
           onClick={() =>
             setActiveMenu(
               activeMenu === "ページレイアウト" ? "" : "ページレイアウト",
@@ -658,6 +786,7 @@ function ExcelMenuBar() {
           ページレイアウト
         </button>
         <button
+          type="button"
           onClick={() => setActiveMenu(activeMenu === "数式" ? "" : "数式")}
           className={`px-2 py-1 rounded hover:bg-gray-200 ${
             activeMenu === "数式" ? "bg-gray-200" : ""
@@ -666,6 +795,7 @@ function ExcelMenuBar() {
           数式
         </button>
         <button
+          type="button"
           onClick={() => setActiveMenu(activeMenu === "データ" ? "" : "データ")}
           className={`px-2 py-1 rounded hover:bg-gray-200 ${
             activeMenu === "データ" ? "bg-gray-200" : ""
@@ -674,6 +804,7 @@ function ExcelMenuBar() {
           データ
         </button>
         <button
+          type="button"
           onClick={() => setActiveMenu(activeMenu === "校閲" ? "" : "校閲")}
           className={`px-2 py-1 rounded hover:bg-gray-200 ${
             activeMenu === "校閲" ? "bg-gray-200" : ""
@@ -682,6 +813,7 @@ function ExcelMenuBar() {
           校閲
         </button>
         <button
+          type="button"
           onClick={() => setActiveMenu(activeMenu === "表示" ? "" : "表示")}
           className={`px-2 py-1 rounded hover:bg-gray-200 ${
             activeMenu === "表示" ? "bg-gray-200" : ""
@@ -695,7 +827,7 @@ function ExcelMenuBar() {
 }
 
 // Excel風の名前ボックス
-function ExcelNameBox() {
+function _ExcelNameBox() {
   const [selectedRange, setSelectedRange] = React.useState("A1");
 
   return (
@@ -710,7 +842,10 @@ function ExcelNameBox() {
         />
       </div>
       <div className="flex items-center gap-1">
-        <button className="px-2 py-1 bg-white border border-gray-300 rounded text-xs hover:bg-gray-50">
+        <button
+          type="button"
+          className="px-2 py-1 bg-white border border-gray-300 rounded text-xs hover:bg-gray-50"
+        >
           ▼
         </button>
       </div>
@@ -741,7 +876,7 @@ export default function ExcelSurveyUI() {
   const [showCellDetails, setShowCellDetails] = React.useState(false);
 
   // セル選択時の処理
-  const handleCellSelect = (
+  const _handleCellSelect = (
     cellParams: CellParameters,
     rowIndex: number,
     colIndex: number,
@@ -753,10 +888,10 @@ export default function ExcelSurveyUI() {
   };
 
   // セルパラメータ更新時の処理
-  const handleCellUpdate = (
+  const _handleCellUpdate = (
     cellParams: CellParameters,
-    rowIndex: number,
-    colIndex: number,
+    _rowIndex: number,
+    _colIndex: number,
   ) => {
     setSelectedCellParams(cellParams);
   };

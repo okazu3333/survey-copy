@@ -183,7 +183,10 @@ const TabSelectionSection = ({
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"
+          role="img"
+          aria-label="矢印"
         >
+          <title>矢印</title>
           <path
             strokeLinecap="round"
             strokeLinejoin="round"

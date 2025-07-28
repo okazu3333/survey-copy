@@ -743,8 +743,10 @@ export const LogicCheckSection = () => {
                     strokeWidth="2"
                     strokeLinecap="round"
                     strokeLinejoin="round"
+                    role="img"
                     aria-label="拡大"
                   >
+                    <title>拡大</title>
                     <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3" />
                   </svg>
                 </button>
@@ -789,8 +791,10 @@ export const LogicCheckSection = () => {
                       strokeWidth="2"
                       strokeLinecap="round"
                       strokeLinejoin="round"
+                      role="img"
                       aria-label="閉じる"
                     >
+                      <title>閉じる</title>
                       <path d="M18 6 6 18" />
                       <path d="m6 6 12 12" />
                     </svg>

@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 
-const fs = require("fs");
-const path = require("path");
-const { execSync } = require("child_process");
+const fs = require("node:fs");
+const path = require("node:path");
+const { execSync } = require("node:child_process");
 
 console.log("🧹 キャッシュクリアを開始します...\n");
 
@@ -51,14 +51,14 @@ targets.forEach((target) => {
 // 一時ファイルの削除
 filesToDelete.forEach((pattern) => {
   try {
-    const globPattern = path.join(projectRoot, pattern);
+    const _globPattern = path.join(projectRoot, pattern);
     execSync(
       `find . -name "${path.basename(pattern)}" -delete 2>/dev/null || true`,
       { cwd: projectRoot },
     );
     console.log(`✅ 一時ファイル ${path.basename(pattern)} を削除しました`);
     clearedCount++;
-  } catch (error) {
+  } catch (_error) {
     // エラーは無視（ファイルが存在しない場合）
   }
 });
@@ -84,7 +84,7 @@ try {
   console.log(
     `  Heap Total: ${Math.round(memoryUsage.heapTotal / 1024 / 1024)} MB`,
   );
-} catch (error) {
+} catch (_error) {
   console.log("⚠️ メモリ使用量の取得に失敗しました");
 }
 
