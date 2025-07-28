@@ -1,0 +1,11 @@
+steps:
+  # Buildpackを使用してビルド
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['run', '--rm', '-v', '/workspace:/workspace', '-w', '/workspace', 'gcr.io/buildpacks/builder:v1', 'pack', 'build', 'gcr.io/$PROJECT_ID/survey-app:$COMMIT_SHA', '--builder', 'gcr.io/buildpacks/builder:v1', '--env', 'NODE_ENV=production', '--no-pull']
+
+  # イメージをプッシュ
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', 'gcr.io/$PROJECT_ID/survey-app:$COMMIT_SHA']
+
+images:
+  - 'gcr.io/$PROJECT_ID/survey-app:$COMMIT_SHA' 
