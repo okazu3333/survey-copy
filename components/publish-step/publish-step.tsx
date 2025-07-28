@@ -55,12 +55,13 @@ export const PublishStep = ({
           配信までのステップ
         </h3>
         <div className="flex items-center justify-center flex-1">
-          <div className="flex items-center gap-0 overflow-x-auto sm:gap-0">
+          <div className="flex items-center gap-0 overflow-x-auto sm:gap-0 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
             {steps.map((step, index) => {
               const status = getStepStatus(index);
               return (
                 <div key={step} className="flex items-center flex-shrink-0">
-                  <div
+                  <button
+                    type="button"
                     className={cn(
                       "flex items-center justify-center gap-1 rounded px-2 py-1 text-xs sm:gap-2 sm:px-3 h-6 sm:h-7 min-w-0",
                       getStepWidth(),
@@ -73,7 +74,13 @@ export const PublishStep = ({
                       },
                     )}
                     onClick={() => onStepClick?.(index)}
-                    style={{ cursor: onStepClick ? "pointer" : "default" }}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" || e.key === " ") {
+                        e.preventDefault();
+                        onStepClick?.(index);
+                      }
+                    }}
+                    disabled={!onStepClick}
                   >
                     <span className="truncate text-[9px] sm:text-[10px] lg:text-xs leading-tight px-0.5">
                       {step}
@@ -81,7 +88,7 @@ export const PublishStep = ({
                     {status === "complete" && (
                       <CircleCheck className="h-3 w-3 flex-shrink-0 text-[#4BBC80] sm:h-4 sm:w-4" />
                     )}
-                  </div>
+                  </button>
                   {index < steps.length - 1 && (
                     <div className="h-0.5 w-2 bg-white sm:w-3" />
                   )}
