@@ -1,7 +1,23 @@
 import * as React from "react";
-import SheetModeGrid, {
-  type CellParameters,
-} from "@/components/sheet-mode-grid";
+
+// セルの詳細パラメータ型定義
+export interface CellParameters {
+  value: string;
+  formula?: string;
+  format: string;
+  fontFamily: string;
+  fontSize: number;
+  isBold: boolean;
+  isItalic: boolean;
+  isUnderline: boolean;
+  textAlign: string;
+  backgroundColor: string;
+  textColor: string;
+  borderStyle: string;
+  dataType: string;
+  validation?: string;
+  comment?: string;
+}
 
 // Excel風のセル詳細パネル
 function ExcelCellDetailsPanel({
@@ -764,10 +780,9 @@ export default function ExcelSurveyUI() {
         <ExcelFormulaBar />
 
         {/* メイングリッド */}
-        <SheetModeGrid
-          onCellSelect={handleCellSelect}
-          onCellUpdate={handleCellUpdate}
-        />
+        <div className="p-4 text-center text-gray-500">
+          SheetModeGrid component was removed
+        </div>
 
         {/* Excel風ステータスバー */}
         <ExcelStatusBar />
