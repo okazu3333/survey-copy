@@ -97,7 +97,7 @@ export const SurveyPreviewSection = () => {
   const router = useRouter();
   const [activeTab, setActiveTab] = useState<TabType>("screening");
   const { handleSubmit } = useForm<QuestionFormData>({
-      defaultValues: {
+    defaultValues: {
       Q1: "",
       Q2: "",
       Q3: "",
@@ -113,8 +113,8 @@ export const SurveyPreviewSection = () => {
       Q13: "",
       Q14: "",
       Q15: [],
-      },
-    });
+    },
+  });
 
   const onSubmit = (data: QuestionFormData) => {
     console.log("Form submitted:", data);

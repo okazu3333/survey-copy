@@ -22,7 +22,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { useTableNavigation } from "@/hooks/use-table-navigation";
-import { ProjectStatus } from "@/lib/types/survey";
+import type { ProjectStatus } from "@/lib/types/survey";
 
 export function ProjectsSection() {
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
@@ -230,10 +230,15 @@ export function ProjectsSection() {
                   <TableRow
                     key={project.id}
                     className={`${selectedItems.includes(project.id) ? "bg-[#BCD6E0]" : "bg-white"} hover:bg-blue-50 transition-colors cursor-pointer`}
-                    onClick={(e) => handleRowClick({
-                      ...project,
-                      status: project.status as ProjectStatus
-                    }, e)}
+                    onClick={(e) =>
+                      handleRowClick(
+                        {
+                          ...project,
+                          status: project.status as ProjectStatus,
+                        },
+                        e,
+                      )
+                    }
                   >
                     <TableCell>
                       <Checkbox
