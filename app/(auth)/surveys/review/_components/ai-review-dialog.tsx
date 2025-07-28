@@ -14,7 +14,12 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogPortal,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -157,330 +162,342 @@ export const AiReviewDialog = ({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-[1600px] max-h-[90vh] h-[960px] p-0 gap-0 bg-white rounded-[48px] shadow-[0px_0px_8px_0px_rgba(0,0,0,0.04)] overflow-hidden flex">
-        <DialogTitle className="sr-only">AIレビュー・編集画面</DialogTitle>
-        <div className="flex flex-col items-start gap-2.5 pt-16 pb-10 px-16 h-full w-full">
-          <div className="flex items-start gap-8 relative w-full h-full overflow-hidden">
-            {/* Left Panel - Question Editor */}
-            <div className="flex flex-col items-center gap-4 flex-1 w-full h-full overflow-hidden">
-              <div className="flex flex-col items-start w-full flex-1 overflow-hidden">
-                {/* Tab Header */}
-                <div className="flex items-center gap-2 px-6 py-0 w-full">
-                  <div className="flex items-center justify-center w-52 h-10 bg-[#138FB5] text-white font-bold text-base rounded-[8px_8px_0px_0px] px-8 py-2">
-                    スクリーニング調査
-                  </div>
-
-                  <div className="flex h-6 items-center justify-end gap-2.5 flex-1">
-                    <div className="font-medium text-xs text-[#333333] whitespace-nowrap">
-                      レビューステータス
-                    </div>
-                    <button
-                      type="button"
-                      onClick={() =>
-                        setStatus(
-                          status === "resolved" ? "unresolved" : "resolved",
-                        )
-                      }
-                      className="cursor-pointer hover:opacity-80 transition-opacity"
-                    >
-                      {status === "resolved" ? (
-                        <CircleCheck className="w-4 h-4 text-white fill-[#138FB5]" />
-                      ) : (
-                        <CircleCheck className="w-4 h-4 text-[#979BA2]" />
-                      )}
-                    </button>
-                    <div className="w-10 font-bold text-xs text-[#333333] text-center">
-                      {status === "resolved" ? "完了" : "未完了"}
-                    </div>
-                  </div>
-                </div>
-
-                {/* Question Content Area */}
+      <DialogPortal>
+        <DialogContent
+          className="max-w-[1600px] max-h-[90vh] h-[960px] p-0 gap-0 bg-white rounded-[48px] shadow-[0px_0px_8px_0px_rgba(0,0,0,0.04)] overflow-hidden flex z-[9999999]"
+          style={{ zIndex: 9999999 }}
+        >
+          <DialogTitle className="sr-only">AIレビュー・編集画面</DialogTitle>
+          <div className="flex flex-col items-start gap-2.5 pt-16 pb-10 px-16 h-full w-full">
+            <div className="flex items-start gap-8 relative w-full h-full overflow-hidden">
+              {/* Left Panel - Question Editor */}
+              <div className="flex flex-col items-center gap-4 flex-1 w-full h-full overflow-hidden">
                 <div className="flex flex-col items-start w-full flex-1 overflow-hidden">
-                  <Card className="flex flex-col items-start gap-4 p-4 w-full h-full bg-[#138FB5] rounded-lg border-none">
-                    <ScrollArea className="w-full h-full rounded-lg shadow-[0px_0px_8px_0px_rgba(0,0,0,0.04)]">
-                      <div className="flex flex-col items-start gap-4 px-10 py-8 w-full bg-[#F4F7F9] rounded border border-solid border-[#dcdcdc]">
-                        <div className="inline-flex items-center gap-2">
-                          <div className="font-bold text-xs text-[#333333] whitespace-nowrap">
-                            セクション：未既婚
-                          </div>
-                        </div>
+                  {/* Tab Header */}
+                  <div className="flex items-center gap-2 px-6 py-0 w-full">
+                    <div className="flex items-center justify-center w-52 h-10 bg-[#138FB5] text-white font-bold text-base rounded-[8px_8px_0px_0px] px-8 py-2">
+                      スクリーニング調査
+                    </div>
 
-                        <Card className="flex flex-col items-start w-full bg-white rounded-lg border border-solid border-[#dcdcdc]">
-                          <div className="flex items-center gap-3 pl-3 pr-0 py-0 w-full bg-[#f5f5f5] rounded-[8px_8px_0px_0px] border border-solid border-[#dcdcdc]">
-                            <Checkbox
-                              className="w-4 h-4"
-                              checked={questionChecked}
-                              onCheckedChange={(checked) =>
-                                setQuestionChecked(checked as boolean)
-                              }
-                            />
-                            <div className="inline-flex items-center justify-center px-4 py-2 bg-[#138FB5]">
-                              <div className="w-fit mt-[-1.00px] font-medium text-white text-base text-center whitespace-nowrap">
-                                Q1
-                              </div>
+                    <div className="flex h-6 items-center justify-end gap-2.5 flex-1">
+                      <div className="font-medium text-xs text-[#333333] whitespace-nowrap">
+                        レビューステータス
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() =>
+                          setStatus(
+                            status === "resolved" ? "unresolved" : "resolved",
+                          )
+                        }
+                        className="cursor-pointer hover:opacity-80 transition-opacity"
+                      >
+                        {status === "resolved" ? (
+                          <CircleCheck className="w-4 h-4 text-white fill-[#138FB5]" />
+                        ) : (
+                          <CircleCheck className="w-4 h-4 text-[#979BA2]" />
+                        )}
+                      </button>
+                      <div className="w-10 font-bold text-xs text-[#333333] text-center">
+                        {status === "resolved" ? "完了" : "未完了"}
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Question Content Area */}
+                  <div className="flex flex-col items-start w-full flex-1 overflow-hidden">
+                    <Card className="flex flex-col items-start gap-4 p-4 w-full h-full bg-[#138FB5] rounded-lg border-none">
+                      <ScrollArea className="w-full h-full rounded-lg shadow-[0px_0px_8px_0px_rgba(0,0,0,0.04)]">
+                        <div className="flex flex-col items-start gap-4 px-10 py-8 w-full bg-[#F4F7F9] rounded border border-solid border-[#dcdcdc]">
+                          <div className="inline-flex items-center gap-2">
+                            <div className="font-bold text-xs text-[#333333] whitespace-nowrap">
+                              セクション：未既婚
                             </div>
                           </div>
 
-                          <CardContent className="flex flex-col items-start gap-4 pt-4 pb-6 px-12 w-full">
-                            <Select>
-                              <SelectTrigger className="flex w-[200px] items-center justify-between pl-4 pr-2 py-1 rounded-[3px] border border-solid border-[#dcdcdc]">
-                                <div className="inline-flex items-center gap-[9px]">
-                                  <div className="w-10 font-bold text-xs text-[#333333]">
-                                    SA
+                          <Card className="flex flex-col items-start w-full bg-white rounded-lg border border-solid border-[#dcdcdc]">
+                            <div className="flex items-center gap-3 pl-3 pr-0 py-0 w-full bg-[#f5f5f5] rounded-[8px_8px_0px_0px] border border-solid border-[#dcdcdc]">
+                              <Checkbox
+                                className="w-4 h-4"
+                                checked={questionChecked}
+                                onCheckedChange={(checked) =>
+                                  setQuestionChecked(checked as boolean)
+                                }
+                              />
+                              <div className="inline-flex items-center justify-center px-4 py-2 bg-[#138FB5]">
+                                <div className="w-fit mt-[-1.00px] font-medium text-white text-base text-center whitespace-nowrap">
+                                  Q1
+                                </div>
+                              </div>
+                            </div>
+
+                            <CardContent className="flex flex-col items-start gap-4 pt-4 pb-6 px-12 w-full">
+                              <Select>
+                                <SelectTrigger className="flex w-[200px] items-center justify-between pl-4 pr-2 py-1 rounded-[3px] border border-solid border-[#dcdcdc]">
+                                  <div className="inline-flex items-center gap-[9px]">
+                                    <div className="w-10 font-bold text-xs text-[#333333]">
+                                      SA
+                                    </div>
+                                    <div className="font-bold text-xs text-[#333333] whitespace-nowrap">
+                                      単一選択方式
+                                    </div>
                                   </div>
-                                  <div className="font-bold text-xs text-[#333333] whitespace-nowrap">
+                                  <ChevronDown className="w-4 h-4" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  <SelectItem value="sa">
                                     単一選択方式
+                                  </SelectItem>
+                                  <SelectItem value="ma">
+                                    複数選択方式
+                                  </SelectItem>
+                                </SelectContent>
+                              </Select>
+
+                              <div className="flex items-center gap-2 w-full">
+                                <div className="flex items-center flex-1">
+                                  <div className="flex-1 font-medium text-base text-[#333333]">
+                                    あなたの性別を教えてください。
                                   </div>
                                 </div>
-                                <ChevronDown className="w-4 h-4" />
-                              </SelectTrigger>
-                              <SelectContent>
-                                <SelectItem value="sa">単一選択方式</SelectItem>
-                                <SelectItem value="ma">複数選択方式</SelectItem>
-                              </SelectContent>
-                            </Select>
+                              </div>
 
-                            <div className="flex items-center gap-2 w-full">
-                              <div className="flex items-center flex-1">
-                                <div className="flex-1 font-medium text-base text-[#333333]">
-                                  あなたの性別を教えてください。
+                              <div className="flex flex-col items-start gap-2 w-full">
+                                <RadioGroup className="w-full">
+                                  {questionOptions.map((option, index) => (
+                                    <div
+                                      key={option.id}
+                                      className="flex items-center gap-2 w-full"
+                                    >
+                                      <div className="flex w-10 items-center justify-end">
+                                        <RadioGroupItem
+                                          value={option.id.toString()}
+                                          id={`option-${option.id}`}
+                                          className="w-4 h-4"
+                                        />
+                                        <Label
+                                          htmlFor={`option-${option.id}`}
+                                          className="flex flex-col w-6 items-center justify-center gap-2.5"
+                                        >
+                                          <div className="w-fit mt-[-1.00px] font-medium text-[#333333] text-sm text-center whitespace-nowrap">
+                                            {option.id}
+                                          </div>
+                                        </Label>
+                                      </div>
+
+                                      {option.isEditing ? (
+                                        <div className="flex-1 flex items-center gap-2">
+                                          <Input
+                                            className="h-10 px-4 py-2 bg-white rounded-sm border-2 border-solid border-[#8e99a2] shadow-[0px_0px_8px_0px_rgba(0,0,0,0.04)]"
+                                            value={option.label}
+                                            onChange={(e) =>
+                                              handleOptionChange(
+                                                index,
+                                                e.target.value,
+                                              )
+                                            }
+                                          />
+                                          <button
+                                            type="button"
+                                            className="w-6 h-6"
+                                          >
+                                            <X className="w-6 h-6 text-[#606060]" />
+                                          </button>
+                                        </div>
+                                      ) : (
+                                        <div className="px-2 py-0 rounded flex items-center flex-1">
+                                          <div className="flex items-start gap-2.5 flex-1">
+                                            <div className="flex-1 font-normal text-sm text-[#333333]">
+                                              {option.label}
+                                            </div>
+                                          </div>
+                                        </div>
+                                      )}
+                                    </div>
+                                  ))}
+                                </RadioGroup>
+
+                                <div className="flex flex-col items-center relative w-full mt-2">
+                                  <Separator className="w-full h-px" />
+                                  <button
+                                    type="button"
+                                    onClick={handleAddOption}
+                                    className="absolute w-4 h-4 top-[-8px] left-1/2 transform -translate-x-1/2 bg-[#979BA2] rounded-full shadow-[0px_0px_8px_0px_rgba(0,0,0,0.08)] flex items-center justify-center"
+                                  >
+                                    <Plus className="w-2 h-2 text-white" />
+                                  </button>
                                 </div>
                               </div>
-                            </div>
 
-                            <div className="flex flex-col items-start gap-2 w-full">
-                              <RadioGroup className="w-full">
-                                {questionOptions.map((option, index) => (
+                              <div className="flex flex-col items-start gap-2 px-6 py-3.5 w-full bg-[#f5f5f5] rounded overflow-hidden">
+                                {questionSettings.map((setting, index) => (
                                   <div
-                                    key={option.id}
-                                    className="flex items-center gap-2 w-full"
+                                    key={index}
+                                    className="flex items-start gap-2 w-full"
                                   >
-                                    <div className="flex w-10 items-center justify-end">
-                                      <RadioGroupItem
-                                        value={option.id.toString()}
-                                        id={`option-${option.id}`}
-                                        className="w-4 h-4"
-                                      />
-                                      <Label
-                                        htmlFor={`option-${option.id}`}
-                                        className="flex flex-col w-6 items-center justify-center gap-2.5"
-                                      >
-                                        <div className="w-fit mt-[-1.00px] font-medium text-[#333333] text-sm text-center whitespace-nowrap">
-                                          {option.id}
+                                    <div className="flex w-36 items-center gap-1 px-0 py-1">
+                                      <div className="inline-flex items-center gap-2">
+                                        <div className="font-medium text-sm text-[#333333] whitespace-nowrap">
+                                          {setting.label}
                                         </div>
-                                      </Label>
+                                        {setting.hasInfo && (
+                                          <div className="inline-flex items-center pt-0.5 pb-0 px-0 self-stretch">
+                                            <HelpCircle className="w-4 h-4 text-[#606060]" />
+                                          </div>
+                                        )}
+                                      </div>
                                     </div>
 
-                                    {option.isEditing ? (
-                                      <div className="flex-1 flex items-center gap-2">
-                                        <Input
-                                          className="h-10 px-4 py-2 bg-white rounded-sm border-2 border-solid border-[#8e99a2] shadow-[0px_0px_8px_0px_rgba(0,0,0,0.04)]"
-                                          value={option.label}
-                                          onChange={(e) =>
-                                            handleOptionChange(
-                                              index,
-                                              e.target.value,
-                                            )
-                                          }
+                                    {setting.type === "toggle" ? (
+                                      <div className="inline-flex items-center gap-2 px-0 py-1">
+                                        <Switch
+                                          defaultChecked
+                                          className="data-[state=checked]:bg-[#138FB5]"
                                         />
-                                        <button
-                                          type="button"
-                                          className="w-6 h-6"
-                                        >
-                                          <X className="w-6 h-6 text-[#606060]" />
-                                        </button>
+                                        <div className="font-medium text-xs text-[#333333] text-center whitespace-nowrap">
+                                          {setting.value}
+                                        </div>
                                       </div>
                                     ) : (
-                                      <div className="px-2 py-0 rounded flex items-center flex-1">
-                                        <div className="flex items-start gap-2.5 flex-1">
-                                          <div className="flex-1 font-normal text-sm text-[#333333]">
-                                            {option.label}
-                                          </div>
+                                      <div className="min-h-10 flex items-center gap-1.5 px-4 py-2 flex-1 bg-white rounded-sm border border-solid border-[#dcdcdc]">
+                                        <div className="font-normal text-sm text-[#333333] whitespace-nowrap">
+                                          {setting.value}
                                         </div>
                                       </div>
                                     )}
                                   </div>
                                 ))}
-                              </RadioGroup>
-
-                              <div className="flex flex-col items-center relative w-full mt-2">
-                                <Separator className="w-full h-px" />
-                                <button
-                                  type="button"
-                                  onClick={handleAddOption}
-                                  className="absolute w-4 h-4 top-[-8px] left-1/2 transform -translate-x-1/2 bg-[#979BA2] rounded-full shadow-[0px_0px_8px_0px_rgba(0,0,0,0.08)] flex items-center justify-center"
-                                >
-                                  <Plus className="w-2 h-2 text-white" />
-                                </button>
                               </div>
-                            </div>
+                            </CardContent>
+                          </Card>
+                        </div>
+                      </ScrollArea>
+                    </Card>
 
-                            <div className="flex flex-col items-start gap-2 px-6 py-3.5 w-full bg-[#f5f5f5] rounded overflow-hidden">
-                              {questionSettings.map((setting, index) => (
-                                <div
-                                  key={index}
-                                  className="flex items-start gap-2 w-full"
-                                >
-                                  <div className="flex w-36 items-center gap-1 px-0 py-1">
-                                    <div className="inline-flex items-center gap-2">
-                                      <div className="font-medium text-sm text-[#333333] whitespace-nowrap">
-                                        {setting.label}
-                                      </div>
-                                      {setting.hasInfo && (
-                                        <div className="inline-flex items-center pt-0.5 pb-0 px-0 self-stretch">
-                                          <HelpCircle className="w-4 h-4 text-[#606060]" />
-                                        </div>
-                                      )}
-                                    </div>
-                                  </div>
+                    <div className="absolute w-1 h-[230px] top-[245px] left-[726px] bg-[#dcdcdc] rounded" />
+                  </div>
+                </div>
 
-                                  {setting.type === "toggle" ? (
-                                    <div className="inline-flex items-center gap-2 px-0 py-1">
-                                      <Switch
-                                        defaultChecked
-                                        className="data-[state=checked]:bg-[#138FB5]"
-                                      />
-                                      <div className="font-medium text-xs text-[#333333] text-center whitespace-nowrap">
-                                        {setting.value}
-                                      </div>
-                                    </div>
-                                  ) : (
-                                    <div className="min-h-10 flex items-center gap-1.5 px-4 py-2 flex-1 bg-white rounded-sm border border-solid border-[#dcdcdc]">
-                                      <div className="font-normal text-sm text-[#333333] whitespace-nowrap">
-                                        {setting.value}
-                                      </div>
-                                    </div>
-                                  )}
-                                </div>
-                              ))}
-                            </div>
-                          </CardContent>
-                        </Card>
-                      </div>
-                    </ScrollArea>
-                  </Card>
+                {/* Action Buttons */}
+                <div className="flex h-20 items-center justify-center gap-6 w-full">
+                  <Button
+                    variant="outline"
+                    className="h-10 bg-white hover:bg-gray-50 rounded-[20px] border border-solid border-[#dcdcdc] min-w-[168px] px-6 py-4"
+                    onClick={() => onOpenChange(false)}
+                  >
+                    <span className="font-bold text-base text-[#3a3a3a] whitespace-nowrap">
+                      キャンセル
+                    </span>
+                  </Button>
 
-                  <div className="absolute w-1 h-[230px] top-[245px] left-[726px] bg-[#dcdcdc] rounded" />
+                  {userType === "reviewee" && (
+                    <Button className="h-10 bg-[#556064] hover:bg-[#444b4f] rounded-[20px] min-w-[168px] px-6 py-4">
+                      <span className="font-bold text-base text-white text-center whitespace-nowrap">
+                        編集を保存して反映する
+                      </span>
+                    </Button>
+                  )}
                 </div>
               </div>
 
-              {/* Action Buttons */}
-              <div className="flex h-20 items-center justify-center gap-6 w-full">
-                <Button
-                  variant="outline"
-                  className="h-10 bg-white hover:bg-gray-50 rounded-[20px] border border-solid border-[#dcdcdc] min-w-[168px] px-6 py-4"
-                  onClick={() => onOpenChange(false)}
-                >
-                  <span className="font-bold text-base text-[#3a3a3a] whitespace-nowrap">
-                    キャンセル
-                  </span>
-                </Button>
-
-                {userType === "reviewee" && (
-                  <Button className="h-10 bg-[#556064] hover:bg-[#444b4f] rounded-[20px] min-w-[168px] px-6 py-4">
-                    <span className="font-bold text-base text-white text-center whitespace-nowrap">
-                      編集を保存して反映する
-                    </span>
-                  </Button>
-                )}
-              </div>
-            </div>
-
-            {/* Right Panel - AI Reviews */}
-            <div className="flex flex-col w-[480px] h-full bg-[#F4F7F9] rounded-lg overflow-hidden">
-              <div className="flex flex-col gap-2 py-2 w-full h-full">
-                <ScrollArea className="w-full h-full flex-1">
-                  <div className="flex flex-col">
-                    {aiReviews.map((review, index) => (
-                      <div
-                        key={index}
-                        className="flex flex-col gap-4 px-6 py-2 w-full border-b-2 border-white"
-                      >
-                        <div className="flex flex-col gap-0.5 w-full">
-                          <div className="flex items-start gap-0.5 w-full">
-                            <div className="flex items-center gap-2 flex-1">
-                              <div className="font-medium text-sm text-[#9DA0A7] leading-[1.714]">
-                                {review.title}
+              {/* Right Panel - AI Reviews */}
+              <div className="flex flex-col w-[480px] h-full bg-[#F4F7F9] rounded-lg overflow-hidden">
+                <div className="flex flex-col gap-2 py-2 w-full h-full">
+                  <ScrollArea className="w-full h-full flex-1">
+                    <div className="flex flex-col">
+                      {aiReviews.map((review, index) => (
+                        <div
+                          key={index}
+                          className="flex flex-col gap-4 px-6 py-2 w-full border-b-2 border-white"
+                        >
+                          <div className="flex flex-col gap-0.5 w-full">
+                            <div className="flex items-start gap-0.5 w-full">
+                              <div className="flex items-center gap-2 flex-1">
+                                <div className="font-medium text-sm text-[#9DA0A7] leading-[1.714]">
+                                  {review.title}
+                                </div>
+                                <div className="font-medium text-xs text-[#9DA0A7] leading-[2]">
+                                  {review.time}
+                                </div>
                               </div>
-                              <div className="font-medium text-xs text-[#9DA0A7] leading-[2]">
-                                {review.time}
-                              </div>
+                              <DropdownMenu>
+                                <DropdownMenuTrigger asChild>
+                                  <button
+                                    type="button"
+                                    className="flex items-center h-5"
+                                  >
+                                    <Ellipsis className="w-5 h-5 text-[#979BA2]" />
+                                  </button>
+                                </DropdownMenuTrigger>
+                                <DropdownMenuContent
+                                  align="end"
+                                  className="w-32"
+                                >
+                                  <DropdownMenuItem
+                                    onClick={() => handleEditReview(index)}
+                                  >
+                                    <Edit className="mr-2 h-4 w-4" />
+                                    <span>編集</span>
+                                  </DropdownMenuItem>
+                                  <DropdownMenuItem
+                                    onClick={() => handleDeleteReview(index)}
+                                    className="text-red-600"
+                                  >
+                                    <Trash2 className="mr-2 h-4 w-4" />
+                                    <span>削除</span>
+                                  </DropdownMenuItem>
+                                </DropdownMenuContent>
+                              </DropdownMenu>
                             </div>
-                            <DropdownMenu>
-                              <DropdownMenuTrigger asChild>
-                                <button
-                                  type="button"
-                                  className="flex items-center h-5"
-                                >
-                                  <Ellipsis className="w-5 h-5 text-[#979BA2]" />
-                                </button>
-                              </DropdownMenuTrigger>
-                              <DropdownMenuContent align="end" className="w-32">
-                                <DropdownMenuItem
-                                  onClick={() => handleEditReview(index)}
-                                >
-                                  <Edit className="mr-2 h-4 w-4" />
-                                  <span>編集</span>
-                                </DropdownMenuItem>
-                                <DropdownMenuItem
-                                  onClick={() => handleDeleteReview(index)}
-                                  className="text-red-600"
-                                >
-                                  <Trash2 className="mr-2 h-4 w-4" />
-                                  <span>削除</span>
-                                </DropdownMenuItem>
-                              </DropdownMenuContent>
-                            </DropdownMenu>
-                          </div>
-                          <div className="w-full">
-                            <div className="font-medium text-sm text-[#333333] leading-[1.714]">
-                              {review.content}
+                            <div className="w-full">
+                              <div className="font-medium text-sm text-[#333333] leading-[1.714]">
+                                {review.content}
+                              </div>
                             </div>
                           </div>
                         </div>
-                      </div>
-                    ))}
-                  </div>
-                </ScrollArea>
+                      ))}
+                    </div>
+                  </ScrollArea>
 
-                {/* Comment Input Section */}
-                <div className="flex flex-col gap-3 p-4 border-t border-[#DCDCDC] bg-white">
-                  <div className="flex items-center gap-2">
-                    <span className="text-sm font-medium text-[#333333]">
-                      コメントを追加
-                    </span>
-                  </div>
-                  <div className="flex flex-col gap-2">
-                    <textarea
-                      value={commentText}
-                      onChange={(e) => setCommentText(e.target.value)}
-                      placeholder="コメントを入力してください..."
-                      className="min-h-[80px] w-full p-3 text-sm border border-[#DCDCDC] rounded-lg resize-none focus:border-[#138FB5] focus:outline-none"
-                    />
-                    <div className="flex justify-end gap-2">
-                      <Button
-                        variant="outline"
-                        onClick={() => onOpenChange(false)}
-                        className="px-4 py-2 text-sm"
-                      >
-                        キャンセル
-                      </Button>
-                      <Button
-                        onClick={handleSendComment}
-                        disabled={!commentText.trim()}
-                        className="px-4 py-2 text-sm bg-[#138FB5] hover:bg-[#0f7a9a] text-white"
-                      >
-                        送信
-                      </Button>
+                  {/* Comment Input Section */}
+                  <div className="flex flex-col gap-3 p-4 border-t border-[#DCDCDC] bg-white">
+                    <div className="flex items-center gap-2">
+                      <span className="text-sm font-medium text-[#333333]">
+                        コメントを追加
+                      </span>
+                    </div>
+                    <div className="flex flex-col gap-2">
+                      <textarea
+                        value={commentText}
+                        onChange={(e) => setCommentText(e.target.value)}
+                        placeholder="コメントを入力してください..."
+                        className="min-h-[80px] w-full p-3 text-sm border border-[#DCDCDC] rounded-lg resize-none focus:border-[#138FB5] focus:outline-none"
+                      />
+                      <div className="flex justify-end gap-2">
+                        <Button
+                          variant="outline"
+                          onClick={() => onOpenChange(false)}
+                          className="px-4 py-2 text-sm"
+                        >
+                          キャンセル
+                        </Button>
+                        <Button
+                          onClick={handleSendComment}
+                          disabled={!commentText.trim()}
+                          className="px-4 py-2 text-sm bg-[#138FB5] hover:bg-[#0f7a9a] text-white"
+                        >
+                          送信
+                        </Button>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
-      </DialogContent>
+        </DialogContent>
+      </DialogPortal>
     </Dialog>
   );
 };

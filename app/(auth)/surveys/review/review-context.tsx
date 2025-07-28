@@ -10,6 +10,8 @@ type ReviewContextType = {
   addReviewItem: (item: ReviewItem) => void;
   updateReviewItem: (id: number, updatedItem: Partial<ReviewItem>) => void;
   deleteReviewItem: (id: number) => void;
+  isAnyCommentOpen: boolean;
+  setIsAnyCommentOpen: (value: boolean) => void;
 };
 
 const ReviewContext = createContext<ReviewContextType | undefined>(undefined);
@@ -134,6 +136,7 @@ export const ReviewProvider = ({ children }: { children: React.ReactNode }) => {
   const [isReviewCollapsed, setIsReviewCollapsed] = useState(false);
   const [reviewItems, setReviewItems] =
     useState<ReviewItem[]>(initialReviewItems);
+  const [isAnyCommentOpen, setIsAnyCommentOpen] = useState(false);
 
   const addReviewItem = (item: ReviewItem) => {
     setReviewItems((prev) => [item, ...prev]);
@@ -158,6 +161,8 @@ export const ReviewProvider = ({ children }: { children: React.ReactNode }) => {
         addReviewItem,
         updateReviewItem,
         deleteReviewItem,
+        isAnyCommentOpen,
+        setIsAnyCommentOpen,
       }}
     >
       {children}

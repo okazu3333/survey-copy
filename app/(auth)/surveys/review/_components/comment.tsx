@@ -1,7 +1,7 @@
 "use client";
 
 import { CircleCheck, Edit, MoreHorizontal, Trash2, X } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -22,6 +22,7 @@ import { Separator } from "@/components/ui/separator";
 import { Textarea } from "@/components/ui/textarea";
 import type { CommentProps } from "@/lib/types/review";
 import { cn } from "@/lib/utils";
+import { useReviewContext } from "../review-context";
 import { AiReviewDialog } from "./ai-review-dialog";
 import { UserReviewDialog } from "./user-review-dialog";
 
@@ -39,11 +40,20 @@ export const Comment = ({
   userType = "reviewee",
   onDelete,
 }: CommentProps) => {
+  const { setIsAnyCommentOpen } = useReviewContext();
   const [isExpanded, setIsExpanded] = useState(false);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [editedComment, setEditedComment] = useState(comment);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+
+  // ダイアログが開いているかどうかを判定
+  const isAnyDialogOpen = isDialogOpen || isDeleteDialogOpen || isExpanded;
+
+  // ダイアログの状態が変更された時にコンテキストを更新
+  useEffect(() => {
+    setIsAnyCommentOpen(isAnyDialogOpen);
+  }, [isAnyDialogOpen, setIsAnyCommentOpen]);
 
   const handleToggle = () => {
     // 削除ダイアログが開いている時は他のダイアログを開かない
@@ -114,7 +124,11 @@ export const Comment = ({
       {!isExpanded && (
         <Button
           variant="ghost"
-          className="justify-between cursor-pointer w-11 h-11 p-0 [&_svg]:size-full"
+          className={cn(
+            "justify-between cursor-pointer w-11 h-11 p-0 [&_svg]:size-full",
+            // ダイアログが開いている時はz-indexを下げて競合を回避
+            isAnyDialogOpen ? "z-0" : "z-30",
+          )}
           onClick={handleToggle}
         >
           {reviewType === "ai" ? (
@@ -254,10 +268,20 @@ export const Comment = ({
         </Button>
       )}
 
-      {/* Expanded content */}
+      {/* Expanded content - 最前面に表示 */}
       {isExpanded && !isDialogOpen && (
         <div
-          className={`bg-white rounded-3xl border border-[#DCDCDC] shadow-[0px_0px_16px_0px_rgba(0,0,0,0.16)] max-w-[400px] max-h-[500px] overflow-hidden transform -translate-x-1/2 -translate-y-1/2 fixed ${isDialogOpen ? "z-[10]" : "z-[99999]"}`}
+          className="bg-white rounded-3xl border border-[#DCDCDC] shadow-[0px_0px_16px_0px_rgba(0,0,0,0.16)] max-w-[400px] max-h-[500px] overflow-hidden transform -translate-x-1/2 -translate-y-1/2 fixed top-1/2 left-1/2 z-[9999999]"
+          style={{
+            zIndex: 9999999,
+            position: "fixed",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            maxWidth: "400px",
+            maxHeight: "500px",
+            overflow: "hidden",
+          }}
         >
           {/* Header */}
           <div className="flex items-center justify-between px-6 py-3">
@@ -316,7 +340,7 @@ export const Comment = ({
                 </DropdownMenuTrigger>
                 <DropdownMenuContent
                   align="end"
-                  className="w-32 z-[99999]"
+                  className="w-32 z-[9999999]"
                   sideOffset={5}
                 >
                   <DropdownMenuItem onClick={handleEditComment}>
@@ -383,7 +407,7 @@ export const Comment = ({
         </div>
       )}
 
-      {/* Dialog based on reviewType */}
+      {/* Dialog based on reviewType - 最前面に表示 */}
       {!isDeleteDialogOpen &&
         (reviewType === "ai" ? (
           <AiReviewDialog
@@ -399,12 +423,15 @@ export const Comment = ({
           />
         ))}
 
-      {/* Delete confirmation dialog */}
+      {/* Delete confirmation dialog - 最前面に表示 */}
       <Dialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
         <DialogPortal>
-          {/* カスタムオーバーレイ - 高いz-index */}
+          {/* カスタムオーバーレイ - 最高のz-index */}
           <div className="fixed inset-0 z-[9999999] bg-black/80 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0" />
-          <DialogContent className="max-w-[400px] z-[9999999]">
+          <DialogContent
+            className="max-w-[400px] z-[9999999]"
+            style={{ zIndex: 9999999 }}
+          >
             <DialogHeader>
               <DialogTitle>コメントを削除</DialogTitle>
               <DialogDescription>

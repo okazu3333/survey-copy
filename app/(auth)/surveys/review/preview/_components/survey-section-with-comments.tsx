@@ -12,6 +12,7 @@ import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Textarea } from "@/components/ui/textarea";
 import type { ReviewItem } from "@/lib/types/review";
+import { useReviewContext } from "../../review-context";
 
 type SurveySectionWithCommentsProps = {
   section: Section;
@@ -38,6 +39,9 @@ export const SurveySectionWithComments = ({
   onDeleteComment,
   mode = "comment",
 }: SurveySectionWithCommentsProps) => {
+  // レビューコンテキストからダイアログの状態を取得
+  const { isAnyCommentOpen } = useReviewContext();
+
   // ローカル状態でコメントを管理
   const [localReviewItems, setLocalReviewItems] =
     useState<ReviewItem[]>(reviewItems);
@@ -296,7 +300,8 @@ export const SurveySectionWithComments = ({
                   mode === "comment" &&
                   cursorPosition &&
                   cursorPosition.questionId === question.id &&
-                  !isAddingComment
+                  !isAddingComment &&
+                  !isAnyCommentOpen
                 );
               })() && (
                 <div

@@ -15,6 +15,16 @@ import { Select, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 type TabType = "screening" | "main";
 
+type SettingsFormData = {
+  requiredAnswer: boolean;
+  targetCondition: string;
+  answerControl: string;
+  subjectCondition: string;
+  skipCondition: string;
+  categoryOrder: string;
+  jumpCondition: string;
+};
+
 // Data for children section settings (screening)
 const childrenSectionSettings = [
   { label: "必須回答", value: "必須オン", isToggled: true },
