@@ -22,6 +22,7 @@ type SurveySectionWithCommentsProps = {
   reviewItems: ReviewItem[];
   userType?: "reviewer" | "reviewee";
   onAddComment?: (comment: ReviewItem) => void;
+  onDeleteComment?: (id: number) => void;
   mode?: "comment" | "cursor";
 };
 
@@ -32,10 +33,25 @@ export const SurveySectionWithComments = ({
   setValue,
   getValues,
   reviewItems,
-  userType = "reviewee",
+  userType = "reviewer",
   onAddComment,
+  onDeleteComment,
   mode = "comment",
 }: SurveySectionWithCommentsProps) => {
+  // ローカル状態でコメントを管理
+  const [localReviewItems, setLocalReviewItems] =
+    useState<ReviewItem[]>(reviewItems);
+
+  // reviewItemsが変更されたらローカル状態を更新
+  useEffect(() => {
+    setLocalReviewItems(reviewItems);
+  }, [reviewItems]);
+
+  // 削除ハンドラー
+  const handleDeleteComment = (id: number) => {
+    setLocalReviewItems((prev) => prev.filter((item) => item.id !== id));
+    onDeleteComment?.(id);
+  };
   const [cursorPosition, setCursorPosition] = useState<{
     x: number;
     y: number;
@@ -43,6 +59,9 @@ export const SurveySectionWithComments = ({
   } | null>(null);
   const [isAddingComment, setIsAddingComment] = useState(false);
   const [newCommentText, setNewCommentText] = useState("");
+  const [checkboxStates, setCheckboxStates] = useState<{
+    [key: string]: { [optionId: string]: boolean };
+  }>({});
   const questionRefs = useRef<{ [key: string]: HTMLDivElement | null }>({});
   // コメント入力UIのref
   const commentInputRef = useRef<HTMLDivElement | null>(null);
@@ -69,6 +88,11 @@ export const SurveySectionWithComments = ({
   }, [isAddingComment]);
 
   const handleMouseMove = (e: React.MouseEvent, questionId: string) => {
+    // デバッグ用ログ
+    if (userType === "reviewer" && mode === "comment") {
+      console.log("Mouse move - userType:", userType, "mode:", mode);
+    }
+
     if (userType !== "reviewer" || isAddingComment || mode !== "comment")
       return;
 
@@ -124,10 +148,16 @@ export const SurveySectionWithComments = ({
   const handleAddComment = () => {
     if (!cursorPosition || !newCommentText.trim()) return;
 
+    // 質問番号を取得
+    const question = section.questions.find(
+      (q) => q.id === cursorPosition.questionId,
+    );
+    const questionNo = question ? question.number : "";
+
     const newComment: ReviewItem = {
       id: Date.now(),
-      questionNo: "",
-      type: "",
+      questionNo: questionNo,
+      type: "チームレビュー",
       reviewerName: "あなた",
       time: new Date().toLocaleTimeString("ja-JP", {
         hour: "2-digit",
@@ -165,10 +195,19 @@ export const SurveySectionWithComments = ({
     }
 
     setValue(questionId, newValues);
+
+    // レビュワー画面用のチェックボックス状態管理
+    setCheckboxStates((prev) => ({
+      ...prev,
+      [questionId]: {
+        ...prev[questionId],
+        [optionId]: checked,
+      },
+    }));
   };
 
   // Filter review items for this section
-  const sectionComments = reviewItems.filter(
+  const sectionComments = localReviewItems.filter(
     (item) => item.sectionId === section.id,
   );
 
@@ -212,49 +251,77 @@ export const SurveySectionWithComments = ({
               aria-label={`Question ${question.number} area`}
             >
               {/* Display all comments for this question with absolute positioning */}
-              {questionComments.map((comment) => (
-                <div
-                  key={comment.id}
-                  className="absolute"
-                  style={{
-                    left: `${comment.position?.x ?? 0}%`,
-                    top: `${comment.position?.y ?? 0}%`,
-                    zIndex: 30, // 既存のコメントを最前面に
-                  }}
-                >
-                  <Comment {...comment} userType={userType} />
-                </div>
-              ))}
+              {questionComments.map((comment) => {
+                const x = comment.position?.x ?? 0;
+                const y = comment.position?.y ?? 0;
 
-              {/* Show message circle icon at cursor position for reviewer */}
-              {userType === "reviewer" &&
-                mode === "comment" &&
-                cursorPosition &&
-                cursorPosition.questionId === question.id &&
-                !isAddingComment && (
+                // 右端に近い場合は左側に表示するための位置調整
+                const adjustedX = x > 70 ? Math.max(0, x - 20) : x;
+                const adjustedY = y > 80 ? Math.max(0, y - 10) : y;
+
+                return (
                   <div
-                    className="absolute pointer-events-none"
+                    key={comment.id}
+                    className="absolute"
                     style={{
-                      left: `${cursorPosition.x}%`,
-                      top: `${cursorPosition.y}%`,
-                      transform: "translate(-50%, -50%)",
-                      zIndex: 10, // 既存のコメントより低いz-index
+                      left: `${adjustedX}%`,
+                      top: `${adjustedY}%`,
+                      zIndex: 99999, // 最前面に表示
                     }}
                   >
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="pointer-events-auto p-0 bg-transparent hover:bg-transparent"
-                      style={{ width: "24px", height: "24px" }}
-                      onClick={() => setIsAddingComment(true)}
-                    >
-                      <MessageCircle
-                        style={{ width: "24px", height: "24px" }}
-                        className="text-[#138FB5]"
-                      />
-                    </Button>
+                    <Comment
+                      {...comment}
+                      userType={userType}
+                      onDelete={handleDeleteComment}
+                    />
                   </div>
-                )}
+                );
+              })}
+
+              {/* Show message circle icon at cursor position for reviewer */}
+              {(() => {
+                // デバッグ用ログ
+                if (userType === "reviewer" && mode === "comment") {
+                  console.log("Comment icon condition check:", {
+                    userType,
+                    mode,
+                    cursorPosition: !!cursorPosition,
+                    questionId: cursorPosition?.questionId,
+                    currentQuestionId: question.id,
+                    isAddingComment,
+                  });
+                }
+                return (
+                  userType === "reviewer" &&
+                  mode === "comment" &&
+                  cursorPosition &&
+                  cursorPosition.questionId === question.id &&
+                  !isAddingComment
+                );
+              })() && (
+                <div
+                  className="absolute pointer-events-none"
+                  style={{
+                    left: `${cursorPosition?.x || 0}%`,
+                    top: `${cursorPosition?.y || 0}%`,
+                    transform: "translate(-50%, -50%)",
+                    zIndex: 10, // 既存のコメントより低いz-index
+                  }}
+                >
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="pointer-events-auto p-0 bg-transparent hover:bg-transparent"
+                    style={{ width: "24px", height: "24px" }}
+                    onClick={() => setIsAddingComment(true)}
+                  >
+                    <MessageCircle
+                      style={{ width: "24px", height: "24px" }}
+                      className="text-[#138FB5]"
+                    />
+                  </Button>
+                </div>
+              )}
 
               {/* Comment creation form */}
               {isAddingComment &&
@@ -309,6 +376,7 @@ export const SurveySectionWithComments = ({
                     <div
                       ref={commentInputRef}
                       className="bg-white rounded-2xl border-2 border-[#838383] shadow-[0px_0px_16px_0px_rgba(0,0,0,0.16)] w-[448px]"
+                      onClick={(e) => e.stopPropagation()}
                     >
                       <div className="flex items-center gap-2.5 p-3 pl-6">
                         <Textarea
@@ -485,9 +553,15 @@ export const SurveySectionWithComments = ({
                               <Checkbox
                                 id={`${question.id}-${option.id}`}
                                 className="relative w-4 h-4"
-                                checked={(
-                                  (watch(question.id) as string[]) || []
-                                ).includes(option.id)}
+                                checked={
+                                  userType === "reviewer"
+                                    ? (checkboxStates[question.id]?.[
+                                        option.id
+                                      ] ?? false)
+                                    : (
+                                        (watch(question.id) as string[]) || []
+                                      ).includes(option.id)
+                                }
                                 onCheckedChange={(checked) =>
                                   handleCheckboxChange(
                                     question.id,

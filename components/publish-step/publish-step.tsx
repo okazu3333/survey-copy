@@ -55,7 +55,7 @@ export const PublishStep = ({
           配信までのステップ
         </h3>
         <div className="flex items-center justify-center flex-1">
-          <div className="flex items-center gap-0 overflow-x-auto sm:gap-0">
+          <div className="flex items-center gap-0 overflow-x-auto sm:gap-0 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
             {steps.map((step, index) => {
               const status = getStepStatus(index);
               return (
@@ -74,6 +74,12 @@ export const PublishStep = ({
                       },
                     )}
                     onClick={() => onStepClick?.(index)}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" || e.key === " ") {
+                        e.preventDefault();
+                        onStepClick?.(index);
+                      }
+                    }}
                     disabled={!onStepClick}
                   >
                     <span className="truncate text-[9px] sm:text-[10px] lg:text-xs leading-tight px-0.5">

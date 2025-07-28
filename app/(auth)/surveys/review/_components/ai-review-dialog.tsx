@@ -3,10 +3,11 @@
 import {
   ChevronDown,
   CircleCheck,
-  Download,
+  Edit,
   Ellipsis,
   HelpCircle,
   Plus,
+  Trash2,
   X,
 } from "lucide-react";
 import { useState } from "react";
@@ -14,6 +15,12 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
@@ -27,10 +34,25 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { Switch } from "@/components/ui/switch";
 
+type ReviewItem = {
+  id: number;
+  questionNo: string;
+  type: string;
+  reviewerName: string;
+  time: string;
+  comment: string;
+  status: "unresolved" | "resolved";
+  reviewType: "ai" | "team";
+  replies?: number;
+};
+
 type AiReviewDialogProps = {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   userType?: "reviewer" | "reviewee";
+  onAddComment?: (comment: ReviewItem) => void;
+  onUpdateComment?: (id: number, updatedComment: Partial<ReviewItem>) => void;
+  onDeleteComment?: (id: number) => void;
 };
 
 type QuestionOption = {
@@ -56,16 +78,17 @@ export const AiReviewDialog = ({
   open,
   onOpenChange,
   userType = "reviewee",
+  onAddComment,
 }: AiReviewDialogProps) => {
-  const [status, _setStatus] = useState<"resolved" | "unresolved">(
-    "unresolved",
-  );
+  const [status, setStatus] = useState<"resolved" | "unresolved">("unresolved");
+  const [questionChecked, setQuestionChecked] = useState(false);
   const [questionOptions, setQuestionOptions] = useState<QuestionOption[]>([
     { id: 1, label: "男性" },
     { id: 2, label: "女性" },
     { id: 3, label: "その他" },
     { id: 4, label: "答えたくない", isEditing: true },
   ]);
+  const [commentText, setCommentText] = useState("");
 
   const questionSettings: QuestionSetting[] = [
     { label: "必須回答", hasInfo: true, value: "必須オン", type: "toggle" },
@@ -103,9 +126,38 @@ export const AiReviewDialog = ({
     setQuestionOptions([...questionOptions, { id: newId, label: "" }]);
   };
 
+  const handleEditReview = (reviewIndex: number) => {
+    // Handle edit review action
+    console.log("Edit review:", reviewIndex);
+  };
+
+  const handleDeleteReview = (reviewIndex: number) => {
+    // Handle delete review action
+    console.log("Delete review:", reviewIndex);
+  };
+
+  const handleSendComment = () => {
+    if (commentText.trim() && onAddComment) {
+      const newComment: ReviewItem = {
+        id: Date.now(), // Generate unique ID
+        questionNo: "#1・スクリーニング調査・Q1", // Default question number
+        type: "AIレビュー・回答テスト結果",
+        reviewerName: "AIアシスタント",
+        time: "今",
+        comment: commentText,
+        status: "unresolved",
+        reviewType: "ai",
+      };
+
+      onAddComment(newComment);
+      setCommentText(""); // Clear input
+      onOpenChange(false); // Close dialog
+    }
+  };
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-[1376px] max-h-[90vh] h-[960px] p-0 gap-0 bg-white rounded-[48px] shadow-[0px_0px_8px_0px_rgba(0,0,0,0.04)] overflow-hidden flex">
+      <DialogContent className="max-w-[1600px] max-h-[90vh] h-[960px] p-0 gap-0 bg-white rounded-[48px] shadow-[0px_0px_8px_0px_rgba(0,0,0,0.04)] overflow-hidden flex">
         <DialogTitle className="sr-only">AIレビュー・編集画面</DialogTitle>
         <div className="flex flex-col items-start gap-2.5 pt-16 pb-10 px-16 h-full w-full">
           <div className="flex items-start gap-8 relative w-full h-full overflow-hidden">
@@ -118,22 +170,25 @@ export const AiReviewDialog = ({
                     スクリーニング調査
                   </div>
 
-                  <Button className="h-8 bg-[#60ADC2] hover:bg-[#4d96ab] rounded-[20px] flex items-center gap-1 px-6 py-4">
-                    <Download className="w-6 h-6" />
-                    <span className="font-bold text-sm text-white whitespace-nowrap">
-                      テスト結果DL
-                    </span>
-                  </Button>
-
                   <div className="flex h-6 items-center justify-end gap-2.5 flex-1">
                     <div className="font-medium text-xs text-[#333333] whitespace-nowrap">
                       レビューステータス
                     </div>
-                    {status === "resolved" ? (
-                      <CircleCheck className="w-4 h-4 text-white fill-[#138FB5]" />
-                    ) : (
-                      <CircleCheck className="w-4 h-4 text-[#979BA2]" />
-                    )}
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setStatus(
+                          status === "resolved" ? "unresolved" : "resolved",
+                        )
+                      }
+                      className="cursor-pointer hover:opacity-80 transition-opacity"
+                    >
+                      {status === "resolved" ? (
+                        <CircleCheck className="w-4 h-4 text-white fill-[#138FB5]" />
+                      ) : (
+                        <CircleCheck className="w-4 h-4 text-[#979BA2]" />
+                      )}
+                    </button>
                     <div className="w-10 font-bold text-xs text-[#333333] text-center">
                       {status === "resolved" ? "完了" : "未完了"}
                     </div>
@@ -153,7 +208,13 @@ export const AiReviewDialog = ({
 
                         <Card className="flex flex-col items-start w-full bg-white rounded-lg border border-solid border-[#dcdcdc]">
                           <div className="flex items-center gap-3 pl-3 pr-0 py-0 w-full bg-[#f5f5f5] rounded-[8px_8px_0px_0px] border border-solid border-[#dcdcdc]">
-                            <Checkbox className="w-4 h-4" />
+                            <Checkbox
+                              className="w-4 h-4"
+                              checked={questionChecked}
+                              onCheckedChange={(checked) =>
+                                setQuestionChecked(checked as boolean)
+                              }
+                            />
                             <div className="inline-flex items-center justify-center px-4 py-2 bg-[#138FB5]">
                               <div className="w-fit mt-[-1.00px] font-medium text-white text-base text-center whitespace-nowrap">
                                 Q1
@@ -329,7 +390,7 @@ export const AiReviewDialog = ({
             {/* Right Panel - AI Reviews */}
             <div className="flex flex-col w-[480px] h-full bg-[#F4F7F9] rounded-lg overflow-hidden">
               <div className="flex flex-col gap-2 py-2 w-full h-full">
-                <ScrollArea className="w-full h-full">
+                <ScrollArea className="w-full h-full flex-1">
                   <div className="flex flex-col">
                     {aiReviews.map((review, index) => (
                       <div
@@ -346,12 +407,31 @@ export const AiReviewDialog = ({
                                 {review.time}
                               </div>
                             </div>
-                            <button
-                              type="button"
-                              className="flex items-center h-5"
-                            >
-                              <Ellipsis className="w-5 h-5 text-[#979BA2]" />
-                            </button>
+                            <DropdownMenu>
+                              <DropdownMenuTrigger asChild>
+                                <button
+                                  type="button"
+                                  className="flex items-center h-5"
+                                >
+                                  <Ellipsis className="w-5 h-5 text-[#979BA2]" />
+                                </button>
+                              </DropdownMenuTrigger>
+                              <DropdownMenuContent align="end" className="w-32">
+                                <DropdownMenuItem
+                                  onClick={() => handleEditReview(index)}
+                                >
+                                  <Edit className="mr-2 h-4 w-4" />
+                                  <span>編集</span>
+                                </DropdownMenuItem>
+                                <DropdownMenuItem
+                                  onClick={() => handleDeleteReview(index)}
+                                  className="text-red-600"
+                                >
+                                  <Trash2 className="mr-2 h-4 w-4" />
+                                  <span>削除</span>
+                                </DropdownMenuItem>
+                              </DropdownMenuContent>
+                            </DropdownMenu>
                           </div>
                           <div className="w-full">
                             <div className="font-medium text-sm text-[#333333] leading-[1.714]">
@@ -363,6 +443,39 @@ export const AiReviewDialog = ({
                     ))}
                   </div>
                 </ScrollArea>
+
+                {/* Comment Input Section */}
+                <div className="flex flex-col gap-3 p-4 border-t border-[#DCDCDC] bg-white">
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm font-medium text-[#333333]">
+                      コメントを追加
+                    </span>
+                  </div>
+                  <div className="flex flex-col gap-2">
+                    <textarea
+                      value={commentText}
+                      onChange={(e) => setCommentText(e.target.value)}
+                      placeholder="コメントを入力してください..."
+                      className="min-h-[80px] w-full p-3 text-sm border border-[#DCDCDC] rounded-lg resize-none focus:border-[#138FB5] focus:outline-none"
+                    />
+                    <div className="flex justify-end gap-2">
+                      <Button
+                        variant="outline"
+                        onClick={() => onOpenChange(false)}
+                        className="px-4 py-2 text-sm"
+                      >
+                        キャンセル
+                      </Button>
+                      <Button
+                        onClick={handleSendComment}
+                        disabled={!commentText.trim()}
+                        className="px-4 py-2 text-sm bg-[#138FB5] hover:bg-[#0f7a9a] text-white"
+                      >
+                        送信
+                      </Button>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>

@@ -7,7 +7,12 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import type { ReviewItem } from "@/lib/types/review";
 
 type MarriageQuestionNodeProps = {
-  data?: { reviewItems?: ReviewItem[] };
+  data?: {
+    reviewItems?: ReviewItem[];
+    onDeleteComment?: (id: number) => void;
+    onAddComment?: (comment: ReviewItem) => void;
+    onUpdateComment?: (id: number, updatedComment: Partial<ReviewItem>) => void;
+  };
   id: string;
 };
 
@@ -39,7 +44,12 @@ export const MarriageQuestionNode = ({
             zIndex: 10,
           }}
         >
-          <Comment {...comment} />
+          <Comment
+            {...comment}
+            onDelete={data?.onDeleteComment}
+            onAdd={data?.onAddComment}
+            onUpdate={data?.onUpdateComment}
+          />
         </div>
       ))}
 

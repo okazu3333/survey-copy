@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import React, { useState } from "react";
+import * as React from "react";
 import { Button } from "@/components/ui/button";
 import { UrlModal } from "./url-modal";
 
@@ -12,6 +12,7 @@ type Mode = {
 };
 
 const modesReviewee: Mode[] = [
+  { id: "edit", label: "編集", path: "/surveys/review/edit" },
   { id: "preview", label: "一覧プレビュー", path: "/surveys/review/preview" },
   { id: "logic", label: "ロジックチェック", path: "/surveys/review/logic" },
 ];
@@ -22,6 +23,7 @@ const modesReviewer: Mode[] = [
     label: "一覧プレビュー",
     path: "/surveys/review/reviewer/preview",
   },
+  // 編集モードはレビュワーには不要な場合は追加しない（必要ならここにも追加）
   {
     id: "logic",
     label: "ロジックチェック",
@@ -40,8 +42,8 @@ export const ReviewModeToggle = ({
 }: ReviewModeToggleProps) => {
   const router = useRouter();
   const modes = type === "reviewer" ? modesReviewer : modesReviewee;
-  const [isUrlModalOpen, setIsUrlModalOpen] = useState(false);
-  const [urlModalConfig, setUrlModalConfig] = useState({
+  const [isUrlModalOpen, setIsUrlModalOpen] = React.useState(false);
+  const [urlModalConfig, setUrlModalConfig] = React.useState({
     url: "",
     title: "",
   });

@@ -175,6 +175,23 @@ const TabSelectionSection = ({
           </button>
         </div>
       </div>
+
+      <Button className="h-10 px-6 py-2 bg-[#138FB5] hover:bg-[#138FB5]/90 text-white font-bold rounded-[20px] inline-flex items-center justify-center relative">
+        <span className="flex-1 text-center">レビューへ進む</span>
+        <svg
+          className="w-4 h-4 ml-2"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M9 5l7 7-7 7"
+          />
+        </svg>
+      </Button>
     </div>
   );
 };

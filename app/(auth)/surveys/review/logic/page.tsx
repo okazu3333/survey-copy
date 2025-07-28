@@ -1,58 +1,34 @@
 "use client";
 
-import { Suspense } from "react";
+import { Suspense, useState } from "react";
 import { SurveyCardHeader } from "@/components/survey-card-header";
 import type { ReviewItem } from "@/lib/types/review";
+import { LogicReviewDialog } from "../_components/logic-review-dialog";
 import { ReviewModeToggle } from "../_components/review-mode-toggle";
+import { useReviewContext } from "../review-context";
 import { PreviewLogicCheckSection } from "./_components/preview-logic-check-section";
 
-// Mock review items for demonstration with logic check questions
-const mockReviewItems: ReviewItem[] = [
-  {
-    id: 101,
-    questionNo: "Q1",
-    type: "SA",
-    reviewerName: "山田太郎",
-    time: "10分前",
-    comment:
-      "性別の選択肢に「その他」や「回答しない」の選択肢を追加することを検討してください。",
-    status: "unresolved",
-    reviewType: "team",
-    sectionId: "group-1",
-    questionId: "q1",
-    position: { x: 70, y: 20 },
-  },
-  {
-    id: 102,
-    questionNo: "Q4",
-    type: "SA",
-    reviewerName: "AIレビュー",
-    time: "15分前",
-    comment:
-      "分岐ロジックが正しく設定されていますが、両方の選択肢でテスト実施を推奨します。",
-    status: "unresolved",
-    reviewType: "ai",
-    sectionId: "group-marriage",
-    questionId: "q4",
-    position: { x: 75, y: 30 },
-  },
-  {
-    id: 103,
-    questionNo: "Q8",
-    type: "SA",
-    reviewerName: "佐藤花子",
-    time: "1時間前",
-    comment:
-      "本調査の最初の質問として適切です。回答者が理解しやすい内容になっています。",
-    status: "resolved",
-    reviewType: "team",
-    sectionId: "group-4",
-    questionId: "q8",
-    position: { x: 80, y: 10 },
-  },
-];
-
 const Page = () => {
+  const { reviewItems, addReviewItem, updateReviewItem } = useReviewContext();
+  const [isAiDialogOpen, setIsAiDialogOpen] = useState(false);
+  const [isUserDialogOpen, setIsUserDialogOpen] = useState(false);
+
+  // ロジックチェック専用のコメントをフィルタリング
+  const logicCheckItems = reviewItems.filter(
+    (item) => item.type === "ロジック" || item.sectionId === "logic",
+  );
+
+  const handleAddComment = (comment: ReviewItem) => {
+    addReviewItem(comment);
+  };
+
+  const handleUpdateComment = (
+    id: number,
+    updatedComment: Partial<ReviewItem>,
+  ) => {
+    updateReviewItem(id, updatedComment);
+  };
+
   return (
     <div className="flex flex-col gap-0">
       <SurveyCardHeader
@@ -63,6 +39,24 @@ const Page = () => {
       <div className="flex flex-col w-full items-center gap-6 p-6 bg-[#ffffff] rounded-b-lg shadow-main-bg">
         {/* Header Section with Mode Toggle */}
         <ReviewModeToggle currentMode="logic" />
+
+        {/* Logic Review Buttons 削除済み */}
+        {/* <div className="flex gap-4 w-full max-w-4xl">
+          <button
+            type="button"
+            onClick={() => setIsAiDialogOpen(true)}
+            className="flex-1 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+          >
+            AIロジックレビュー
+          </button>
+          <button
+            type="button"
+            onClick={() => setIsUserDialogOpen(true)}
+            className="flex-1 bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors"
+          >
+            ロジックレビュー
+          </button>
+        </div> */}
 
         {/* Logic Check Section with Comments */}
         <Suspense
@@ -77,8 +71,26 @@ const Page = () => {
             </div>
           }
         >
-          <PreviewLogicCheckSection reviewItems={mockReviewItems} />
+          <PreviewLogicCheckSection
+            reviewItems={logicCheckItems}
+            onAddComment={handleAddComment}
+            onUpdateComment={handleUpdateComment}
+          />
         </Suspense>
+
+        {/* Logic Review Dialogs */}
+        <LogicReviewDialog
+          isOpen={isAiDialogOpen}
+          onClose={() => setIsAiDialogOpen(false)}
+          onAddComment={handleAddComment}
+          reviewType="ai"
+        />
+        <LogicReviewDialog
+          isOpen={isUserDialogOpen}
+          onClose={() => setIsUserDialogOpen(false)}
+          onAddComment={handleAddComment}
+          reviewType="team"
+        />
       </div>
     </div>
   );

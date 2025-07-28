@@ -1,11 +1,12 @@
 "use client";
 
 import { AnimatePresence, motion } from "framer-motion";
-import { Maximize, X } from "lucide-react";
+import { GitBranch, List, Maximize, X } from "lucide-react";
 import { Suspense, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Card } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { Switch } from "@/components/ui/switch";
 import type { ReviewItem } from "@/lib/types/review";
 import { LogicCheckSurveyContent } from "./logic-check-survey-content";
 
@@ -19,11 +20,21 @@ type QuestionFormData = {
 
 type PreviewLogicCheckSectionProps = {
   reviewItems?: ReviewItem[];
+  onAddComment?: (comment: ReviewItem) => void;
+  onUpdateComment?: (id: number, updatedComment: Partial<ReviewItem>) => void;
 };
 
 export const PreviewLogicCheckSection = ({
   reviewItems = [],
+  onAddComment,
+  onUpdateComment,
 }: PreviewLogicCheckSectionProps) => {
+  const [localReviewItems, setLocalReviewItems] =
+    useState<ReviewItem[]>(reviewItems);
+
+  const handleDeleteComment = (id: number) => {
+    setLocalReviewItems((prev) => prev.filter((item) => item.id !== id));
+  };
   const { handleSubmit } = useForm<QuestionFormData>({
     defaultValues: {
       q1: "",
@@ -39,43 +50,95 @@ export const PreviewLogicCheckSection = ({
   };
 
   const [isExpanded, setIsExpanded] = useState(false);
+  const [mode, setMode] = useState<"sheet" | "tree">("tree");
 
   return (
-    <div className="flex flex-col items-start relative self-stretch w-full">
+    <div
+      className={`flex flex-col items-start relative self-stretch w-full${isExpanded ? " fixed inset-0 z-[9999] bg-white" : ""}`}
+    >
       <motion.div
         layoutId="survey-card"
         className="flex flex-col items-start relative self-stretch w-full"
       >
         <Card className="flex flex-col items-start gap-4 p-4 relative self-stretch w-full bg-[#138FB5] rounded-lg">
-          {/* Maximize Button */}
+          {/* 右上: 全画面ボタン */}
           <button
             type="button"
-            onClick={() => setIsExpanded(true)}
+            onClick={() => setIsExpanded(!isExpanded)}
             className="absolute top-4 right-4 p-2 hover:bg-gray-100 rounded-lg z-10 transition-colors"
           >
-            <Maximize size={16} className="text-[#138FB5]" />
+            {isExpanded ? (
+              <X size={16} className="text-[#138FB5]" />
+            ) : (
+              <Maximize size={16} className="text-[#138FB5]" />
+            )}
           </button>
+          {/* 右上: シート/ツリーモードトグル（Switch, アイコン） */}
+          <div className="absolute top-16 right-4 flex items-center gap-2 z-10 bg-white rounded px-2 py-1 shadow">
+            <GitBranch
+              size={20}
+              className={
+                mode === "tree" ? "text-[#138FB5]" : "text-[#888] opacity-60"
+              }
+            />
+            <Switch
+              checked={mode === "sheet"}
+              onCheckedChange={(checked) => setMode(checked ? "sheet" : "tree")}
+              className="data-[state=checked]:bg-[#138FB5]"
+            />
+            <List
+              size={20}
+              className={
+                mode === "sheet" ? "text-[#138FB5]" : "text-[#888] opacity-60"
+              }
+            />
+          </div>
 
           <ScrollArea className="w-full ">
-            <form
-              onSubmit={handleSubmit(onSubmit)}
-              className="flex flex-col items-start gap-4 relative"
-            >
-              <Suspense
-                fallback={
-                  <div className="flex items-center justify-center w-full h-32">
-                    <div className="flex flex-col items-center gap-2">
-                      <div className="w-6 h-6 border-2 border-[#138FB5] border-t-transparent rounded-full animate-spin"></div>
-                      <p className="text-xs text-gray-600">読み込み中...</p>
-                    </div>
-                  </div>
-                }
+            {mode === "tree" ? (
+              <form
+                onSubmit={handleSubmit(onSubmit)}
+                className="flex flex-col items-start gap-4 relative"
               >
-                <LogicCheckSurveyContent reviewItems={reviewItems} />
-              </Suspense>
-            </form>
+                <Suspense
+                  fallback={
+                    <div className="flex items-center justify-center w-full h-32">
+                      <div className="flex flex-col items-center gap-2">
+                        <div className="w-6 h-6 border-2 border-[#138FB5] border-t-transparent rounded-full animate-spin"></div>
+                        <p className="text-xs text-gray-600">読み込み中...</p>
+                      </div>
+                    </div>
+                  }
+                >
+                  <LogicCheckSurveyContent
+                    reviewItems={localReviewItems}
+                    onDeleteComment={handleDeleteComment}
+                    onAddComment={onAddComment}
+                    onUpdateComment={onUpdateComment}
+                  />
+                </Suspense>
+              </form>
+            ) : (
+              <div className="w-full h-[700px] flex items-center justify-center text-gray-600 bg-white rounded-lg border border-dashed border-gray-300">
+                <span className="text-lg font-bold">
+                  シートモード（一覧表示）は今後実装予定
+                </span>
+              </div>
+            )}
           </ScrollArea>
         </Card>
+
+        {/* Logic Comments Section 削除済み */}
+        {/*
+        <div className="w-full max-w-4xl">
+          <h3 className="text-lg font-semibold text-gray-800 mb-4">
+            ロジックレビューコメント
+          </h3>
+          <div className="space-y-4 max-h-96 overflow-y-auto">
+            ...
+          </div>
+        </div>
+        */}
       </motion.div>
 
       {/* Expanded View Modal */}

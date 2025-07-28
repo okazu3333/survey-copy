@@ -2,7 +2,7 @@
 
 import { RadioGroup, RadioGroupItem } from "@radix-ui/react-radio-group";
 import { Separator } from "@radix-ui/react-separator";
-import { Lock, X } from "lucide-react";
+import { Lock } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -20,7 +20,6 @@ const GridPattern = () => (
     height="100%"
     xmlns="http://www.w3.org/2000/svg"
     className="absolute inset-0 h-full w-full"
-    aria-hidden="true"
   >
     <title>Grid Pattern</title>
     <defs>
@@ -36,8 +35,6 @@ const GridPattern = () => (
     <rect width="100%" height="100%" fill="url(#grid)" />
   </svg>
 );
-
-// Data for main survey questions (編集画面と同期)
 
 type TabType = "screening" | "main";
 
@@ -541,10 +538,6 @@ export const SurveyPreviewSection = () => {
                     defaultValue="子ども"
                     className="h-6 border border-solid border-[#dcdcdc] font-normal text-[#333333] text-sm"
                   />
-                </div>
-
-                <div className="w-6 h-6 cursor-pointer flex items-center justify-center">
-                  <X className="w-4 h-4 text-[#556064]" />
                 </div>
               </div>
 
