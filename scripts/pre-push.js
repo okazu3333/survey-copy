@@ -1,7 +1,6 @@
 #!/usr/bin/env node
 
-const { execSync } = require("child_process");
-const path = require("path");
+import { execSync } from "node:child_process";
 
 console.log("🚀 Push前品質チェックを開始します...\n");
 
@@ -14,7 +13,7 @@ try {
 
   console.log("\n✅ Push前品質チェックが完了しました。Pushを続行します。");
   process.exit(0);
-} catch (error) {
+} catch (_error) {
   console.error("\n❌ Push前品質チェックが失敗しました。");
   console.error("修正してから再度Pushしてください。");
   process.exit(1);

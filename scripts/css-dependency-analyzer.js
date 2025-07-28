@@ -14,9 +14,9 @@
  *   --help              ヘルプを表示
  */
 
-import fs from "fs";
-import path from "path";
-import { fileURLToPath } from "url";
+import fs from "node:fs";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
 
 // TypeScriptファイルを動的にインポート
 const __filename = fileURLToPath(import.meta.url);
@@ -157,7 +157,7 @@ async function main() {
       await reportGenerator.saveReport(analysis, options.file);
       console.log(`💾 レポートを保存しました: ${options.file}`);
     } else {
-      console.log("\n" + "=".repeat(80));
+      console.log(`\n${"=".repeat(80)}`);
       console.log(report);
     }
 

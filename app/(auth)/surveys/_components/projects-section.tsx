@@ -21,92 +21,99 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { useTableNavigation } from "@/hooks/use-table-navigation";
+import type { Project } from "@/lib/types/survey";
 
 export function ProjectsSection() {
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
+  const { handleRowClick, handleIconClick } = useTableNavigation();
 
-  const projects = [
+  const projects: Project[] = [
     {
       id: "SRB008",
       title: "家族構成に関する調査",
       status: "作成中",
-      statusColor: "bg-white text-[#4BBC80] border-[#4BBC80]",
       createdDate: "2025/06/04 08:00",
       updatedDate: "2025/06/10 15:30",
       creator: "山田太郎",
-      rowColor: "bg-white",
     },
     {
       id: "SRB009",
       title: "〜〜〜〜に関するイメ…",
       status: "作成中",
-      statusColor: "bg-white text-[#4BBC80] border-[#4BBC80]",
       createdDate: "2025/06/04 08:00",
       updatedDate: "2025/06/10 15:30",
       creator: "山田太郎",
-      rowColor: "bg-white",
     },
     {
       id: "SRB010",
       title: "〜〜〜〜満足度調査",
       status: "レビュー待ち",
-      statusColor: "bg-white text-[#60ADC2] border-[#60ADC2]",
       createdDate: "2025/06/04 08:00",
       updatedDate: "2025/06/10 15:30",
       creator: "山田太郎",
-      rowColor: "bg-white",
     },
     {
       id: "SRB011",
       title: "調査タイトル横幅は切…",
       status: "レビュー完了",
-      statusColor: "bg-[#60ADC2] text-white border-[#60ADC2]",
       createdDate: "2025/06/04 08:00",
       updatedDate: "2025/06/10 15:30",
       creator: "山田太郎",
-      rowColor: "bg-white",
     },
     {
       id: "SRB012",
       title: "満足度調査",
       status: "作成完了",
-      statusColor: "bg-[#4BBC80] text-white border-[#4BBC80]",
       createdDate: "2025/06/04 08:00",
       updatedDate: "2025/06/10 15:30",
       creator: "山田太郎",
-      rowColor: "bg-white",
     },
     {
       id: "SRB013",
       title: "満足度調査",
       status: "配信中",
-      statusColor: "bg-[#D96868] text-white border-[#D96868]",
       createdDate: "2025/06/04 08:00",
       updatedDate: "2025/06/10 15:30",
       creator: "山田太郎",
-      rowColor: "bg-white",
     },
     {
       id: "SRB014",
       title: "満足度調査",
       status: "配信終了",
-      statusColor: "bg-[#ABAEB1] text-white border-[#ABAEB1]",
       createdDate: "2025/06/04 08:00",
       updatedDate: "2025/06/10 15:30",
       creator: "山田太郎",
-      rowColor: "bg-white",
     },
     {
       id: "SRB015",
       title: "満足度調査",
       status: "配信終了",
-      statusColor: "bg-[#ABAEB1] text-white border-[#ABAEB1]",
       createdDate: "2025/06/04 08:00",
       updatedDate: "2025/06/10 15:30",
       creator: "山田太郎",
-      rowColor: "bg-white",
     },
   ];
+
+  // ステータスに応じた色を取得
+  const getStatusColor = (status: Project["status"]) => {
+    switch (status) {
+      case "作成中":
+        return "bg-white text-[#4BBC80] border-[#4BBC80]";
+      case "レビュー待ち":
+        return "bg-white text-[#60ADC2] border-[#60ADC2]";
+      case "レビュー完了":
+        return "bg-[#60ADC2] text-white border-[#60ADC2]";
+      case "作成完了":
+        return "bg-[#4BBC80] text-white border-[#4BBC80]";
+      case "配信中":
+        return "bg-[#D96868] text-white border-[#D96868]";
+      case "配信終了":
+        return "bg-[#ABAEB1] text-white border-[#ABAEB1]";
+      default:
+        return "bg-white text-gray-600 border-gray-300";
+    }
+  };
 
   const handleSelectAll = (checked: boolean) => {
     if (checked) {
@@ -215,13 +222,8 @@ export function ProjectsSection() {
                 {projects.map((project) => (
                   <TableRow
                     key={project.id}
-                    className={`${selectedItems.includes(project.id) ? "bg-[#BCD6E0]" : project.rowColor} hover:bg-blue-50 transition-colors cursor-pointer`}
-                    onClick={() =>
-                      handleSelectItem(
-                        project.id,
-                        !selectedItems.includes(project.id),
-                      )
-                    }
+                    className={`${selectedItems.includes(project.id) ? "bg-[#BCD6E0]" : "bg-white"} hover:bg-blue-50 transition-colors cursor-pointer`}
+                    onClick={(e) => handleRowClick(project, e)}
                   >
                     <TableCell>
                       <Checkbox
@@ -240,7 +242,7 @@ export function ProjectsSection() {
                     <TableCell className="text-center">
                       <Badge
                         variant="outline"
-                        className={`${project.statusColor} font-bold`}
+                        className={`${getStatusColor(project.status)} font-bold`}
                       >
                         {project.status}
                       </Badge>
@@ -259,6 +261,9 @@ export function ProjectsSection() {
                         variant="outline"
                         size="sm"
                         className="border-gray-300 hover:bg-gray-50 w-8 h-8 p-0 mx-auto"
+                        onClick={(e) =>
+                          handleIconClick("review", project.id, e)
+                        }
                       >
                         <Eye className="w-4 h-4" />
                       </Button>
@@ -268,6 +273,9 @@ export function ProjectsSection() {
                         variant="outline"
                         size="sm"
                         className="border-gray-300 hover:bg-gray-50 w-8 h-8 p-0 mx-auto"
+                        onClick={(e) =>
+                          handleIconClick("response", project.id, e)
+                        }
                       >
                         <MessageSquare className="w-4 h-4" />
                       </Button>
@@ -277,6 +285,9 @@ export function ProjectsSection() {
                         variant="outline"
                         size="sm"
                         className="border-gray-300 hover:bg-gray-50 w-8 h-8 p-0 mx-auto"
+                        onClick={(e) =>
+                          handleIconClick("distribution", project.id, e)
+                        }
                       >
                         <Settings className="w-4 h-4" />
                       </Button>
@@ -286,6 +297,9 @@ export function ProjectsSection() {
                         variant="outline"
                         size="sm"
                         className="border-gray-300 hover:bg-gray-50 w-8 h-8 p-0 mx-auto"
+                        onClick={(e) =>
+                          handleIconClick("gtTable", project.id, e)
+                        }
                       >
                         <FileText className="w-4 h-4" />
                       </Button>

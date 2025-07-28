@@ -14,7 +14,7 @@ interface DraggableQuestionComponentProps {
 
 export const DraggableQuestionComponent: React.FC<
   DraggableQuestionComponentProps
-> = ({ question, _index, isFixed = false }) => {
+> = ({ question, isFixed = false }) => {
   return (
     <Card className="flex flex-col items-start relative self-stretch w-full flex-[0_0_auto] bg-white rounded-lg border border-solid border-[#dcdcdc]">
       <div className="flex items-center gap-3 pl-3 pr-0 py-0 relative self-stretch w-full flex-[0_0_auto] bg-[#f5f5f5] rounded-[8px_8px_0px_0px] border border-solid border-[#dcdcdc]">

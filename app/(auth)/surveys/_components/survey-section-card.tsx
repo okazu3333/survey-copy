@@ -1,5 +1,5 @@
 import { Lock } from "lucide-react";
-import { type Control, Controller } from "react-hook-form";
+import { type Control, Controller, type FieldValues } from "react-hook-form";
 import { Card, CardContent } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
@@ -30,10 +30,10 @@ export type Section = {
 
 type SurveySectionCardProps = {
   section: Section;
-  control: Control<any>;
-  watch: (name: string) => any;
-  setValue: (name: string, value: any) => void;
-  getValues: (name?: string) => any;
+  control: Control<FieldValues>;
+  watch: (name: string) => unknown;
+  setValue: (name: string, value: unknown) => void;
+  getValues: (name?: string) => unknown;
 };
 
 export const SurveySectionCard = ({
@@ -110,7 +110,7 @@ export const SurveySectionCard = ({
 
             {question.type.includes("SA") && question.options && (
               <Controller
-                name={question.id}
+                name={`questions.${question.id}`}
                 control={control}
                 render={({ field }) => (
                   <RadioGroup
@@ -164,7 +164,7 @@ export const SurveySectionCard = ({
                   </div>
                   <div className="gap-2 flex items-center px-2 py-0 relative flex-1 grow">
                     <Controller
-                      name={question.id}
+                      name={`questions.${question.id}`}
                       control={control}
                       render={({ field }) => (
                         <Input
@@ -194,7 +194,7 @@ export const SurveySectionCard = ({
                   </div>
                   <div className="flex items-center relative flex-1 grow">
                     <Controller
-                      name={question.id}
+                      name={`questions.${question.id}`}
                       control={control}
                       render={({ field }) => (
                         <Input

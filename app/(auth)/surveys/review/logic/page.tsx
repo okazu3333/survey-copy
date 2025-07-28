@@ -1,5 +1,6 @@
 "use client";
 
+import { Suspense } from "react";
 import { SurveyCardHeader } from "@/components/survey-card-header";
 import type { ReviewItem } from "@/lib/types/review";
 import { ReviewModeToggle } from "../_components/review-mode-toggle";
@@ -64,7 +65,20 @@ const Page = () => {
         <ReviewModeToggle currentMode="logic" />
 
         {/* Logic Check Section with Comments */}
-        <PreviewLogicCheckSection reviewItems={mockReviewItems} />
+        <Suspense
+          fallback={
+            <div className="flex items-center justify-center w-full h-64">
+              <div className="flex flex-col items-center gap-4">
+                <div className="w-8 h-8 border-4 border-[#138FB5] border-t-transparent rounded-full animate-spin"></div>
+                <p className="text-sm text-gray-600">
+                  ロジックチェックを読み込み中...
+                </p>
+              </div>
+            </div>
+          }
+        >
+          <PreviewLogicCheckSection reviewItems={mockReviewItems} />
+        </Suspense>
       </div>
     </div>
   );

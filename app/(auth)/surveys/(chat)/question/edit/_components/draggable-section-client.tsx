@@ -64,7 +64,7 @@ export const DraggableSectionClient: React.FC<DraggableSectionClientProps> = ({
             <DraggableQuestionClient
               key={question.id}
               question={question}
-                              _index={index}
+              _index={index}
               isFixed={isFixed}
             />
           ))}

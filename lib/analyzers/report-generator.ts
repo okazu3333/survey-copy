@@ -42,7 +42,6 @@ export class CSSReportGenerator {
         return this.generateHTMLReport(analysis);
       case "markdown":
         return this.generateMarkdownReport(analysis);
-      case "console":
       default:
         return this.generateConsoleReport(analysis);
     }
@@ -312,7 +311,7 @@ export class CSSReportGenerator {
   }
 
   private createFooter(): string {
-    return "\n" + "=".repeat(80);
+    return `\n${"=".repeat(80)}`;
   }
 
   // HTMLセクション生成メソッド
@@ -410,7 +409,7 @@ export class CSSReportGenerator {
     analysis: CSSAnalysisResult,
     filePath: string,
   ): Promise<void> {
-    const fs = await import("fs");
+    const fs = await import("node:fs");
     const report = this.generateReport(analysis);
     await fs.promises.writeFile(filePath, report, "utf8");
   }

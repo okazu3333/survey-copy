@@ -1,81 +1,12 @@
 "use client";
 
-
-import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { Checkbox } from "@/components/ui/checkbox";
-import { GripIcon } from "@/components/ui/grip-icon";
-import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Select, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Textarea } from "@/components/ui/textarea";
 import { DragDropProvider, type DraggableQuestion } from "./drag-drop-context";
 import { DraggableSection } from "./draggable-section";
 
 type TabType = "screening" | "main";
-
-// Data for children section settings (screening)
-const childrenSectionSettings = [
-  { label: "必須回答", value: "必須オン", isToggled: true },
-  { label: "回答者条件", value: "全員\nカテゴリ.2 - SC4 = 2" },
-  {
-    label: "回答制御",
-    value: "カテゴリ.1 - ：SC5 ≠ 2 ～ 10　に該当しない場合はアラートを表示",
-  },
-  { label: "対象者条件", value: "なし" },
-  { label: "スキップ条件", value: "なし" },
-  { label: "カテゴリ表示順", value: "通常" },
-  { label: "ジャンプ条件", value: "なし" },
-];
-
-// Data for main survey section settings
-const mainSurveySettings = [
-  { label: "必須回答", value: "必須オン", isToggled: true },
-  { label: "回答者条件", value: "全員" },
-  { label: "回答制御", value: "なし" },
-  { label: "対象者条件", value: "なし" },
-  { label: "スキップ条件", value: "なし" },
-  { label: "カテゴリ表示順", value: "通常" },
-  { label: "ジャンプ条件", value: "なし" },
-];
-
-type SettingsFormData = {
-  requiredAnswer: boolean;
-  targetCondition: string;
-  answerControl: string;
-  subjectCondition: string;
-  skipCondition: string;
-  categoryOrder: string;
-  jumpCondition: string;
-};
-
-const childrenSection = {
-  title: "セクション：子どもの有無",
-  questions: [
-    {
-      id: "Q5",
-      type: "MA",
-      typeLabel: "MA・複数選択方式",
-      question: "あなたと同居している方をお知らせください。",
-      options: [
-        { id: 1, label: "自分のみ（一人暮らし）" },
-        { id: 2, label: "配偶者" },
-        { id: 3, label: "こども（未就学児）" },
-        { id: 4, label: "こども（小学生）" },
-        { id: 5, label: "こども（中高生）" },
-        { id: 6, label: "こども（高校生を除く18歳以上）" },
-        { id: 7, label: "自分（配偶者）の親" },
-        { id: 8, label: "自分（配偶者）の兄弟姉妹" },
-        { id: 9, label: "自分（配偶者）の祖父母" },
-        { id: 10, label: "その他" },
-      ],
-      settings: [...childrenSectionSettings],
-    },
-  ],
-};
 
 // 固定セクションの設問データ
 const fixedQuestions: DraggableQuestion[] = [
@@ -194,10 +125,6 @@ const screeningQuestions: DraggableQuestion[] = [
   },
 ];
 
-const GridPattern = () => (
-  <div className="w-4 h-4 bg-[#f0f0f0] border border-[#dcdcdc] rounded-sm" />
-);
-
 const TabSelectionSection = ({
   activeTab,
   onTabChange,
@@ -205,7 +132,6 @@ const TabSelectionSection = ({
   activeTab: TabType;
   onTabChange: (tab: TabType) => void;
 }) => {
-  const router = useRouter();
   return (
     <div className="flex items-center justify-between self-stretch w-full px-6 py-0">
       <div className="inline-flex items-center justify-end gap-2">
@@ -251,7 +177,9 @@ const TabSelectionSection = ({
       </div>
 
       <Button
-        onClick={() => router.push("/surveys/review")}
+        onClick={() => {
+          window.location.href = "/surveys/review";
+        }}
         className="h-10 px-6 py-2 bg-[#138FB5] hover:bg-[#138FB5]/90 text-white font-bold rounded-[20px] inline-flex items-center justify-center relative"
       >
         <span className="flex-1 text-center">レビューへ進む</span>
@@ -260,7 +188,9 @@ const TabSelectionSection = ({
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"
+          aria-hidden="true"
         >
+          <title>レビューへ進む</title>
           <path
             strokeLinecap="round"
             strokeLinejoin="round"
@@ -280,9 +210,7 @@ type SurveyEditSectionProps = {
 export const SurveyEditSection: React.FC<SurveyEditSectionProps> = ({
   groupId,
 }) => {
-  const router = useRouter();
   const [activeTab, setActiveTab] = useState<TabType>("screening");
-  const { register, handleSubmit } = useForm<SettingsFormData>();
 
   const getQuestionsForGroup = (id: string) => {
     const groupMap: Record<string, string[]> = {
@@ -291,26 +219,6 @@ export const SurveyEditSection: React.FC<SurveyEditSectionProps> = ({
       "group-3": ["Q6", "Q7"],
     };
     return groupMap[id] || ["Q1", "Q2", "Q3", "Q4", "Q5", "Q6", "Q7"];
-  };
-
-  const getTabForGroup = (id: string): TabType => {
-    const screeningGroups = ["group-1", "group-2"];
-    const mainGroups = ["group-3"];
-
-    if (screeningGroups.includes(id)) {
-      return "screening";
-    } else if (mainGroups.includes(id)) {
-      return "main";
-    }
-    return "screening";
-  };
-
-  const onSubmit = (data: SettingsFormData) => {
-    console.log("Form submitted:", data);
-  };
-
-  const handleGoToReview = () => {
-    router.push("/surveys/review");
   };
 
   const renderScreeningContent = () => {

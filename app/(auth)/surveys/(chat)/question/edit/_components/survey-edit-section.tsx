@@ -1,16 +1,16 @@
 import { RadioGroup, RadioGroupItem } from "@radix-ui/react-radio-group";
 import { Separator } from "@radix-ui/react-separator";
-import { GripVertical, HelpCircle, Lock, Plus, Trash, X } from "lucide-react";
+import { Lock, Plus, Trash, X } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { useForm } from "react-hook-form";
+import { SettingsPanel } from "@/components/common/settings-panel";
+import { GripIcon } from "@/components/ui";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Select, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Textarea } from "@/components/ui/textarea";
 
 type TabType = "screening" | "main";
 
@@ -38,16 +38,6 @@ const mainSurveySettings = [
   { label: "カテゴリ表示順", value: "通常" },
   { label: "ジャンプ条件", value: "なし" },
 ];
-
-type SettingsFormData = {
-  requiredAnswer: boolean;
-  targetCondition: string;
-  answerControl: string;
-  subjectCondition: string;
-  skipCondition: string;
-  categoryOrder: string;
-  jumpCondition: string;
-};
 
 const childrenSection = {
   title: "セクション：子どもの有無",
@@ -291,23 +281,6 @@ export const SurveyEditSection = ({ groupId }: SurveyEditSectionProps) => {
     groupId ? getTabForGroup(groupId) : "screening",
   );
 
-  const { register, handleSubmit } = useForm<SettingsFormData>({
-    defaultValues: {
-      requiredAnswer: true,
-      targetCondition: "全員 カテゴリ.2 - SC4 = 2",
-      answerControl:
-        "カテゴリ.1 - ：SC5 ≠ 2 ～ 10　に該当しない場合はアラートを表示",
-      subjectCondition: "なし",
-      skipCondition: "なし",
-      categoryOrder: "通常",
-      jumpCondition: "なし",
-    },
-  });
-
-  const onSubmit = (data: SettingsFormData) => {
-    console.log("Settings form submitted:", data);
-  };
-
   const handleGoToReview = () => {
     router.push("/surveys/review/preview");
   };
@@ -326,7 +299,7 @@ export const SurveyEditSection = ({ groupId }: SurveyEditSectionProps) => {
           targetQuestions.includes("Q3")) && (
           <Card className="flex flex-col items-start gap-4 px-6 py-4 relative self-stretch w-full flex-[0_0_auto] bg-[#f4f7f9] rounded-lg border border-solid border-[#dcdcdc]">
             <div className="items-center inline-flex gap-2 relative flex-[0_0_auto]">
-              <GripVertical className="w-4 h-4 text-[#556064]" />
+              <GripIcon size={21} />
               <div className="relative w-fit mt-[-1.00px] font-bold text-[#333333] text-xs whitespace-nowrap">
                 固定セクション：性別・年齢・居住地
               </div>
@@ -448,6 +421,24 @@ export const SurveyEditSection = ({ groupId }: SurveyEditSectionProps) => {
                   <div className="absolute top-[94px] left-3.5 inline-flex items-center p-1">
                     <GridPattern />
                   </div>
+
+                  {/* 設定パネル */}
+                  <div className="mt-4 w-full">
+                    <SettingsPanel
+                      defaultValues={{
+                        requiredAnswer: true,
+                        targetCondition: "全員",
+                        answerControl: "なし",
+                        subjectCondition: "なし",
+                        skipCondition: "なし",
+                        categoryOrder: "通常",
+                        jumpCondition: "なし",
+                      }}
+                      onSave={(data) => {
+                        console.log("Q1設定保存:", data);
+                      }}
+                    />
+                  </div>
                 </CardContent>
               </Card>
             )}
@@ -502,6 +493,24 @@ export const SurveyEditSection = ({ groupId }: SurveyEditSectionProps) => {
                   </div>
                   <div className="absolute top-[42px] left-3.5 inline-flex items-center p-1">
                     <GridPattern />
+                  </div>
+
+                  {/* 設定パネル */}
+                  <div className="mt-4 w-full">
+                    <SettingsPanel
+                      defaultValues={{
+                        requiredAnswer: true,
+                        targetCondition: "全員",
+                        answerControl: "なし",
+                        subjectCondition: "なし",
+                        skipCondition: "なし",
+                        categoryOrder: "通常",
+                        jumpCondition: "なし",
+                      }}
+                      onSave={(data) => {
+                        console.log("Q2設定保存:", data);
+                      }}
+                    />
                   </div>
                 </CardContent>
               </Card>
@@ -568,6 +577,24 @@ export const SurveyEditSection = ({ groupId }: SurveyEditSectionProps) => {
                   <div className="absolute top-[42px] left-3.5 inline-flex items-center p-1">
                     <GridPattern />
                   </div>
+
+                  {/* 設定パネル */}
+                  <div className="mt-4 w-full">
+                    <SettingsPanel
+                      defaultValues={{
+                        requiredAnswer: true,
+                        targetCondition: "全員",
+                        answerControl: "なし",
+                        subjectCondition: "なし",
+                        skipCondition: "なし",
+                        categoryOrder: "通常",
+                        jumpCondition: "なし",
+                      }}
+                      onSave={(data) => {
+                        console.log("Q3設定保存:", data);
+                      }}
+                    />
+                  </div>
                 </CardContent>
               </Card>
             )}
@@ -578,7 +605,7 @@ export const SurveyEditSection = ({ groupId }: SurveyEditSectionProps) => {
         {targetQuestions.includes("Q4") && (
           <Card className="flex flex-col items-start gap-4 px-6 py-4 relative self-stretch w-full flex-[0_0_auto] bg-[#f4f7f9] rounded-lg border border-solid border-[#dcdcdc]">
             <div className="items-start inline-flex gap-2 relative flex-[0_0_auto]">
-              <GripVertical className="w-4 h-4 text-[#556064]" />
+              <GripIcon size={21} />
               <div className="relative w-fit mt-[-1.00px] font-bold text-[#333333] text-xs whitespace-nowrap">
                 セクション：未既婚
               </div>
@@ -667,6 +694,24 @@ export const SurveyEditSection = ({ groupId }: SurveyEditSectionProps) => {
                 <div className="absolute w-4 h-4 top-[132px] left-1/2 transform -translate-x-1/2 cursor-pointer flex items-center justify-center bg-[#979BA2] rounded-full shadow-[0px_0px_8px_0px_rgba(0,0,0,0.08)]">
                   <Plus className="w-2 h-2 text-white" />
                 </div>
+
+                {/* 設定パネル */}
+                <div className="mt-4 w-full">
+                  <SettingsPanel
+                    defaultValues={{
+                      requiredAnswer: true,
+                      targetCondition: "全員",
+                      answerControl: "なし",
+                      subjectCondition: "なし",
+                      skipCondition: "なし",
+                      categoryOrder: "通常",
+                      jumpCondition: "なし",
+                    }}
+                    onSave={(data) => {
+                      console.log("Q4設定保存:", data);
+                    }}
+                  />
+                </div>
               </CardContent>
             </Card>
           </Card>
@@ -676,7 +721,7 @@ export const SurveyEditSection = ({ groupId }: SurveyEditSectionProps) => {
         {targetQuestions.includes("Q5") && (
           <Card className="flex flex-col items-start gap-4 px-6 py-4 relative self-stretch w-full flex-[0_0_auto] bg-[#f4f7f9] rounded-lg border border-solid border-[#dcdcdc]">
             <div className="items-start inline-flex gap-2 relative flex-[0_0_auto]">
-              <GripVertical className="w-4 h-4 text-[#556064]" />
+              <GripIcon size={21} />
               <div className="relative w-fit mt-[-1.00px] font-bold text-[#333333] text-xs whitespace-nowrap">
                 セクション：子どもの有無
               </div>
@@ -733,77 +778,25 @@ export const SurveyEditSection = ({ groupId }: SurveyEditSectionProps) => {
                 <div className="absolute top-[380px] left-3.5 inline-flex items-center p-1">
                   <GridPattern />
                 </div>
-                <form
-                  onSubmit={handleSubmit(onSubmit)}
-                  className="flex flex-col items-start gap-2 px-6 py-3.5 relative self-stretch w-full flex-[0_0_auto] bg-[#f5f5f5] rounded overflow-hidden"
-                >
-                  {childrenSection.questions[0].settings.map(
-                    (setting, index) => {
-                      const fieldNames = [
-                        "requiredAnswer",
-                        "targetCondition",
-                        "answerControl",
-                        "subjectCondition",
-                        "skipCondition",
-                        "categoryOrder",
-                        "jumpCondition",
-                      ] as const;
 
-                      return (
-                        <div
-                          key={`setting-${index}`}
-                          className="flex items-start gap-2 relative self-stretch w-full flex-[0_0_auto] min-w-0"
-                        >
-                          <div className="flex w-36 items-center gap-1 px-0 py-1 relative flex-shrink-0">
-                            <div className="inline-flex items-center gap-2 relative flex-[0_0_auto] min-w-0">
-                              <label
-                                htmlFor={fieldNames[index]}
-                                className="w-fit font-medium text-[#333333] text-sm relative mt-[-1.00px] truncate"
-                              >
-                                {setting.label}
-                              </label>
-                              <div className="inline-flex items-center pt-0.5 pb-0 px-0 relative flex-shrink-0">
-                                <HelpCircle className="w-4 h-4 flex-shrink-0" />
-                              </div>
-                            </div>
-                          </div>
-                          {index === 0 ? (
-                            <div className="inline-flex items-center gap-2 px-0 py-1 relative flex-shrink-0">
-                              <Checkbox
-                                id={fieldNames[index]}
-                                {...register(fieldNames[index])}
-                                defaultChecked={setting.isToggled}
-                                className="flex-shrink-0"
-                              />
-                              <span className="relative w-fit mt-[-1.00px] font-medium text-[#333333] text-xs text-center whitespace-nowrap">
-                                {setting.value}
-                              </span>
-                            </div>
-                          ) : index === 1 || index === 2 || index === 6 ? (
-                            <div className="min-h-10 border border-solid border-[#dcdcdc] flex items-center gap-1.5 px-4 py-2 relative flex-1 bg-white rounded-sm overflow-hidden min-w-0">
-                              <Textarea
-                                id={fieldNames[index]}
-                                {...register(fieldNames[index])}
-                                defaultValue={setting.value}
-                                className="w-full resize-none border-none p-0 bg-transparent text-sm text-[#333333] focus:ring-0 focus:outline-none min-h-0"
-                                rows={2}
-                              />
-                            </div>
-                          ) : (
-                            <div className="h-10 border border-solid border-[#dcdcdc] flex items-center gap-1.5 px-4 py-2 relative flex-1 bg-white rounded-sm overflow-hidden min-w-0">
-                              <Input
-                                id={fieldNames[index]}
-                                {...register(fieldNames[index])}
-                                defaultValue={setting.value}
-                                className="w-full border-none p-0 bg-transparent text-sm text-[#333333] focus:ring-0 focus:outline-none h-auto min-w-0"
-                              />
-                            </div>
-                          )}
-                        </div>
-                      );
-                    },
-                  )}
-                </form>
+                {/* 設定パネル */}
+                <div className="mt-4 w-full">
+                  <SettingsPanel
+                    defaultValues={{
+                      requiredAnswer: true,
+                      targetCondition: "全員\nカテゴリ.2 - SC4 = 2",
+                      answerControl:
+                        "カテゴリ.1 - ：SC5 ≠ 2 ～ 10　に該当しない場合はアラートを表示",
+                      subjectCondition: "なし",
+                      skipCondition: "なし",
+                      categoryOrder: "通常",
+                      jumpCondition: "なし",
+                    }}
+                    onSave={(data) => {
+                      console.log("Q5設定保存:", data);
+                    }}
+                  />
+                </div>
               </CardContent>
             </Card>
           </Card>
@@ -813,7 +806,7 @@ export const SurveyEditSection = ({ groupId }: SurveyEditSectionProps) => {
         {(targetQuestions.includes("Q6") || targetQuestions.includes("Q7")) && (
           <Card className="flex flex-col items-start gap-4 px-6 py-4 relative self-stretch w-full flex-[0_0_auto] bg-[#f4f7f9] rounded-lg border border-solid border-[#dcdcdc]">
             <div className="items-start inline-flex gap-2 relative flex-[0_0_auto]">
-              <GripVertical className="w-4 h-4 text-[#556064]" />
+              <GripIcon size={21} />
               <div className="relative w-fit mt-[-1.00px] font-bold text-[#333333] text-xs whitespace-nowrap">
                 セクション：職業
               </div>
@@ -846,6 +839,24 @@ export const SurveyEditSection = ({ groupId }: SurveyEditSectionProps) => {
                   <div className="absolute top-[42px] left-3.5 inline-flex items-center p-1">
                     <GridPattern />
                   </div>
+
+                  {/* 設定パネル */}
+                  <div className="mt-4 w-full">
+                    <SettingsPanel
+                      defaultValues={{
+                        requiredAnswer: true,
+                        targetCondition: "全員",
+                        answerControl: "なし",
+                        subjectCondition: "なし",
+                        skipCondition: "なし",
+                        categoryOrder: "通常",
+                        jumpCondition: "なし",
+                      }}
+                      onSave={(data) => {
+                        console.log("Q6設定保存:", data);
+                      }}
+                    />
+                  </div>
                 </CardContent>
               </Card>
             )}
@@ -877,6 +888,24 @@ export const SurveyEditSection = ({ groupId }: SurveyEditSectionProps) => {
                   <div className="absolute top-[42px] left-3.5 inline-flex items-center p-1">
                     <GridPattern />
                   </div>
+
+                  {/* 設定パネル */}
+                  <div className="mt-4 w-full">
+                    <SettingsPanel
+                      defaultValues={{
+                        requiredAnswer: true,
+                        targetCondition: "全員",
+                        answerControl: "なし",
+                        subjectCondition: "なし",
+                        skipCondition: "なし",
+                        categoryOrder: "通常",
+                        jumpCondition: "なし",
+                      }}
+                      onSave={(data) => {
+                        console.log("Q7設定保存:", data);
+                      }}
+                    />
+                  </div>
                 </CardContent>
               </Card>
             )}
@@ -907,7 +936,7 @@ export const SurveyEditSection = ({ groupId }: SurveyEditSectionProps) => {
               className="flex flex-col items-start gap-4 px-6 py-4 relative self-stretch w-full flex-[0_0_auto] bg-[#f4f7f9] rounded-lg border border-solid border-[#dcdcdc]"
             >
               <div className="items-start inline-flex gap-2 relative flex-[0_0_auto]">
-                <GripVertical className="w-4 h-4 text-[#556064]" />
+                <GripIcon size={21} />
                 <div className="relative w-fit mt-[-1.00px] font-bold text-[#333333] text-xs whitespace-nowrap">
                   {section.title}
                 </div>
@@ -975,76 +1004,26 @@ export const SurveyEditSection = ({ groupId }: SurveyEditSectionProps) => {
                       <GridPattern />
                     </div>
 
-                    <form
-                      onSubmit={handleSubmit(onSubmit)}
-                      className="flex flex-col items-start gap-2 px-6 py-3.5 relative self-stretch w-full flex-[0_0_auto] bg-[#f5f5f5] rounded overflow-hidden"
-                    >
-                      {question.settings.map((setting, index) => {
-                        const fieldNames = [
-                          "requiredAnswer",
-                          "targetCondition",
-                          "answerControl",
-                          "subjectCondition",
-                          "skipCondition",
-                          "categoryOrder",
-                          "jumpCondition",
-                        ] as const;
-
-                        return (
-                          <div
-                            key={`setting-${index}`}
-                            className="flex items-start gap-2 relative self-stretch w-full flex-[0_0_auto] min-w-0"
-                          >
-                            <div className="flex w-36 items-center gap-1 px-0 py-1 relative flex-shrink-0">
-                              <div className="inline-flex items-center gap-2 relative flex-[0_0_auto] min-w-0">
-                                <label
-                                  htmlFor={fieldNames[index]}
-                                  className="w-fit font-medium text-[#333333] text-sm relative mt-[-1.00px] truncate"
-                                >
-                                  {setting.label}
-                                </label>
-                                <div className="inline-flex items-center pt-0.5 pb-0 px-0 relative flex-shrink-0">
-                                  <HelpCircle className="w-4 h-4 flex-shrink-0" />
-                                </div>
-                              </div>
-                            </div>
-
-                            {index === 0 ? (
-                              <div className="inline-flex items-center gap-2 px-0 py-1 relative flex-shrink-0">
-                                <Checkbox
-                                  id={fieldNames[index]}
-                                  {...register(fieldNames[index])}
-                                  defaultChecked={setting.isToggled}
-                                  className="flex-shrink-0"
-                                />
-                                <span className="relative w-fit mt-[-1.00px] font-medium text-[#333333] text-xs text-center whitespace-nowrap">
-                                  {setting.value}
-                                </span>
-                              </div>
-                            ) : index === 1 || index === 2 || index === 6 ? (
-                              <div className="min-h-10 border border-solid border-[#dcdcdc] flex items-center gap-1.5 px-4 py-2 relative flex-1 bg-white rounded-sm overflow-hidden min-w-0">
-                                <Textarea
-                                  id={fieldNames[index]}
-                                  {...register(fieldNames[index])}
-                                  defaultValue={setting.value}
-                                  className="w-full resize-none border-none p-0 bg-transparent text-sm text-[#333333] focus:ring-0 focus:outline-none min-h-0"
-                                  rows={2}
-                                />
-                              </div>
-                            ) : (
-                              <div className="h-10 border border-solid border-[#dcdcdc] flex items-center gap-1.5 px-4 py-2 relative flex-1 bg-white rounded-sm overflow-hidden min-w-0">
-                                <Input
-                                  id={fieldNames[index]}
-                                  {...register(fieldNames[index])}
-                                  defaultValue={setting.value}
-                                  className="w-full border-none p-0 bg-transparent text-sm text-[#333333] focus:ring-0 focus:outline-none h-auto min-w-0"
-                                />
-                              </div>
-                            )}
-                          </div>
-                        );
-                      })}
-                    </form>
+                    {/* 設定パネル */}
+                    <div className="mt-4 w-full">
+                      <SettingsPanel
+                        defaultValues={{
+                          requiredAnswer:
+                            question.settings[0]?.isToggled || true,
+                          targetCondition:
+                            question.settings[1]?.value || "全員",
+                          answerControl: question.settings[2]?.value || "なし",
+                          subjectCondition:
+                            question.settings[3]?.value || "なし",
+                          skipCondition: question.settings[4]?.value || "なし",
+                          categoryOrder: question.settings[5]?.value || "通常",
+                          jumpCondition: question.settings[6]?.value || "なし",
+                        }}
+                        onSave={(data) => {
+                          console.log(`${question.id}設定保存:`, data);
+                        }}
+                      />
+                    </div>
                   </CardContent>
                 </Card>
               ))}
@@ -1064,17 +1043,6 @@ export const SurveyEditSection = ({ groupId }: SurveyEditSectionProps) => {
             onTabChange={setActiveTab}
           />
         )}
-                <Button
-          onClick={handleGoToReview}
-                      className="whitespace-nowrap text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 text-primary-foreground shadow hover:bg-primary/90 w-[176px] h-10 bg-[#556064] rounded-[20px] flex items-center justify-center gap-3 px-4 py-0"
-        >
-          <span className="font-bold text-white text-base text-center tracking-[0] leading-[22.4px] font-['Noto_Sans_JP',Helvetica]">
-            レビューへ進む
-          </span>
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-chevron-right w-[6.68px] h-[11.89px]" aria-hidden="true">
-            <path d="m9 18 6-6-6-6"></path>
-          </svg>
-        </Button>
       </div>
       <Card className="flex flex-col items-start gap-4 p-4 relative self-stretch w-full flex-[0_0_auto] bg-[#138fb5] rounded-lg">
         <div className="inline-flex items-start gap-1 relative flex-[0_0_auto]">
@@ -1095,6 +1063,33 @@ export const SurveyEditSection = ({ groupId }: SurveyEditSectionProps) => {
             : renderMainSurveyContent()}
         </ScrollArea>
       </Card>
+
+      {/* レビューへ進むボタンを下部に配置 */}
+      <div className="flex justify-center w-full mt-6 pb-6">
+        <Button
+          onClick={handleGoToReview}
+          className="w-[340px] h-14 bg-[#556064] rounded-[34px] flex items-center justify-center gap-4 px-4 py-0"
+        >
+          <span className="font-bold text-white text-base text-center tracking-[0] leading-[22.4px] font-['Noto_Sans_JP',Helvetica]">
+            レビューへ進む
+          </span>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            className="lucide lucide-chevron-right w-[6.68px] h-[11.89px]"
+            aria-hidden="true"
+          >
+            <path d="m9 18 6-6-6-6"></path>
+          </svg>
+        </Button>
+      </div>
 
       {!groupId && (
         <div className="absolute w-1 h-[230px] top-[211px] left-[870px] bg-borderdefault rounded" />

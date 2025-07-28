@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import type { Control } from "react-hook-form";
+import type { Control, FieldValues } from "react-hook-form";
 import { Controller } from "react-hook-form";
 import { Input } from "@/components/ui/input";
 
@@ -13,7 +13,7 @@ type NumberInputProps = {
   max?: number;
   step?: number;
   defaultValue?: number;
-  control?: Control<any>;
+  control?: Control<FieldValues>;
   questionId?: string;
   onChange?: (value: number | undefined) => void;
 };

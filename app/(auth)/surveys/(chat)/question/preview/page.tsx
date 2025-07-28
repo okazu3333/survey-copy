@@ -1,16 +1,10 @@
 "use client";
 
-import { useRouter } from "next/navigation";
 import { SurveyCardHeader } from "@/components/survey-card-header";
 import { ModeToggle } from "../_components/mode-toggle";
 import { SurveyPreviewSection } from "./_components/survey-preview-section";
 
 const Page = () => {
-  const router = useRouter();
-
-  const _handleGoToReview = () => {
-    router.push("/surveys/review/preview");
-  };
 
   return (
     <div className="min-h-screen bg-gray-100">

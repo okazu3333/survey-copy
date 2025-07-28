@@ -38,14 +38,14 @@ export const Preview: Story = {
     defaultValue: 25,
   },
   render: (args) => {
-    const { control } = useForm({
+    useForm({
       defaultValues: {
         age: 25,
       },
     });
     return (
       <div className="w-[600px] p-4 bg-white">
-        <NumberInput {...args} control={control} questionId="age" />
+        <NumberInput {...args} questionId="age" />
       </div>
     );
   },
@@ -81,14 +81,14 @@ export const MonthlySpending: Story = {
     defaultValue: 5000,
   },
   render: (args) => {
-    const { control } = useForm({
+    useForm({
       defaultValues: {
         spending: 5000,
       },
     });
     return (
       <div className="w-[600px] p-4 bg-white">
-        <NumberInput {...args} control={control} questionId="spending" />
+        <NumberInput {...args} questionId="spending" />
       </div>
     );
   },
@@ -105,14 +105,14 @@ export const HeightMeasurement: Story = {
     defaultValue: 170.5,
   },
   render: (args) => {
-    const { control } = useForm({
+    useForm({
       defaultValues: {
         height: 170.5,
       },
     });
     return (
       <div className="w-[600px] p-4 bg-white">
-        <NumberInput {...args} control={control} questionId="height" />
+        <NumberInput {...args} questionId="height" />
       </div>
     );
   },
@@ -127,14 +127,14 @@ export const WithoutSuffix: Story = {
     defaultValue: 4,
   },
   render: (args) => {
-    const { control } = useForm({
+    useForm({
       defaultValues: {
         familySize: 4,
       },
     });
     return (
       <div className="w-[600px] p-4 bg-white">
-        <NumberInput {...args} control={control} questionId="familySize" />
+        <NumberInput {...args} questionId="familySize" />
       </div>
     );
   },
@@ -154,7 +154,7 @@ export const Interactive: Story = {
       args.type,
     );
     const [value, setValue] = useState<number | undefined>(75);
-    const { control } = useForm({
+    useForm({
       defaultValues: {
         satisfaction: 75,
       },
@@ -190,7 +190,6 @@ export const Interactive: Story = {
             type={currentType}
             defaultValue={value}
             onChange={setValue}
-            control={control}
             questionId="satisfaction"
           />
         </div>
