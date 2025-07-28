@@ -90,9 +90,9 @@ export const DraggableQuestionComponent: React.FC<
             >
               <div className="flex w-36 items-center gap-1 px-0 py-1 relative flex-shrink-0">
                 <div className="inline-flex items-center gap-2 relative flex-[0_0_auto] min-w-0">
-                  <label className="w-fit font-medium text-[#333333] text-sm relative mt-[-1.00px] truncate">
+                  <span className="w-fit font-medium text-[#333333] text-sm relative mt-[-1.00px] truncate">
                     {setting.label}
-                  </label>
+                  </span>
                 </div>
               </div>
               <div className="flex-1 px-2 py-1">

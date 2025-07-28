@@ -46,8 +46,9 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({
   return (
     <div className="border border-solid border-[#dcdcdc] rounded-lg overflow-hidden">
       {/* ヘッダー部分 */}
-      <div
-        className="flex items-center justify-between px-4 py-2 bg-[#f5f5f5] cursor-pointer hover:bg-[#e5e5e5] transition-colors"
+      <button
+        type="button"
+        className="flex items-center justify-between px-4 py-2 bg-[#f5f5f5] cursor-pointer hover:bg-[#e5e5e5] transition-colors w-full text-left"
         onClick={() => setIsOpen(!isOpen)}
       >
         <span className="font-medium text-[#333333] text-sm">設定</span>
@@ -56,7 +57,7 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({
         ) : (
           <ChevronDown className="w-4 h-4 text-[#333333]" />
         )}
-      </div>
+      </button>
 
       {/* 設定フォーム */}
       {isOpen && (

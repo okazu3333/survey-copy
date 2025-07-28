@@ -5,7 +5,6 @@ import { ModeToggle } from "../_components/mode-toggle";
 import { SurveyPreviewSection } from "./_components/survey-preview-section";
 
 const Page = () => {
-
   return (
     <div className="min-h-screen bg-gray-100">
       <main className="w-full py-6 px-4">

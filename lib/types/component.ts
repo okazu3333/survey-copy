@@ -38,7 +38,7 @@ export interface AccessibilityProps {
 // イベントハンドラーのProps型
 export interface EventHandlerProps {
   onClick?: () => void;
-  onChange?: (value: any) => void;
+  onChange?: (value: unknown) => void;
   onFocus?: () => void;
   onBlur?: () => void;
   onSubmit?: (event: FormEvent) => void;
@@ -47,7 +47,7 @@ export interface EventHandlerProps {
 // Storybook用のメタデータ型
 export interface StoryMeta {
   title: string;
-  component: ComponentType<any>;
+  component: ComponentType<unknown>;
   parameters?: {
     layout?: "centered" | "padded" | "fullscreen";
     docs?: {
@@ -56,8 +56,8 @@ export interface StoryMeta {
       };
     };
   };
-  argTypes?: Record<string, any>;
-  decorators?: any[];
+  argTypes?: Record<string, unknown>;
+  decorators?: unknown[];
 }
 
 // コンポーネントの状態型

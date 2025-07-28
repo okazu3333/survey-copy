@@ -13,8 +13,6 @@ import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Select, SelectTrigger, SelectValue } from "@/components/ui/select";
 
-
-
 // GridPattern component from edit section
 const GridPattern = () => (
   <svg
@@ -60,8 +58,6 @@ type QuestionFormData = {
   Q14: string;
   Q15: string[];
 };
-
-
 
 // Tab Selection Component
 const TabSelectionSection = ({

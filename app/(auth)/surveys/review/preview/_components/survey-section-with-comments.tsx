@@ -309,7 +309,6 @@ export const SurveySectionWithComments = ({
                     <div
                       ref={commentInputRef}
                       className="bg-white rounded-2xl border-2 border-[#838383] shadow-[0px_0px_16px_0px_rgba(0,0,0,0.16)] w-[448px]"
-                      onClick={(e) => e.stopPropagation()}
                     >
                       <div className="flex items-center gap-2.5 p-3 pl-6">
                         <Textarea

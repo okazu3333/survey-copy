@@ -72,7 +72,7 @@ export function generateId(prefix: string): string {
 }
 
 // イベントハンドラーを安全に実行
-export function safeHandler<T extends (...args: any[]) => any>(
+export function safeHandler<T extends (...args: unknown[]) => unknown>(
   handler: T | undefined,
   ...args: Parameters<T>
 ): void {
@@ -86,15 +86,17 @@ export function safeHandler<T extends (...args: any[]) => any>(
 }
 
 // コンポーネントの表示名を生成
-export function getDisplayName(Component: React.ComponentType<any>): string {
+export function getDisplayName(
+  Component: React.ComponentType<unknown>,
+): string {
   return Component.displayName || Component.name || "Component";
 }
 
 // 条件付きでプロパティを追加
-export function conditionalProps<T extends Record<string, any>>(
+export function conditionalProps<T extends Record<string, unknown>>(
   props: T,
   condition: boolean,
-  additionalProps: Record<string, any>,
+  additionalProps: Record<string, unknown>,
 ): T {
   return condition ? { ...props, ...additionalProps } : props;
 }

@@ -26,10 +26,19 @@ type LogicCheckSurveyContentProps = {
 
 const createNodeTypes = (reviewItems: ReviewItem[]) => ({
   start: StartNode,
-  question: (props: any) => (
-    <QuestionNode {...props} data={{ ...props.data, reviewItems }} />
-  ),
-  marriageQuestion: (props: any) => (
+  question: (props: {
+    id: string;
+    data: {
+      id: string;
+      type: string;
+      question: string;
+      isMainSurvey?: boolean;
+    };
+  }) => <QuestionNode {...props} data={{ ...props.data, reviewItems }} />,
+  marriageQuestion: (props: {
+    id: string;
+    data?: { reviewItems?: ReviewItem[] };
+  }) => (
     <MarriageQuestionNode {...props} data={{ ...props.data, reviewItems }} />
   ),
   group: GroupNode,

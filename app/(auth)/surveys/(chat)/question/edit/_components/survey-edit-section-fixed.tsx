@@ -175,30 +175,6 @@ const TabSelectionSection = ({
           </button>
         </div>
       </div>
-
-      <Button
-        onClick={() => {
-          window.location.href = "/surveys/review";
-        }}
-        className="h-10 px-6 py-2 bg-[#138FB5] hover:bg-[#138FB5]/90 text-white font-bold rounded-[20px] inline-flex items-center justify-center relative"
-      >
-        <span className="flex-1 text-center">レビューへ進む</span>
-        <svg
-          className="w-4 h-4 ml-2"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-          aria-hidden="true"
-        >
-          <title>レビューへ進む</title>
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M9 5l7 7-7 7"
-          />
-        </svg>
-      </Button>
     </div>
   );
 };
@@ -265,16 +241,74 @@ export const SurveyEditSection: React.FC<SurveyEditSectionProps> = ({
   };
 
   return (
-    <div className="flex flex-col items-start gap-0 relative self-stretch w-full flex-[0_0_auto] bg-white">
-      <TabSelectionSection activeTab={activeTab} onTabChange={setActiveTab} />
+    <div className="flex flex-col items-start relative self-stretch w-full">
+      <div className="flex items-center justify-between w-full">
+        <TabSelectionSection activeTab={activeTab} onTabChange={setActiveTab} />
+        <Button
+          onClick={() => {
+            window.location.href = "/surveys/review";
+          }}
+          className="h-10 px-8 py-2 bg-[#556064] text-white hover:bg-[#4B5563] font-medium text-base"
+        >
+          レビューへ進む
+        </Button>
+      </div>
 
-      <ScrollArea className="flex-1 w-full">
-        <div className="flex flex-col items-start gap-4 p-6">
-          {activeTab === "screening"
-            ? renderScreeningContent()
-            : renderMainSurveyContent()}
+      <div className="border text-card-foreground shadow flex flex-col items-start gap-4 p-4 relative self-stretch w-full flex-[0_0_auto] bg-[#138fb5] rounded-lg">
+        <div className="inline-flex items-start gap-1 relative flex-[0_0_auto]">
+          <div className="inline-flex h-6 items-center gap-2 pl-2 pr-3 py-0 relative flex-[0_0_auto] bg-white rounded border border-solid border-white cursor-pointer">
+            <input type="checkbox" className="w-4 h-4" />
+            <span className="w-fit font-bold text-[#138fb5] text-xs whitespace-nowrap relative">
+              全選択・解除
+            </span>
+          </div>
+          <div className="flex w-6 h-6 items-center justify-center gap-2 relative bg-white rounded border border-solid border-white cursor-pointer">
+            <svg
+              className="w-5 h-5 text-[#556064]"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              aria-hidden="true"
+            >
+              <title>削除</title>
+              <path d="M3 6h18"></path>
+              <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path>
+              <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path>
+            </svg>
+          </div>
         </div>
-      </ScrollArea>
+
+        <ScrollArea className="flex flex-col h-[580px] items-start gap-4 relative self-stretch rounded-lg">
+          <div className="flex flex-col items-start gap-4 p-6">
+            {activeTab === "screening"
+              ? renderScreeningContent()
+              : renderMainSurveyContent()}
+          </div>
+        </ScrollArea>
+      </div>
+
+      <div className="flex justify-center w-full mt-6 pb-6">
+        <Button
+          onClick={() => {
+            window.location.href = "/surveys/review";
+          }}
+          className="whitespace-nowrap text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 text-primary-foreground shadow hover:bg-primary/90 w-[340px] h-14 bg-[#556064] rounded-[34px] flex items-center justify-center gap-4 px-4 py-0"
+        >
+          <span className="font-bold text-white text-base text-center tracking-[0] leading-[22.4px] font-['Noto_Sans_JP',Helvetica]">
+            レビューへ進む
+          </span>
+          <svg
+            className="w-[6.68px] h-[11.89px]"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+            aria-hidden="true"
+          >
+            <title>レビューへ進む</title>
+            <path d="m9 18 6-6-6-6"></path>
+          </svg>
+        </Button>
+      </div>
     </div>
   );
 };

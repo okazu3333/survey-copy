@@ -6,7 +6,7 @@ export interface CSSAnalysisResult {
   tailwindClasses: Map<string, string[]>;
   customCSS: Map<string, string[]>;
   componentDependencies: Map<string, string[]>;
-  globalStyles: Map<string, any>;
+  globalStyles: Map<string, unknown>;
   issues: AnalysisIssue[];
   recommendations: AnalysisRecommendation[];
   statistics: AnalysisStatistics;

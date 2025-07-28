@@ -18,7 +18,9 @@ export const GripIcon = ({
       strokeLinecap="round"
       strokeLinejoin="round"
       className={className}
+      aria-hidden="true"
     >
+      <title>グリップアイコン</title>
       {/* 9点のグリッド型（3列×3行） */}
       <circle cx="6" cy="6" r="1" />
       <circle cx="12" cy="6" r="1" />
