@@ -10,13 +10,28 @@ export const Header = () => {
 
   const navItems = [
     {
+      title: "アンケート調査",
+      id: "survey",
+      dropdownItems: ["アンケート情報一覧"],
+    },
+    {
+      title: "管理",
+      id: "admin",
+      dropdownItems: ["ユーザー管理", "設定"],
+    },
+    {
       title: "マニュアル",
       id: "manual",
       dropdownItems: [],
     },
   ];
 
-  const userMenuItems = [{ label: "ログアウト", isTitle: false }];
+  const userMenuItems = [
+    { label: "ユーザー情報", isTitle: true },
+    { label: "パスワード変更", isTitle: false },
+    { label: "通知管理", isTitle: false },
+    { label: "ログアウト", isTitle: true },
+  ];
 
   return (
     <header className="relative h-16 bg-[#F9F9F9] shadow-[0px_1px_1px_0px_rgba(0,0,0,0.25)]">
