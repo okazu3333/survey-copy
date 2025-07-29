@@ -11,12 +11,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
 
@@ -111,30 +105,28 @@ export const ReviewItemComponent = ({
             </span>
           </div>
           <div className="flex items-center gap-2">
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <button
-                  type="button"
-                  className="hover:opacity-80 transition-opacity p-1"
-                  onClick={(e) => e.stopPropagation()}
-                >
-                  <Edit className="w-4 h-4 text-[#979BA2]" />
-                </button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-32">
-                <DropdownMenuItem onClick={handleEditComment}>
-                  <Edit className="mr-2 h-4 w-4" />
-                  <span>編集</span>
-                </DropdownMenuItem>
-                <DropdownMenuItem
-                  onClick={handleDeleteComment}
-                  className="text-red-600"
-                >
-                  <Trash2 className="mr-2 h-4 w-4" />
-                  <span>削除</span>
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+            <div className="flex items-center gap-1">
+              <button
+                type="button"
+                className="hover:opacity-80 transition-opacity p-1"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleEditComment();
+                }}
+              >
+                <Edit className="w-4 h-4 text-[#979BA2]" />
+              </button>
+              <button
+                type="button"
+                className="hover:opacity-80 transition-opacity p-1"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleDeleteComment();
+                }}
+              >
+                <Trash2 className="w-4 h-4 text-[#979BA2]" />
+              </button>
+            </div>
             <button
               type="button"
               onClick={(e) => {
