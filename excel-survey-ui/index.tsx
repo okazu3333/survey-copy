@@ -591,8 +591,6 @@ function ExcelMenuBar() {
   );
 }
 
-
-
 export default function ExcelSurveyUI() {
   const [selectedCellAddress] = React.useState("A1");
   const [selectedCellParams, setSelectedCellParams] =
@@ -614,8 +612,6 @@ export default function ExcelSurveyUI() {
       comment: "",
     });
   const [showCellDetails, setShowCellDetails] = React.useState(false);
-
-
 
   return (
     <div className="w-full max-w-[1400px] mx-auto p-6">

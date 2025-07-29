@@ -108,7 +108,10 @@ const ReviewSidebar = ({
   // Filter items based on selected review type and status
   const filteredItems = reviewItems.filter((item: ReviewItem) => {
     // ロジックチェック専用のコメントは除外（レビューコメントパネルには表示しない）
-    if (item.type === "ロジック" || (item as any).sectionId === "logic")
+    if (
+      item.type === "ロジック" ||
+      (item as ReviewItem & { sectionId?: string }).sectionId === "logic"
+    )
       return false;
 
     if (item.reviewType !== selectedReviewType) return false;
@@ -238,7 +241,10 @@ const ReviewSidebar = ({
                   onDeleteComment={handleDeleteComment}
                   onDoubleClick={handleItemDoubleClick}
                   index={index}
-                  sectionId={(item as any).sectionId || "main"}
+                  sectionId={
+                    (item as ReviewItem & { sectionId?: string }).sectionId ||
+                    "main"
+                  }
                 />
               ))}
             </div>
