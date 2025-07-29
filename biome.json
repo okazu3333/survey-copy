@@ -16,13 +16,21 @@
     "rules": {
       "recommended": true,
       "style": {
-        "noDefaultExport": "off"
+        "noDefaultExport": "off",
+        "useNamingConvention": "error"
       },
       "nursery": {
         "useSortedClasses": "off"
       },
       "suspicious": {
         "noArrayIndexKey": "off"
+      },
+      "complexity": {
+        "noExcessiveCognitiveComplexity": "warn"
+      },
+      "correctness": {
+        "noUnusedVariables": "error",
+        "noUnusedImports": "error"
       }
     }
   },
@@ -33,9 +41,36 @@
       "semicolons": "always"
     }
   },
+
   "overrides": [
     {
-      "includes": ["tailwind.config.ts"],
+      "includes": ["tailwind.config.ts", "next.config.ts"],
+      "linter": {
+        "rules": {
+          "style": {
+            "useNamingConvention": "off"
+          }
+        }
+      }
+    },
+    {
+      "includes": ["**/*.stories.tsx", "**/*.test.tsx", "**/*.spec.tsx"],
+      "linter": {
+        "rules": {
+          "style": {
+            "useNamingConvention": "off"
+          }
+        }
+      }
+    },
+    {
+      "includes": ["is-docker/**/*"],
+      "linter": {
+        "enabled": false
+      }
+    },
+    {
+      "includes": ["lib/constants/**/*"],
       "linter": {
         "rules": {
           "style": {

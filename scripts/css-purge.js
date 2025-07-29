@@ -133,7 +133,7 @@ const USED_CLASSES = new Set([
   "inline-block",
 ]);
 
-async function purgeUnusedCSS() {
+async function purgeUnusedCss() {
   console.log("🧹 未使用CSSクラスの削除中...");
 
   const tsxFiles = await glob("**/*.tsx", {
@@ -207,7 +207,7 @@ async function updateTailwindConfig(unusedClasses) {
   console.log("✅ Tailwind設定を更新しました");
 }
 
-async function generateOptimizedCSS() {
+async function generateOptimizedCss() {
   console.log("\n🎨 最適化されたCSSクラスを生成中...");
 
   const optimizedClasses = [
@@ -237,8 +237,8 @@ async function generateOptimizedCSS() {
 
 async function main() {
   try {
-    const purgeResult = await purgeUnusedCSS();
-    const optimizedClasses = await generateOptimizedCSS();
+    const purgeResult = await purgeUnusedCss();
+    const optimizedClasses = await generateOptimizedCss();
 
     console.log("\n✅ CSS軽量化完了！");
     console.log("\n📈 改善効果:");

@@ -21,7 +21,7 @@ const HARDCODED_COLORS = {
   "#FFFFFF": "bg-overlay",
 };
 
-async function analyzeCSSDependencies() {
+async function analyzeCssDependencies() {
   console.log("🔍 CSS依存関係を分析中...");
 
   const tsxFiles = await glob("**/*.tsx", {
@@ -110,7 +110,7 @@ async function generateOptimizationReport() {
 
 async function main() {
   try {
-    await analyzeCSSDependencies();
+    await analyzeCssDependencies();
     await generateOptimizationReport();
 
     console.log("\n✅ 分析完了！");

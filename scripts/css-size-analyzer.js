@@ -3,7 +3,7 @@
 import fs from "node:fs";
 import { glob } from "glob";
 
-async function analyzeCSSSize() {
+async function analyzeCssSize() {
   console.log("🔍 CSSサイズ分析中...");
 
   const cssFiles = await glob("**/*.css", {
@@ -13,14 +13,14 @@ async function analyzeCSSSize() {
     ignore: ["node_modules/**", ".next/**"],
   });
 
-  let totalCSSSize = 0;
+  let totalCssSize = 0;
   const cssFileSizes = {};
 
   // CSSファイルのサイズを計算
   for (const file of cssFiles) {
     const content = fs.readFileSync(file, "utf-8");
     const size = Buffer.byteLength(content, "utf-8");
-    totalCSSSize += size;
+    totalCssSize += size;
     cssFileSizes[file] = {
       size,
       sizeKB: (size / 1024).toFixed(2),
@@ -35,7 +35,7 @@ async function analyzeCSSSize() {
     console.log(`  - 行数: ${info.lines}行`);
   }
 
-  console.log(`\n📈 合計CSSサイズ: ${(totalCSSSize / 1024).toFixed(2)} KB`);
+  console.log(`\n📈 合計CSSサイズ: ${(totalCssSize / 1024).toFixed(2)} KB`);
 
   // Tailwindクラスの使用状況を分析
   const tailwindClasses = new Set();
@@ -239,7 +239,7 @@ async function analyzeCSSSize() {
   });
 
   return {
-    totalCSSSize,
+    totalCSSSize: totalCssSize,
     cssFileSizes,
     tailwindClasses: tailwindClasses.size,
     unusedClasses: unusedClasses.size,
@@ -303,7 +303,7 @@ async function generateOptimizationRecommendations(analysis) {
 
 async function main() {
   try {
-    const analysis = await analyzeCSSSize();
+    const analysis = await analyzeCssSize();
     await generateOptimizationRecommendations(analysis);
 
     console.log("\n✅ CSS分析完了！");
